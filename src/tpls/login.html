@@ -1,0 +1,9 @@
+<h1>Login!</h1>
+<div ng-if="!isAuthenticating">
+  <p>
+    <a href="{{authUrl}}">You have to log in flickr before use this app.</a>
+  </p>
+</div>
+<div ng-if="isAuthenticating">
+  <p>Verifying your login, just a second&hellip;</p>
+</div>
