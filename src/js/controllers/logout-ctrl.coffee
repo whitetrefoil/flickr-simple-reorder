@@ -2,13 +2,20 @@
 
 angular.module 'flickrSimpleReorder'
 .controller 'LogoutCtrl', [
+  '$scope'
   '$state'
   'Auth'
-  ($state, Auth) ->
+  (
+    $scope
+    $state
+    Auth
+  ) ->
 
     Auth.clearAuth()
 
+    $scope.isExpired = $state.params.isExpired
+
     if $state.params.isSilent
-      $state.go 'login', {frob: null}
+      $state.go 'login', {inherit: false}
 
 ]

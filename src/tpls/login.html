@@ -1,7 +1,10 @@
 <h1>Login!</h1>
 <div ng-if="!isAuthenticating">
-  <p>
+  <p ng-if="!isFrobInvalid">
     <a href="{{authUrl}}">You have to log in flickr before use this app.</a>
+  </p>
+  <p ng-if="isFrobInvalid">
+    This login is invalid! Please <a href="{{authUrl}}">try again</a>.
   </p>
 </div>
 <div ng-if="isAuthenticating">

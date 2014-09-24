@@ -2,10 +2,13 @@
 
 angular.module 'flickrSimpleReorder'
 .provider 'Auth', ->
-  $.cookie.json = true;
+  config = this
 
   @authUrl = 'http://flickr.com/services/auth/'
-  @getTokenUrl = 'https://api.flickr.com/services/rest/'
+  @endpoint = 'https://api.flickr.com/services/rest/'
+  @methods =
+    getToken: 'flickr.auth.getToken'
+    checkToken: 'flickr.auth.checkToken'
   @apiKey = '5cdc0f5ec9c28202f1098f615edba5cd'
   @apiSecret = 'e3b842e3b923b0fb'
   @perms = 'write'
@@ -28,7 +31,7 @@ angular.module 'flickrSimpleReorder'
       else
         params.format ||= @format unless _.isEmpty @format
         params.nojsoncallback ||= 1
-        params.auth_token = _auth.token
+        params.auth_token = $.cookie 'token'
 
     _(params).pairs().sortBy(0).forEach (param) ->
       strToSign += param[0] + param[1]
@@ -37,44 +40,65 @@ angular.module 'flickrSimpleReorder'
     sig = @sigMethod strToSign
     "#{convertedUrl}api_sig=#{sig}"
 
-  _auth = $.cookie 'auth'
+  @$get = [
+    '$http'
+    '$q'
+    '$state'
+    (
+      $http
+      $q
+      $state
+    ) ->
+      signUrl: config.signUrl
 
-  @$get = [ '$http', ($http) =>
-    exports =
-      signUrl: @signUrl
+      authUrl: ->
+        config.signUrl config.authUrl,
+          perms: config.perms
+        , 'login'
 
-      authUrl: => @signUrl @authUrl,
-        perms: @perms
-      , 'login'
-
-      getToken: (frob) =>
-        url = @signUrl @getTokenUrl,
-          method: 'flickr.auth.getToken'
+      getToken: (frob) ->
+        def = $q.defer()
+        url = config.signUrl config.endpoint,
+          method: config.methods.getToken
           frob: frob
         , 'token'
         $http.get(url)
+        .then (res) ->
+          if res.data.stat isnt 'ok'
+            def.reject()
+            $state.go 'login',{isFrobInvalid: true}, {inherit: false}
+          else
+            _token = res.data.auth.token._content
+            _user = res.data.auth.user
+            $.cookie 'token', _token,
+              expires: 30
+            $.cookie 'user', _user,
+              expires: 30
+            def.resolve _user
+        def.promise
 
-      clearAuth: =>
-        _auth = {}
-        $.removeCookie 'auth'
+      checkToken: ->
+        def = $q.defer()
+        url = config.signUrl config.endpoint,
+          method: config.methods.checkToken
+        $http.get(url)
+        .then (res) ->
+          if res.data.stat isnt 'ok'
+            def.resolve
+            $state.go 'logout', {isExpired: true}, {inherit: false}
+          else
+            _user = res.data.auth.user
+            $.cookie 'token', $.cookie('token'),
+              expires: 30
+            $.cookie 'user', _user,
+              expires: 30
+            def.resolve _user
+        def.promise
 
-      setAuth: (auth) =>
-        _auth =
-          perms: auth.perms._content
-          token: auth.token._content
-          user: auth.user
-        $.cookie 'auth', _auth,
-          expires: 30
+      clearAuth: ->
+        $.removeCookie 'token'
+        $.removeCookie 'user'
 
-    Object.defineProperties exports,
-      perms:
-        get: -> _auth.perms
-      token:
-        get: -> _auth.token
-      user:
-        get: -> _auth.user
-
-    exports
   ]
 
   return

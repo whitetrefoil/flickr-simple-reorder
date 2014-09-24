@@ -4,18 +4,21 @@ angular.module 'flickrSimpleReorder'
 .config [
   '$stateProvider'
   '$urlRouterProvider'
-  ($stateProvider, $urlRouterProvider) ->
+  (
+    $stateProvider
+    $urlRouterProvider
+  ) ->
 
     $urlRouterProvider.otherwise '/photosets'
 
     $stateProvider
     .state 'login',
-      url: '/login?frob'
+      url: '/login?frob&isFrobInvalid'
       controller: 'LoginCtrl'
       templateUrl: 'tpls/login.html'
 
     .state 'logout',
-      url: '/logout?isSilent'
+      url: '/logout?isSilent&isExpired'
       controller: 'LogoutCtrl'
       templateUrl: 'tpls/logout.html'
 
@@ -23,4 +26,6 @@ angular.module 'flickrSimpleReorder'
       url: '/photosets'
       controller: 'PhotosetsCtrl'
       templateUrl: 'tpls/photosets.html'
+      resolve:
+        user: ['Auth', (Auth) -> Auth.checkToken()]
 ]

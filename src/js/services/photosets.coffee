@@ -13,13 +13,19 @@ angular.module 'flickrSimpleReorder'
   @photosPerRequest = 500
 
   @$get = [
-    '$http', '$q', 'Auth'
-    ($http, $q, Auth) =>
-      getList: (page = 1) ->
+    '$http'
+    '$q'
+    'Auth'
+    (
+      $http
+      $q
+      Auth
+    ) =>
+      getList: (userId, page = 1) ->
         deferred = $q.defer()
         $http.get Auth.signUrl config.url,
           method: config.methods.getList
-          user_id: Auth.user.nsid
+          user_id: userId
           per_page: 10
           page: page
         .then (res) ->

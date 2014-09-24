@@ -4,22 +4,32 @@ angular.module 'flickrSimpleReorder'
 .controller 'PhotosetsCtrl', [
   '$scope'
   'Photosets'
-  ($scope, Photosets) ->
+  'user'
+  (
+    $scope
+    Photosets
+    user
+  ) ->
     getList = ->
-      Photosets.getList($scope.page).then (data) ->
+      Photosets.getList(user.nsid, $scope.page).then (data) ->
         $scope.photosets = data.photoset
         $scope.totalPhotosets = data.total
         $scope.photosetsPerPage = parseInt data.perpage, 10
 
-    $scope.reorder = (photosetId) ->
-      photoset = _.find $scope.photosets, { id: photosetId }
-      Photosets.getPhotos photosetId, parseInt(photoset.photos, 10)
+    $scope.reorder = (photoset) ->
+      photoset.state = 'reordering'
+      Photosets.getPhotos photoset.id, parseInt(photoset.photos, 10)
       .then (photos) ->
         ids = _(photos)
         .sortBy (photo) -> parseInt(photo.dateupload, 10) * -1
         .map 'id'
         .value()
-        Photosets.reorderPhotos photosetId, ids
+        photoset.state = 'syncing'
+        Photosets.reorderPhotos photoset.id, ids
+      .then ->
+        photoset.state = null
+      .catch ->
+        photoset.state = 'failed'
 
     $scope.$watch 'page', -> getList()
 
