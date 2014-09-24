@@ -1,10 +1,13 @@
 <h1>Photosets</h1>
 <section class="photosets-list">
   <ul>
-    <li ng-repeat="photoset in photosets">
+    <li ng-repeat="photoset in photosets" ng-switch="photoset.state">
       {{photoset.title._content}} ({{photoset.photos}})
       -
-      <a href="javascript:" ng-click="reorder(photoset.id)">Reorder</a>
+      <a ng-switch-when="reordering">Reordering&hellip;</a>
+      <a ng-switch-when="syncing">Syncing&hellip;</a>
+      <a href="javascript:" ng-switch-when="failed" ng-click="reorder(photoset)">Retry</a>
+      <a href="javascript:" ng-switch-default ng-click="reorder(photoset)">Reorder</a>
     </li>
   </ul>
   <pagination ng-model="page"
