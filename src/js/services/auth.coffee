@@ -2,7 +2,7 @@
 
 angular.module 'flickrSimpleReorder'
 .provider 'Auth', ->
-  $.cookie.json = true;
+  config = this
 
   @authUrl = 'http://flickr.com/services/auth/'
   @getTokenUrl = 'https://api.flickr.com/services/rest/'
@@ -28,7 +28,7 @@ angular.module 'flickrSimpleReorder'
       else
         params.format ||= @format unless _.isEmpty @format
         params.nojsoncallback ||= 1
-        params.auth_token = _auth.token
+        params.auth_token = _token
 
     _(params).pairs().sortBy(0).forEach (param) ->
       strToSign += param[0] + param[1]
@@ -37,42 +37,40 @@ angular.module 'flickrSimpleReorder'
     sig = @sigMethod strToSign
     "#{convertedUrl}api_sig=#{sig}"
 
-  _auth = $.cookie 'auth'
+  _token = $.cookie('token')
+  _user = {}
 
-  @$get = [ '$http', ($http) =>
+  @$get = [ '$http', ($http) ->
     exports =
-      signUrl: @signUrl
+      signUrl: config.signUrl
 
-      authUrl: => @signUrl @authUrl,
-        perms: @perms
-      , 'login'
+      authUrl: ->
+        config.signUrl config.authUrl,
+          perms: config.perms
+        , 'login'
 
-      getToken: (frob) =>
-        url = @signUrl @getTokenUrl,
+      getToken: (frob) ->
+        url = config.signUrl config.getTokenUrl,
           method: 'flickr.auth.getToken'
           frob: frob
         , 'token'
         $http.get(url)
 
-      clearAuth: =>
-        _auth = {}
-        $.removeCookie 'auth'
+      clearAuth: ->
+        _token = null
+        $.removeCookie 'token'
 
-      setAuth: (auth) =>
-        _auth =
-          perms: auth.perms._content
-          token: auth.token._content
-          user: auth.user
-        $.cookie 'auth', _auth,
+      setAuth: (auth) ->
+        _token = auth.token._content
+        _user = auth.user
+        $.cookie 'token', _token,
           expires: 30
 
     Object.defineProperties exports,
-      perms:
-        get: -> _auth.perms
       token:
-        get: -> _auth.token
+        get: -> _token
       user:
-        get: -> _auth.user
+        get: -> _user
 
     exports
   ]
