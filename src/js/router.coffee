@@ -6,7 +6,7 @@ angular.module 'flickrSimpleReorder'
   '$urlRouterProvider'
   ($stateProvider, $urlRouterProvider) ->
 
-    $urlRouterProvider.otherwise '/'
+    $urlRouterProvider.otherwise '/photosets'
 
     $stateProvider
     .state 'login',
@@ -19,7 +19,8 @@ angular.module 'flickrSimpleReorder'
       controller: 'LogoutCtrl'
       templateUrl: 'tpls/logout.html'
 
-    .state 'test',
-      url: '/test'
-      controller: 'TestCtrl'
+    .state 'photosets',
+      url: '/photosets'
+      controller: 'PhotosetsCtrl'
+      templateUrl: 'tpls/photosets.html'
 ]
