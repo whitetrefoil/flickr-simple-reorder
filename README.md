@@ -1,6 +1,8 @@
 flickr-simple-reorder
 =====================
 
+master: [![Build Status](https://travis-ci.org/whitetrefoil/flickr-simple-reorder.svg?branch=master)](https://travis-ci.org/whitetrefoil/flickr-simple-reorder) dev: [![Build Status](https://travis-ci.org/whitetrefoil/flickr-simple-reorder.svg?branch=dev)](https://travis-ci.org/whitetrefoil/flickr-simple-reorder)
+
 A simple tool to help reorder photos in galleries
 
 Changelog
