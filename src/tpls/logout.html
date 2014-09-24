@@ -1,5 +1,12 @@
-<p ng-if="!isExpired">You have logged out!</p>
-<p ng-if="isExpired">Your login has expired!</p>
-<p>You can <a ui-sref="login">log in</a> again now.</p>
-<p>But please be aware, this application will not wipe your cookie on Flickr.</p>
-<p>If you saved your login on Flickr, you may be re-login directly without being asked for anything when you try to log in this application.</p>
+<div class="col-xs-12 col-lg-6">
+  <p ng-if="!isExpired">You have logged out! You can log in again now.</p>
+  <p ng-if="isExpired">Your login has expired! You can log in again now.</p>
+  <p><button class="btn btn-primary">Login</button></p>
+</div>
+<div class="col-xs-12 col-lg-6">
+  <div class="callout callout-warning">
+    <h4>Please notice</h4>
+    <p>This application will <strong class="text-uppercase">not</strong> wipe your cookie on Flickr.</p>
+    <p>If you saved your login on Flickr, you may be re-login directly without being asked for anything when you try to log in this application.</p>
+  </div>
+</div>

@@ -1,1 +1,32 @@
 @import '../lib/bootstrap-sass-official/assets/stylesheets/bootstrap'
+
+=set-callout-color($color)
+  border-color: $color
+  h1, h2, h3, h4, h5, h6
+    color: $color
+
+.callout
+  border:
+    color: $gray-lighter
+    image: none
+    radius: 3px
+    style: solid
+    width: 1px 1px 1px 5px
+  margin: 20px 0
+  padding: 20px
+
+.callout-primary
+  +set-callout-color($brand-primary)
+
+.callout-success
+  +set-callout-color($brand-success)
+
+.callout-info
+  +set-callout-color($brand-info)
+
+.callout-warning
+  +set-callout-color($brand-warning)
+
+.callout-danger
+  +set-callout-color($brand-danger)
+
