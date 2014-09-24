@@ -5,7 +5,10 @@ angular.module 'flickrSimpleReorder'
   config = this
 
   @authUrl = 'http://flickr.com/services/auth/'
-  @getTokenUrl = 'https://api.flickr.com/services/rest/'
+  @endpoint = 'https://api.flickr.com/services/rest/'
+  @methods =
+    getToken: 'flickr.auth.getToken'
+    checkToken: 'flickr.auth.checkToken'
   @apiKey = '5cdc0f5ec9c28202f1098f615edba5cd'
   @apiSecret = 'e3b842e3b923b0fb'
   @perms = 'write'
@@ -28,7 +31,7 @@ angular.module 'flickrSimpleReorder'
       else
         params.format ||= @format unless _.isEmpty @format
         params.nojsoncallback ||= 1
-        params.auth_token = _token
+        params.auth_token = $.cookie 'token'
 
     _(params).pairs().sortBy(0).forEach (param) ->
       strToSign += param[0] + param[1]
@@ -37,11 +40,15 @@ angular.module 'flickrSimpleReorder'
     sig = @sigMethod strToSign
     "#{convertedUrl}api_sig=#{sig}"
 
-  _token = $.cookie('token')
-  _user = {}
-
-  @$get = [ '$http', ($http) ->
-    exports =
+  @$get = [
+    '$http'
+    '$q'
+    '$state'
+    (
+      $http
+      $q
+      $state
+    ) ->
       signUrl: config.signUrl
 
       authUrl: ->
@@ -50,29 +57,48 @@ angular.module 'flickrSimpleReorder'
         , 'login'
 
       getToken: (frob) ->
-        url = config.signUrl config.getTokenUrl,
-          method: 'flickr.auth.getToken'
+        def = $q.defer()
+        url = config.signUrl config.endpoint,
+          method: config.methods.getToken
           frob: frob
         , 'token'
         $http.get(url)
+        .then (res) ->
+          if res.data.stat isnt 'ok'
+            def.reject()
+            $state.go 'login',{isFrobInvalid: true}, {inherit: false}
+          else
+            _token = res.data.auth.token._content
+            _user = res.data.auth.user
+            $.cookie 'token', _token,
+              expires: 30
+            $.cookie 'user', _user,
+              expires: 30
+            def.resolve _user
+        def.promise
+
+      checkToken: ->
+        def = $q.defer()
+        url = config.signUrl config.endpoint,
+          method: config.methods.checkToken
+        $http.get(url)
+        .then (res) ->
+          if res.data.stat isnt 'ok'
+            def.resolve
+            $state.go 'logout', {isExpired: true}, {inherit: false}
+          else
+            _user = res.data.auth.user
+            $.cookie 'token', $.cookie('token'),
+              expires: 30
+            $.cookie 'user', _user,
+              expires: 30
+            def.resolve _user
+        def.promise
 
       clearAuth: ->
-        _token = null
         $.removeCookie 'token'
+        $.removeCookie 'user'
 
-      setAuth: (auth) ->
-        _token = auth.token._content
-        _user = auth.user
-        $.cookie 'token', _token,
-          expires: 30
-
-    Object.defineProperties exports,
-      token:
-        get: -> _token
-      user:
-        get: -> _user
-
-    exports
   ]
 
   return

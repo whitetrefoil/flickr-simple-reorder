@@ -4,9 +4,14 @@ angular.module 'flickrSimpleReorder'
 .controller 'PhotosetsCtrl', [
   '$scope'
   'Photosets'
-  ($scope, Photosets) ->
+  'user'
+  (
+    $scope
+    Photosets
+    user
+  ) ->
     getList = ->
-      Photosets.getList($scope.page).then (data) ->
+      Photosets.getList(user.nsid, $scope.page).then (data) ->
         $scope.photosets = data.photoset
         $scope.totalPhotosets = data.total
         $scope.photosetsPerPage = parseInt data.perpage, 10
