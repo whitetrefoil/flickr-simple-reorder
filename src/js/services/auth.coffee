@@ -12,17 +12,23 @@ angular.module 'flickrSimpleReorder'
   @sigMethod = (new Hashes.MD5).hex
   @format = 'json'
 
-  @signUrl = (url, params = {}, isKeyRequired = true) =>
-    if _.isBoolean(params)
-      isKeyRequired = params
+  @signUrl = (url, params = {}, step = 'normal') =>
+    if _.isString(params)
+      step = params
       params = {}
 
     strToSign = @apiSecret
     convertedUrl = url + '?'
-    params.format ||= @format unless _.isEmpty @format
-    params.nojsoncallback ||= 1
-    if isKeyRequired
-      params.api_key = @apiKey
+    params.api_key = @apiKey
+    switch step
+      when 'login' then null  # nothing to do
+      when 'token'
+        params.format ||= @format unless _.isEmpty @format
+        params.nojsoncallback ||= 1
+      else
+        params.format ||= @format unless _.isEmpty @format
+        params.nojsoncallback ||= 1
+        params.auth_token = _auth.token
 
     _(params).pairs().sortBy(0).forEach (param) ->
       strToSign += param[0] + param[1]
@@ -39,11 +45,13 @@ angular.module 'flickrSimpleReorder'
 
       authUrl: => @signUrl @authUrl,
         perms: @perms
+      , 'login'
 
       getToken: (frob) =>
         url = @signUrl @getTokenUrl,
           method: 'flickr.auth.getToken'
           frob: frob
+        , 'token'
         $http.get(url)
 
       clearAuth: =>
