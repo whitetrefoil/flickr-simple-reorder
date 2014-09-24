@@ -1,6 +1,6 @@
 {
   "name":            "flickr-simple-reorder",
-  "version":         "0.0.1",
+  "version":         "0.0.2",
   "description":     "A simple tool to help reorder photos in galleries.",
   "keywords":        [
     "flickr"
