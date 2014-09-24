@@ -100,7 +100,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'src'
-          src: [ '**/*.js' ]
+          src: [ '**/*.js', '**/*.html' ]
           filter: 'isFile'
           dest: '.building'
         ]
@@ -151,7 +151,7 @@ module.exports = (grunt) ->
           'dist/js/**/*.js'
         ]
     useminPrepare:
-      html: [ '+(src|.building)/**/*.html' ]
+      html: [ '.building/**/*.html' ]
     usemin:
       html: [ 'dist/**/*.html' ]
       css: [ 'dist/css/**/*.css' ]

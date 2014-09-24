@@ -64,7 +64,7 @@ angular.module 'flickrSimpleReorder'
           photo_ids: photoIds.toString()
         $http.post url
         .then (data) ->
-          console.log data
+          deferred.resolve data
         deferred.promise
   ]
 

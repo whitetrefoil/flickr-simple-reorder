@@ -15,8 +15,11 @@ angular.module 'flickrSimpleReorder'
       photoset = _.find $scope.photosets, { id: photosetId }
       Photosets.getPhotos photosetId, parseInt(photoset.photos, 10)
       .then (photos) ->
-        ids = _(photos).sortBy('date_upload').map 'id'
-        Photosets.reorderPhotos photosetId, ids.reverse()
+        ids = _(photos)
+        .sortBy (photo) -> parseInt(photo.dateupload, 10) * -1
+        .map 'id'
+        .value()
+        Photosets.reorderPhotos photosetId, ids
 
     $scope.$watch 'page', -> getList()
 
