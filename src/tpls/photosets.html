@@ -1,0 +1,17 @@
+<h1>Photosets</h1>
+<section class="photosets-list">
+  <ul>
+    <li ng-repeat="photoset in photosets">
+      {{photoset.title._content}} ({{photoset.photos}})
+      -
+      <a href="javascript:" ng-click="reorder(photoset.id)">Reorder</a>
+    </li>
+  </ul>
+  <pagination ng-model="page"
+              total-items="totalPhotosets"
+              items-per-page="photosetsPerPage"
+              max-size="maxSize" rotate="false"
+              boundary-links="true"
+              previous-text="&lsaquo;" next-text="&rsaquo;"
+              first-text="&laquo;" last-text="&raquo;"></pagination>
+</section>
