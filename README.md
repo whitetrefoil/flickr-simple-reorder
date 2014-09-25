@@ -8,7 +8,7 @@ A simple tool to help reorder photos in galleries
 TODOs
 -----
 
-* [ ] Possible damage alerts
+* [x] Possible damage alerts
 * [ ] Messages
 * [ ] Network error handling
 * [ ] Bulk edit
