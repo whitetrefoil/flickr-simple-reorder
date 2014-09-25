@@ -23,6 +23,12 @@ TODOs
 Changelog
 ---------
 
+### v0.1.1
+
+* Added searching function
+* Added a link to the original Flickr photoset page on the photosets' name
+* Fixed mistakenly calling `/{{currentUserIconUrl}}`
+
 ### v0.1.0
 
 * Much better UI.
