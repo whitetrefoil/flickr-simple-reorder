@@ -13,7 +13,7 @@
            ng-src="{{photoset.primary_photo_extras.url_q}}"
            height="150" width="150"/>
       <div class="photoset-info">
-        <h5>{{photoset.title._content}}</h5>
+        <h5><a href="https://www.flickr.com/photos/{{currentUser.path_alias}}/sets/{{photoset.id}}/">{{photoset.title._content}}</a></h5>
         <p><small>{{photoset.photos}} photos</small></p>
         <p ng-switch="photoset.state">
           <a ng-switch-when="reordering">Ordering&hellip;</a>

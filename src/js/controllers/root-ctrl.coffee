@@ -19,6 +19,7 @@ angular.module 'flickrSimpleReorder'
       $rootScope.currentUserIconUrl = null
       People.getInfo user.nsid
       .then (info) ->
+        _.extend $rootScope.currentUser, info
         $rootScope.currentUserIconUrl = parseIconUrl
           farm: info.iconfarm
           server: info.iconserver

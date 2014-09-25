@@ -43,8 +43,8 @@ angular.module 'flickrSimpleReorder'
     getList()
 
     $scope.$watch 'isFilterEnabled', -> filter()
-    $scope.$watch 'filterString', ->
-      $scope.isFilterEnabled = true
+    $scope.$watch 'filterString', (val) ->
+      $scope.isFilterEnabled = !_.isEmpty(val)
       filter()
 
     $scope.perPage = 12
