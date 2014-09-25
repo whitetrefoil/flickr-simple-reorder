@@ -21,13 +21,11 @@ angular.module 'flickrSimpleReorder'
       $q
       Auth
     ) =>
-      getList: (userId, page = 1) ->
+      getList: (userId) ->
         deferred = $q.defer()
         $http.get Auth.signUrl config.url,
           method: config.methods.getList
           user_id: userId
-          per_page: 10
-          page: page
         .then (res) ->
           if res.data.stat isnt 'ok'
             deferred.reject res.data.message

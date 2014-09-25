@@ -1,7 +1,9 @@
-<h2>Photosets</h2>
+<div class="page-header">
+  <h2>Photosets</h2>
+</div>
 <section class="photosets-list">
   <ul>
-    <li ng-repeat="photoset in photosets" ng-switch="photoset.state">
+    <li ng-repeat="photoset in photosets | paginate:page:perPage" ng-switch="photoset.state">
       {{photoset.title._content}} ({{photoset.photos}})
       -
       <a ng-switch-when="reordering">Reordering&hellip;</a>
@@ -10,11 +12,22 @@
       <a href="javascript:" ng-switch-default ng-click="reorder(photoset)">Reorder</a>
     </li>
   </ul>
-  <pagination ng-model="page"
-              total-items="totalPhotosets"
-              items-per-page="photosetsPerPage"
-              max-size="maxSize" rotate="false"
-              boundary-links="true"
-              previous-text="&lsaquo;" next-text="&rsaquo;"
-              first-text="&laquo;" last-text="&raquo;"></pagination>
+  <div class="pages">
+    <pagination class="pagination hidden-xs"
+                ng-model="page"
+                total-items="totalPhotosets"
+                items-per-page="perPage"
+                max-size="maxSize"
+                boundary-links="true"
+                previous-text="&lsaquo;" next-text="&rsaquo;"
+                first-text="&laquo;" last-text="&raquo;"></pagination>
+    <pagination class="pagination-sm visible-xs-inline-block"
+                ng-model="page"
+                total-items="totalPhotosets"
+                items-per-page="perPage"
+                max-size="maxSize"
+                boundary-links="true"
+                previous-text="&lsaquo;" next-text="&rsaquo;"
+                first-text="&laquo;" last-text="&raquo;"></pagination>
+  </div>
 </section>
