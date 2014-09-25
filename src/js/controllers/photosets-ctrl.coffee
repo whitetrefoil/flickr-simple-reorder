@@ -3,10 +3,12 @@
 angular.module 'flickrSimpleReorder'
 .controller 'PhotosetsCtrl', [
   '$scope'
+  '$modal'
   'Photosets'
   'user'
   (
     $scope
+    $modal
     Photosets
     user
   ) ->
@@ -41,8 +43,13 @@ angular.module 'flickrSimpleReorder'
         photoset.state = 'failed'
 
     $scope.reorderAll = ->
-      console.log 'TBD'
       # TODO
+      $modal.open
+        templateUrl: 'tpls/sync-progress.html'
+        backdrop: 'static'
+        keyboard: false
+        windowClass: 'modal-sync-progress'
+        controller: 'SyncProgressCtrl'
 
     getList()
 

@@ -31,15 +31,55 @@
   +set-callout-color($brand-danger)
 
 
+.modal-content
+  .modal-header
+    border-radius: 5px 5px 0 0
+    text-transform: uppercase
+  strong
+    text-transform: uppercase
+
+.modal-primary
+  .modal-header
+    background-color: $brand-primary
+    color: white
+  strong
+    color: $brand-primary
+
+.modal-info
+  .modal-header
+    background-color: $brand-info
+    color: white
+  strong
+    color: $brand-info
+
+.modal-success
+  .modal-header
+    background-color: $brand-success
+    color: white
+  strong
+    color: $brand-success
+
+.modal-warning
+  .modal-header
+    background-color: $brand-warning
+    color: white
+  strong
+    color: $brand-warning
+
 .modal-danger
   .modal-header
     background-color: $brand-danger
     color: white
-    border-radius: 6px 6px 0 0
-    text-transform: uppercase
   strong
-    text-transform: uppercase
     color: $brand-danger
+
+.modal-sync-progress
+  .modal-body
+    padding:
+      top: 40px
+      bottom: 40px
+  .progress
+    margin-bottom: 0
 
 body
   margin-top: 50px
