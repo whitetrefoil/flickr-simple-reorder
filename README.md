@@ -12,7 +12,7 @@ TODOs
 * [ ] Messages
 * [ ] Network error handling
 * [ ] Bulk edit
-* [ ] Searching / filtering
+* [x] Searching / filtering
 * [ ] About page
 * [ ] Ordering in other orders
 * [ ] Rollback
