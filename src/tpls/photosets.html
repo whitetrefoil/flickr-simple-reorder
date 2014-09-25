@@ -1,8 +1,26 @@
-<div class="page-header form-inline">
-  <h2 class="hidden-xs">Photosets</h2>
-  <div class="input-group search-box">
+<div class="hidden-xs page-header form-inline row">
+  <h2 class="col-sm-10">Photosets</h2>
+  <div class="input-group search-box-sm hidden-xs">
     <span class="input-group-addon"><input type="checkbox" ng-model="isFilterEnabled"/></span>
     <input type="text" class="form-control" placeholder="Search" ng-model="filterString">
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" class="btn btn-primary" ng-click="reorderAll()">Reorder All</button>
+  </div>
+</div>
+<div class="visible-xs-inline-block page-header form-inline">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search" ng-model="filterString">
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-align-justify"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li><a href="javascript:" ng-click="reorderAll()">Reorder All</a></li>
+        <li class="divider"></li>
+        <li><a href="javascript:" ng-click="isFilterEnabled=false">Disable Search</a></li>
+      </ul>
+    </span>
   </div>
 </div>
 <section class="photosets-list">

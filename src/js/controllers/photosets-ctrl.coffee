@@ -40,6 +40,10 @@ angular.module 'flickrSimpleReorder'
       .catch ->
         photoset.state = 'failed'
 
+    $scope.reorderAll = ->
+      console.log 'TBD'
+      # TODO
+
     getList()
 
     $scope.$watch 'isFilterEnabled', -> filter()
