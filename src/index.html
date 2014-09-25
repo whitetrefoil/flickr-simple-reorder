@@ -21,6 +21,7 @@
     <!-- build:js js/app.min.js -->
     <script src='js/application.js'></script>
     <script src='js/services/auth.js'></script>
+    <script src='js/services/people.js'></script>
     <script src='js/services/photosets.js'></script>
     <script src='js/controllers/root-ctrl.js'></script>
     <script src='js/controllers/login-ctrl.js'></script>
@@ -36,8 +37,12 @@
       <div class="navbar-header hidden-xs">
         <a class="navbar-brand" href="#">Flickr Simple Reorder</a>
       </div>
-      <p class="navbar-text navbar-right">
+      <p class="navbar-text navbar-right" ng-if="!currentUser">
         <a ui-sref="login" class="navbar-link">Log in</a>
+      </p>
+      <p class="navbar-text navbar-right" ng-if="currentUser">
+        <span class="hidden-xs">Hello, </span>{{currentUser.username}}
+        <img id="current-user-icon" src="{{currentUserIconUrl}}" height="32" width="32"/>
       </p>
     </div>
   </nav>

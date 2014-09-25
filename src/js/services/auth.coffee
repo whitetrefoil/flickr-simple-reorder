@@ -44,10 +44,12 @@ angular.module 'flickrSimpleReorder'
     '$http'
     '$q'
     '$state'
+    '$rootScope'
     (
       $http
       $q
       $state
+      $rootScope
     ) ->
       signUrl: config.signUrl
 
@@ -70,10 +72,8 @@ angular.module 'flickrSimpleReorder'
           else
             _token = res.data.auth.token._content
             _user = res.data.auth.user
-            $.cookie 'token', _token,
-              expires: 30
-            $.cookie 'user', _user,
-              expires: 30
+            $.cookie 'token', _token, { expires: 30 }
+            $rootScope.setCurrentUser _user
             def.resolve _user
         def.promise
 
@@ -88,17 +88,15 @@ angular.module 'flickrSimpleReorder'
             $state.go 'logout', {isExpired: true}, {inherit: false}
           else
             _user = res.data.auth.user
-            $.cookie 'token', $.cookie('token'),
-              expires: 30
-            $.cookie 'user', _user,
-              expires: 30
+            $.cookie 'token', $.cookie('token'), { expires: 30 }
+            $rootScope.setCurrentUser _user
             def.resolve _user
         def.promise
 
       clearAuth: ->
         $.removeCookie 'token'
         $.removeCookie 'user'
-
+        $rootScope.cleanCurrentUser()
   ]
 
   return
