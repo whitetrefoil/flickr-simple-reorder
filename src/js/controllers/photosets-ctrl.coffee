@@ -10,10 +10,20 @@ angular.module 'flickrSimpleReorder'
     Photosets
     user
   ) ->
+    photosets = []
+
+    filter = ->
+      $scope.photosets = if $scope.isFilterEnabled and !_.isEmpty($scope.filterString)
+        photosets.filter (photoset) ->
+          photoset.title._content.indexOf($scope.filterString) >= 0
+      else
+        photosets
+      $scope.totalPhotosets = $scope.photosets.length
+
     getList = ->
       Photosets.getList(user.nsid).then (data) ->
-        $scope.photosets = data.photoset
-        $scope.totalPhotosets = $scope.photosets.length
+        photosets = data.photoset
+        filter()
 
     $scope.reorder = (photoset) ->
       photoset.state = 'reordering'
@@ -31,6 +41,11 @@ angular.module 'flickrSimpleReorder'
         photoset.state = 'failed'
 
     getList()
+
+    $scope.$watch 'isFilterEnabled', -> filter()
+    $scope.$watch 'filterString', ->
+      $scope.isFilterEnabled = true
+      filter()
 
     $scope.perPage = 12
     $scope.maxSize = 5
