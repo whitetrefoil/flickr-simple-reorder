@@ -25,6 +25,7 @@ angular.module 'flickrSimpleReorder'
         deferred = $q.defer()
         $http.get Auth.signUrl config.url,
           method: config.methods.getList
+          primary_photo_extras: 'url_q'
           user_id: userId
         .then (res) ->
           if res.data.stat isnt 'ok'
