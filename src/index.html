@@ -43,7 +43,7 @@
       </p>
       <p class="navbar-text navbar-right" ng-if="currentUser">
         <span class="hidden-xs">Hello, </span>{{currentUser.username}}
-        <img id="current-user-icon" src="{{currentUserIconUrl}}" height="32" width="32"/>
+        <img id="current-user-icon" ng-src="{{currentUserIconUrl}}" height="32" width="32"/>
       </p>
     </div>
   </nav>
