@@ -12,7 +12,7 @@ TODOs
 * [ ] Messages
 * [ ] Network error handling
 * [ ] Bulk edit
-* [ ] Searching / filtering
+* [x] Searching / filtering
 * [ ] About page
 * [ ] Ordering in other orders
 * [ ] Rollback
@@ -22,6 +22,12 @@ TODOs
 
 Changelog
 ---------
+
+### v0.1.1
+
+* Added searching function
+* Added a link to the original Flickr photoset page on the photosets' name
+* Fixed mistakenly calling `/{{currentUserIconUrl}}`
 
 ### v0.1.0
 
