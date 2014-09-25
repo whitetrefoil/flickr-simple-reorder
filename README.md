@@ -8,6 +8,10 @@ A simple tool to help reorder photos in galleries
 Changelog
 ---------
 
+### v0.1.0
+
+* Much better UI.
+
 ### v0.0.3
 
 * Improve the robustness of authentication process.
