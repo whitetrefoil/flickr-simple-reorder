@@ -23,6 +23,10 @@ TODOs
 Changelog
 ---------
 
+### v0.1.2
+
+* Added a warning about development.
+
 ### v0.1.1
 
 * Added searching function
