@@ -1,1 +1,83 @@
 @import '../lib/bootstrap-sass-official/assets/stylesheets/bootstrap'
+
+=set-callout-color($color)
+  border-color: $color
+  h1, h2, h3, h4, h5, h6
+    color: $color
+
+.callout
+  border:
+    color: $gray-lighter
+    image: none
+    radius: 3px
+    style: solid
+    width: 1px 1px 1px 5px
+  margin: 20px 0
+  padding: 20px
+
+.callout-primary
+  +set-callout-color($brand-primary)
+
+.callout-success
+  +set-callout-color($brand-success)
+
+.callout-info
+  +set-callout-color($brand-info)
+
+.callout-warning
+  +set-callout-color($brand-warning)
+
+.callout-danger
+  +set-callout-color($brand-danger)
+
+body
+  margin-top: 50px
+
+.page-header
+  margin-top: 20px
+
+.navbar
+  .navbar-right
+    text-align: right
+  .navbar-text
+    #current-user-icon
+      margin:
+        top: -8px
+        bottom: -8px
+        left: 8px
+
+.photosets-list
+  margin:
+    bottom: 80px
+  > ul
+    list-style: none
+    margin: 0
+    padding: 0
+    li
+      position: relative
+      height: 150px
+      margin:
+        top: 15px
+        bottom: 15px
+      .photoset-cover
+        position: absolute
+        top: 0
+        left: 15px
+      .photoset-info
+        display: block
+        margin:
+          left: 160px
+        h5
+          font:
+            size: 110%
+            weight: bold
+  .pages
+    width: 100%
+    position: fixed
+    left: 0
+    bottom: 20px
+    text-align: center
+
+    .pagination
+      margin: 0 auto
+

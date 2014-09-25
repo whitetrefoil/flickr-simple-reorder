@@ -1,20 +1,42 @@
-<h1>Photosets</h1>
+<div class="page-header">
+  <h2>Photosets</h2>
+</div>
 <section class="photosets-list">
-  <ul>
-    <li ng-repeat="photoset in photosets" ng-switch="photoset.state">
-      {{photoset.title._content}} ({{photoset.photos}})
-      -
-      <a ng-switch-when="reordering">Reordering&hellip;</a>
-      <a ng-switch-when="syncing">Syncing&hellip;</a>
-      <a href="javascript:" ng-switch-when="failed" ng-click="reorder(photoset)">Retry</a>
-      <a href="javascript:" ng-switch-default ng-click="reorder(photoset)">Reorder</a>
+  <ul class="row">
+    <li class="col-xs-12 col-sm-6 col-md-4"
+        ng-repeat="photoset in photosets | paginate:page:perPage">
+      <img class="photoset-cover"
+           ng-src="{{photoset.primary_photo_extras.url_q}}"
+           height="150" width="150"/>
+      <div class="photoset-info">
+        <h5>{{photoset.title._content}}</h5>
+        <p><small>{{photoset.photos}} photos</small></p>
+        <p ng-switch="photoset.state">
+          <a ng-switch-when="reordering">Ordering&hellip;</a>
+          <a ng-switch-when="syncing">Syncing&hellip;</a>
+          <a href="javascript:" ng-switch-when="failed" ng-click="reorder(photoset)">Retry</a>
+          <a href="javascript:" ng-switch-when="done" ng-click="reorder(photoset)">Done</a>
+          <a href="javascript:" ng-switch-default ng-click="reorder(photoset)">Reorder</a>
+        </p>
+      </div>
     </li>
   </ul>
-  <pagination ng-model="page"
-              total-items="totalPhotosets"
-              items-per-page="photosetsPerPage"
-              max-size="maxSize" rotate="false"
-              boundary-links="true"
-              previous-text="&lsaquo;" next-text="&rsaquo;"
-              first-text="&laquo;" last-text="&raquo;"></pagination>
+  <div class="pages">
+    <pagination class="pagination hidden-xs"
+                ng-model="page"
+                total-items="totalPhotosets"
+                items-per-page="perPage"
+                max-size="maxSize"
+                boundary-links="true"
+                previous-text="&lsaquo;" next-text="&rsaquo;"
+                first-text="&laquo;" last-text="&raquo;"></pagination>
+    <pagination class="pagination-sm visible-xs-inline-block"
+                ng-model="page"
+                total-items="totalPhotosets"
+                items-per-page="perPage"
+                max-size="maxSize"
+                boundary-links="true"
+                previous-text="&lsaquo;" next-text="&rsaquo;"
+                first-text="&laquo;" last-text="&raquo;"></pagination>
+  </div>
 </section>

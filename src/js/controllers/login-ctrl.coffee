@@ -4,21 +4,24 @@ angular.module 'flickrSimpleReorder'
 .controller 'LoginCtrl', [
   '$state'
   'Auth'
-  '$log'
   '$scope'
+  '$window'
   (
     $state
     Auth
-    $log
     $scope
+    $window
   ) ->
 
-    if _.isEmpty($state.params.frob)
-      $scope.isAuthenticating = false
-      $scope.authUrl = Auth.authUrl()
-      $scope.isFrobInvalid = $state.params.isFrobInvalid
+    $scope.authUrl = Auth.authUrl()
+
+    if ($state.params.isFrobInvalid)
+      $scope.state = 'invalid'
+    else if _.isEmpty($state.params.frob)
+      $scope.state = 'redirecting'
+      $window.location.href = $scope.authUrl
     else
-      $scope.isAuthenticating = true
+      $scope.state = 'verifying'
       Auth.getToken($state.params.frob)
       .then ->
         $state.go 'photosets'

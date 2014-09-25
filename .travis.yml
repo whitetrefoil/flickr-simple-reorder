@@ -7,8 +7,8 @@ before_install:
   - gem install -N bundler
   - bundle update
   - npm -g up npm
+  - npm -g ins grunt-cli bower
   - npm -g up
-  - npm -g ins grunt-cli
   - npm install
   - bower install
 script:

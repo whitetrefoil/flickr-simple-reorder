@@ -11,10 +11,9 @@ angular.module 'flickrSimpleReorder'
     user
   ) ->
     getList = ->
-      Photosets.getList(user.nsid, $scope.page).then (data) ->
+      Photosets.getList(user.nsid).then (data) ->
         $scope.photosets = data.photoset
-        $scope.totalPhotosets = data.total
-        $scope.photosetsPerPage = parseInt data.perpage, 10
+        $scope.totalPhotosets = $scope.photosets.length
 
     $scope.reorder = (photoset) ->
       photoset.state = 'reordering'
@@ -27,12 +26,13 @@ angular.module 'flickrSimpleReorder'
         photoset.state = 'syncing'
         Photosets.reorderPhotos photoset.id, ids
       .then ->
-        photoset.state = null
+        photoset.state = 'done'
       .catch ->
         photoset.state = 'failed'
 
-    $scope.$watch 'page', -> getList()
+    getList()
 
+    $scope.perPage = 12
     $scope.maxSize = 5
     $scope.page = 1
 ]
