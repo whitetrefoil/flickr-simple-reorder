@@ -11,7 +11,7 @@ TODOs
 * [x] Possible damage alerts
 * [ ] Messages
 * [ ] Network error handling
-* [ ] Bulk edit
+* [x] Bulk edit
 * [x] Searching / filtering
 * [ ] About page
 * [ ] Ordering in other orders
@@ -22,6 +22,11 @@ TODOs
 
 Changelog
 ---------
+
+### v0.2.0
+
+* Reorder all (or currently filtered out) photosets.
+* Let the filtering to be case insensitive.
 
 ### v0.1.2
 
