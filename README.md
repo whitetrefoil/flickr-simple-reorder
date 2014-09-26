@@ -11,7 +11,7 @@ TODOs
 * [x] Possible damage alerts
 * [ ] Messages
 * [ ] Network error handling
-* [ ] Bulk edit
+* [x] Bulk edit
 * [x] Searching / filtering
 * [ ] About page
 * [ ] Ordering in other orders
