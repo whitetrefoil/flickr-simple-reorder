@@ -35,7 +35,7 @@ TODOs
 * [ ] Network error handling
 * [x] Bulk edit
 * [x] Searching / filtering
-* [ ] About page
+* [x] About page
 * [ ] Ordering in other orders
 * [ ] Rollback
 * [ ] Logo
@@ -44,6 +44,10 @@ TODOs
 
 Changelog
 ---------
+
+### v0.2.1
+
+* About page.
 
 ### v0.2.0
 
