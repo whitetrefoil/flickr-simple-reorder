@@ -19,7 +19,7 @@ angular.module 'flickrSimpleReorder'
     filter = ->
       $scope.photosets = if $scope.isFilterEnabled and !_.isEmpty($scope.filterString)
         photosets.filter (photoset) ->
-          photoset.title._content.indexOf($scope.filterString) >= 0
+          photoset.title._content.toLowerCase().indexOf($scope.filterString.toLowerCase()) >= 0
       else
         photosets
       $scope.totalPhotosets = $scope.photosets.length
