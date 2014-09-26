@@ -23,6 +23,11 @@ TODOs
 Changelog
 ---------
 
+### v0.2.0
+
+* Reorder all (or currently filtered out) photosets.
+* Let the filtering to be case insensitive.
+
 ### v0.1.2
 
 * Added a warning about development.
