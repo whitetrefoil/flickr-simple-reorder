@@ -1,0 +1,37 @@
+<div ng-class="{'modal-info': remaining > 0 && fail === 0, 'modal-success': remaining === 0 && fail === 0, 'modal-danger': fail > 0}">
+  <div class="modal-header">
+    <h4 class="modal-title">Syncing with server</h4>
+  </div>
+  <div class="modal-body">
+    <p>
+      <span class="total-number">Total: {{total}}</span>,
+      <span class="success-number">Successful: {{success}}</span>,
+      <span class="fail-number" ng-if="fail > 0">Failed: {{fail}}</span>
+    </p>
+    <div class="progress" ng-if="remaining > 0">
+      <div class="progress-bar progress-bar-danger progress-bar-striped active"
+           ng-style="failStyle"></div>
+      <div class="progress-bar progress-bar-info progress-bar-striped active"
+           ng-style="successStyle"></div>
+    </div>
+    <div class="progress" ng-if="remaining === 0">
+      <div class="progress-bar progress-bar-danger progress-bar-striped"
+           ng-style="failStyle"></div>
+      <div class="progress-bar progress-bar-info progress-bar-striped"
+           ng-style="successStyle" ng-if="fail > 0"></div>
+      <div class="progress-bar progress-bar-success progress-bar-striped"
+           style="width: 100%" ng-if="fail === 0"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default"
+            ng-disabled="remaining > 0" ng-if="fail > 0"
+            ng-click="abandon()">Leave them</button>
+    <button type="button" class="btn btn-danger"
+            ng-disabled="remaining > 0" ng-if="fail > 0"
+            ng-click="retry()">Try again</button>
+    <button type="button" class="btn btn-primary"
+            ng-disabled="remaining > 0" ng-if="fail === 0"
+            ng-click="close()">Close</button>
+  </div>
+</div>
