@@ -45,6 +45,10 @@ TODOs
 Changelog
 ---------
 
+### v0.2.1
+
+* About page.
+
 ### v0.2.0
 
 * Reorder all (or currently filtered out) photosets.
