@@ -28,4 +28,11 @@ angular.module 'flickrSimpleReorder'
       templateUrl: 'tpls/photosets.html'
       resolve:
         user: ['Auth', (Auth) -> Auth.checkToken()]
+
+    .state 'about',
+      url: '/about'
+      templateUrl: 'tpls/about.html'
+      resolve:
+        user: ['Auth', (Auth) -> Auth.checkToken()]
+
 ]
