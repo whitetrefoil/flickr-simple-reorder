@@ -89,6 +89,14 @@
     font-weight: bold
     color: $brand-danger
 
+
+.checklist
+  list-style: none
+  padding-left: 20px
+  label
+    font-weight: normal
+
+
 body
   margin-top: 50px
 
@@ -107,14 +115,25 @@ body
       margin-left: -150px
 
 .navbar
-  .navbar-right
-    text-align: right
-  .navbar-text
-    #current-user-icon
-      margin:
-        top: -8px
-        bottom: -8px
-        left: 8px
+  .current-user-icon
+    margin:
+      top: -8px
+      bottom: -8px
+  .main-navbar-user-info
+    position: absolute
+    right: 0
+    top: 0
+    span
+      margin: 0 8px
+  .navbar-xs-menu-toggle
+    float: right
+    .glyphicon
+      vertical-align: middle
+  .unknown-user-icon
+    width: 32px
+    height: 32px
+    margin: -8px 0
+    font-size: 32px
 
 .photosets-list
   margin:

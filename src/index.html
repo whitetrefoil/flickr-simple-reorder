@@ -34,18 +34,56 @@
   </head>
 
   <body ng-controller="RootCtrl">
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-      <div class="navbar-header hidden-xs">
+  <nav id="main-navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid hidden-xs">
+      <div class="navbar-header">
         <a class="navbar-brand" href="#">Flickr Simple Reorder</a>
       </div>
-      <p class="navbar-text navbar-right" ng-if="!currentUser">
-        <a ui-sref="login" class="navbar-link">Log in</a>
+      <ul class="nav navbar-nav">
+        <li ui-sref="photosets" ui-sref-active="active">
+          <a href="">Photosets</a>
+        </li>
+        <li ui-sref="about" ui-sref-active="active">
+          <a href="">About</a>
+        </li>
+        <li ui-sref="logout" ui-sref-active="active" ng-if="currentUser">
+          <a href="">Log out</a>
+        </li>
+        <li ui-sref="login" ui-sref-active="active" ng-if="!currentUser">
+          <a href="">Log in</a>
+        </li>
+      </ul>
+      <p class="navbar-text main-navbar-user-info" ng-if="currentUser">
+        <span>Hello, {{currentUser.username}}</span>
+        <img class="current-user-icon" ng-src="{{currentUserIconUrl}}"
+             height="32" width="32"/>
       </p>
-      <p class="navbar-text navbar-right" ng-if="currentUser">
-        <span class="hidden-xs">Hello, </span>{{currentUser.username}}
-        <img id="current-user-icon" ng-src="{{currentUserIconUrl}}" height="32" width="32"/>
-      </p>
+    </div>
+    <div class="container-fluid visible-xs-block dropdown">
+      <div class="navbar-text navbar-xs-menu-toggle">
+        <img class="current-user-icon dropdown-toggle"
+             ng-src="{{currentUserIconUrl}}" ng-if="currentUser"
+             height="32" width="32"/>
+        <span class="unknown-user-icon dropdown-toggle glyphicon glyphicon-user"
+              ng-if="!currentUser">
+        </span>
+        <span class="glyphicon glyphicon-chevron-down dropdown-toggle"></span>
+      </div>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li ui-sref="photosets" ui-sref-active="active">
+          <a href="">Photosets</a>
+        </li>
+        <li ui-sref="about" ui-sref-active="active">
+          <a href="">About</a>
+        </li>
+        <li class="divider"></li>
+        <li ui-sref="logout" ui-sref-active="active" ng-if="currentUser">
+          <a href="">Log out</a>
+        </li>
+        <li ui-sref="login" ui-sref-active="active" ng-if="!currentUser">
+          <a href="">Log in</a>
+        </li>
+      </ul>
     </div>
   </nav>
   <div id='page' class="container" ui-view></div>

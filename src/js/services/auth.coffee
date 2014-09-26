@@ -81,16 +81,18 @@ angular.module 'flickrSimpleReorder'
         def = $q.defer()
         url = config.signUrl config.endpoint,
           method: config.methods.checkToken
-        $http.get(url)
-        .then (res) ->
-          if res.data.stat isnt 'ok'
-            def.resolve
-            $state.go 'logout', {isExpired: true}, {inherit: false}
-          else
-            _user = res.data.auth.user
-            $.cookie 'token', $.cookie('token'), { expires: 30 }
-            $rootScope.setCurrentUser _user
-            def.resolve _user
+        if $.cookie('token')?
+          $http.get(url)
+          .then (res) ->
+            if res.data.stat isnt 'ok'
+              def.reject 'authExpired'
+            else
+              _user = res.data.auth.user
+              $.cookie 'token', $.cookie('token'), { expires: 30 }
+              $rootScope.setCurrentUser _user
+              def.resolve _user
+        else
+          def.reject 'authExpired'
         def.promise
 
       clearAuth: ->

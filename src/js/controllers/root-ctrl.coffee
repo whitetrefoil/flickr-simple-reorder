@@ -5,11 +5,13 @@ angular.module 'flickrSimpleReorder'
   '$rootScope'
   '$modal'
   '$location'
+  '$state'
   'People'
   (
     $rootScope
     $modal
     $location
+    $state
     People
   ) ->
     unless $location.host() is 'localhost'
@@ -41,4 +43,8 @@ angular.module 'flickrSimpleReorder'
           server: info.iconserver
           nsid: info.nsid
 
+    $rootScope.$on '$stateChangeError', (event, toState, toParams, fromState, fromParams, error) ->
+      switch error
+        when 'authExpired'
+          $state.go 'logout', {isExpired: true}, {inherit: false}
 ]
