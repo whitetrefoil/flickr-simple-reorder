@@ -35,7 +35,7 @@ TODOs
 * [ ] Network error handling
 * [x] Bulk edit
 * [x] Searching / filtering
-* [ ] About page
+* [x] About page
 * [ ] Ordering in other orders
 * [ ] Rollback
 * [ ] Logo
