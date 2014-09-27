@@ -37,6 +37,7 @@
         <p ng-switch="photoset.state">
           <a ng-switch-when="reordering">Ordering&hellip;</a>
           <a ng-switch-when="syncing">Syncing&hellip;</a>
+          <a href="javascript:" ng-switch-when="skipped" ng-click="reorder(photoset)">Skipped</a>
           <a href="javascript:" ng-switch-when="failed" ng-click="reorder(photoset)">Retry</a>
           <a href="javascript:" ng-switch-when="done" ng-click="reorder(photoset)">Done</a>
           <a href="javascript:" ng-switch-default ng-click="reorder(photoset)">Reorder</a>

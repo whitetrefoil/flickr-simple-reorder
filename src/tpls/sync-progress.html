@@ -1,4 +1,4 @@
-<div ng-class="{'modal-info': remaining > 0 && fail === 0, 'modal-success': remaining === 0 && fail === 0, 'modal-danger': fail > 0}">
+<div ng-class="getModalClass()">
   <div class="modal-header">
     <h4 class="modal-title">Syncing with server</h4>
   </div>
@@ -6,21 +6,16 @@
     <p>
       <span class="total-number">Total: {{total}}</span>,
       <span class="success-number">Successful: {{success}}</span>,
+      <span class="warning-number" ng-if="warning > 0">Skipped: {{warning}}</span>,
       <span class="fail-number" ng-if="fail > 0">Failed: {{fail}}</span>
     </p>
-    <div class="progress" ng-if="remaining > 0">
-      <div class="progress-bar progress-bar-danger progress-bar-striped active"
-           ng-style="failStyle"></div>
-      <div class="progress-bar progress-bar-info progress-bar-striped active"
-           ng-style="successStyle"></div>
-    </div>
-    <div class="progress" ng-if="remaining === 0">
+    <div class="progress">
       <div class="progress-bar progress-bar-danger progress-bar-striped"
-           ng-style="failStyle"></div>
-      <div class="progress-bar progress-bar-info progress-bar-striped"
-           ng-style="successStyle" ng-if="fail > 0"></div>
-      <div class="progress-bar progress-bar-success progress-bar-striped"
-           style="width: 100%" ng-if="fail === 0"></div>
+          ng-class="{active: remaining > 0}" ng-style="getFailStyle()"></div>
+      <div class="progress-bar progress-bar-warning progress-bar-striped active"
+          ng-class="{active: remaining > 0}" ng-style="getWarningStyle()"></div>
+      <div class="progress-bar progress-bar-info progress-bar-striped active"
+          ng-class="{active: remaining > 0}" ng-style="getSuccessStyle()"></div>
     </div>
   </div>
   <div class="modal-footer">

@@ -33,18 +33,20 @@ angular.module 'flickrSimpleReorder'
       photoset.state = 'reordering'
       Photosets.getPhotos photoset.id, parseInt(photoset.photos, 10)
       .then (photos) ->
-        ids = _(photos)
+        idsBeforeOrdering = _.map photos, 'id'
+        idsAfterOrdering = _(photos)
         .sortBy (photo) -> parseInt(photo.dateupload, 10) * -1
         .map 'id'
         .value()
-        photoset.state = 'syncing'
-        Photosets.reorderPhotos photoset.id, ids
-      .then ->
-        photoset.state = 'done'
-        photoset
+        if _.isEqual idsBeforeOrdering, idsAfterOrdering
+          photoset.state = 'skipped'
+        else
+          photoset.state = 'syncing'
+          Photosets.reorderPhotos photoset.id, idsAfterOrdering
+          .then ->
+            photoset.state = 'done'
       .catch ->
         photoset.state = 'failed'
-        photoset
 
     $scope.reorderAll = (photosets = $scope.photosets)->
       orderings = _.map photosets, (photoset) -> $scope.reorder photoset
