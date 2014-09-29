@@ -46,7 +46,7 @@ angular.module 'flickrSimpleReorder'
         else if $scope.warning is $scope.total
           'modal-warning'
         else
-
+          'modal-success'
 
     # Buttons
     close = -> $modalInstance.close
