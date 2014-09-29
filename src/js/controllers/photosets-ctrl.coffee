@@ -6,12 +6,14 @@ angular.module 'flickrSimpleReorder'
   '$rootScope'
   '$modal'
   'Photosets'
+  'Orders'
   'user'
   (
     $scope
     $rootScope
     $modal
     Photosets
+    Orders
     user
   ) ->
     photosets = []
@@ -30,14 +32,13 @@ angular.module 'flickrSimpleReorder'
         filter()
 
     $scope.reorder = (photoset) ->
+      orderCode = $scope.selectedOrder.code
+      isPreferDescending = $scope.isPreferDescending
       photoset.state = 'reordering'
       Photosets.getPhotos photoset.id, parseInt(photoset.photos, 10)
       .then (photos) ->
         idsBeforeOrdering = _.map photos, 'id'
-        idsAfterOrdering = _(photos)
-        .sortBy (photo) -> parseInt(photo.dateupload, 10) * -1
-        .map 'id'
-        .value()
+        idsAfterOrdering = _.map Orders.Photosets.orderBy(photos, orderCode, isPreferDescending), 'id'
         if _.isEqual idsBeforeOrdering, idsAfterOrdering
           photoset.state = 'skipped'
         else
@@ -72,4 +73,8 @@ angular.module 'flickrSimpleReorder'
     $scope.perPage = 12
     $scope.maxSize = 5
     $scope.page = 1
+    $scope.availableOrders = Orders.Photosets.availableOrders
+    $scope.selectedOrder = $scope.availableOrders[0]
+    $scope.isPreferDescending = true
+    $scope.setOrder = (order) -> $scope.selectedOrder = order
 ]

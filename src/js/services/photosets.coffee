@@ -41,7 +41,7 @@ angular.module 'flickrSimpleReorder'
           photoset_id: photosetId
           page: page
           per_page: config.photosPerRequest
-          extras: 'date_upload'
+          extras: 'date_upload,date_taken,views'
         .then (res) ->
           if res.data.stat isnt 'ok'
             deferred.reject res.data.message
