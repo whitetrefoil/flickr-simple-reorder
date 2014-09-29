@@ -6,12 +6,16 @@ angular.module 'flickrSimpleReorder'
   '$rootScope'
   '$modal'
   'Photosets'
+  'Orders'
+  'Modals'
   'user'
   (
     $scope
     $rootScope
     $modal
     Photosets
+    Orders
+    Modals
     user
   ) ->
     photosets = []
@@ -30,35 +34,31 @@ angular.module 'flickrSimpleReorder'
         filter()
 
     $scope.reorder = (photoset) ->
+      orderCode = $scope.selectedOrder.code
+      isPreferDescending = $scope.isPreferDescending
       photoset.state = 'reordering'
       Photosets.getPhotos photoset.id, parseInt(photoset.photos, 10)
       .then (photos) ->
-        ids = _(photos)
-        .sortBy (photo) -> parseInt(photo.dateupload, 10) * -1
-        .map 'id'
-        .value()
-        photoset.state = 'syncing'
-        Photosets.reorderPhotos photoset.id, ids
-      .then ->
-        photoset.state = 'done'
-        photoset
+        idsBeforeOrdering = _.map photos, 'id'
+        idsAfterOrdering = _.map Orders.Photosets.orderBy(photos, orderCode, isPreferDescending), 'id'
+        if _.isEqual idsBeforeOrdering, idsAfterOrdering
+          photoset.state = 'skipped'
+        else
+          photoset.state = 'syncing'
+          Photosets.reorderPhotos photoset.id, idsAfterOrdering
+          .then ->
+            photoset.state = 'done'
       .catch ->
         photoset.state = 'failed'
-        photoset
 
     $scope.reorderAll = (photosets = $scope.photosets)->
-      orderings = _.map photosets, (photoset) -> $scope.reorder photoset
-      modalScope = $rootScope.$new()
-      modalScope.orderings = orderings
-      $modal.open
-        scope: modalScope
-        templateUrl: 'tpls/sync-progress.html'
-        backdrop: 'static'
-        keyboard: false
-        windowClass: 'modal-sync-progress'
-        controller: 'SyncProgressCtrl'
-      .result.catch (failedPhotosets) ->
-        $scope.reorderAll(failedPhotosets)
+      Modals.reorderAllConfirm
+        photosetsCount: photosets.length
+      .then ->
+        Modals.syncProgress
+          orderings: _.map photosets, (photoset) -> $scope.reorder photoset
+        .catch (failedPhotosets) ->
+          $scope.reorderAll(failedPhotosets)
 
     getList()
 
@@ -70,4 +70,8 @@ angular.module 'flickrSimpleReorder'
     $scope.perPage = 12
     $scope.maxSize = 5
     $scope.page = 1
+    $scope.availableOrders = Orders.Photosets.availableOrders
+    $scope.selectedOrder = $scope.availableOrders[0]
+    $scope.isPreferDescending = true
+    $scope.setOrder = (order) -> $scope.selectedOrder = order
 ]

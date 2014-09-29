@@ -1,3 +1,3 @@
 'use strict'
 
-angular.module 'flickrSimpleReorder', ['ui.router', 'ui.bootstrap']
+angular.module 'flickrSimpleReorder', ['ui.router', 'ui.bootstrap', 'angularMoment']

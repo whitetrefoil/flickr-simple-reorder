@@ -36,7 +36,7 @@ TODOs
 * [x] Bulk edit
 * [x] Searching / filtering
 * [x] About page
-* [ ] Ordering in other orders
+* [x] Ordering in other orders
 * [ ] Rollback
 * [ ] Logo
 * [ ] Public API
@@ -44,6 +44,12 @@ TODOs
 
 Changelog
 ---------
+
+### v0.3.0
+* Now can order in "Title", "Taken time", "Upload time" or "Views count".
+* Added a confirmation modal before doing re-order.
+* UI optimized.
+
 
 ### v0.2.1
 
