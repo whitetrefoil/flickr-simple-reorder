@@ -19,7 +19,8 @@
         <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-if="isPreferDescending"></span>
       </button>
     </div>
-    <button type="button" class="btn btn-primary btn-sm" ng-click="reorderAll()">Reorder All</button>
+    <button type="button" class="btn btn-primary btn-sm"
+            ng-click="reorderAll()" ng-disabled="checkIsProcessing()">Reorder All</button>
   </div>
 </div>
 <section class="photosets-list">

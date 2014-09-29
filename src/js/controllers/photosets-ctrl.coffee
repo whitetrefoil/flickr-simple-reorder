@@ -76,4 +76,8 @@ angular.module 'flickrSimpleReorder'
     $scope.selectedOrder = $scope.availableOrders[0]
     $scope.isPreferDescending = true
     $scope.setOrder = (order) -> $scope.selectedOrder = order
+    $scope.checkIsProcessing = ->
+      _.some $scope.photosets, (photoset) ->
+        photoset.state is 'reordering' or photoset.state is 'syncing'
+
 ]
