@@ -7,6 +7,7 @@ angular.module 'flickrSimpleReorder'
   '$modal'
   'Photosets'
   'Orders'
+  'Modals'
   'user'
   (
     $scope
@@ -14,6 +15,7 @@ angular.module 'flickrSimpleReorder'
     $modal
     Photosets
     Orders
+    Modals
     user
   ) ->
     photosets = []
@@ -50,18 +52,21 @@ angular.module 'flickrSimpleReorder'
         photoset.state = 'failed'
 
     $scope.reorderAll = (photosets = $scope.photosets)->
-      orderings = _.map photosets, (photoset) -> $scope.reorder photoset
-      modalScope = $rootScope.$new()
-      modalScope.orderings = orderings
-      $modal.open
-        scope: modalScope
-        templateUrl: 'tpls/sync-progress.html'
-        backdrop: 'static'
-        keyboard: false
-        windowClass: 'modal-sync-progress'
-        controller: 'SyncProgressCtrl'
-      .result.catch (failedPhotosets) ->
-        $scope.reorderAll(failedPhotosets)
+      Modals.reorderAllConfirm
+        photosetsCount: photosets.length
+      .then ->
+        orderings = _.map photosets, (photoset) -> $scope.reorder photoset
+        modalScope = $rootScope.$new()
+        modalScope.orderings = orderings
+        $modal.open
+          scope: modalScope
+          templateUrl: 'tpls/sync-progress.html'
+          backdrop: 'static'
+          keyboard: false
+          windowClass: 'modal-sync-progress'
+          controller: 'SyncProgressCtrl'
+        .result.catch (failedPhotosets) ->
+          $scope.reorderAll(failedPhotosets)
 
     getList()
 
