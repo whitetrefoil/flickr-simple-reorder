@@ -5,6 +5,10 @@ master: [![Build Status](https://travis-ci.org/whitetrefoil/flickr-simple-reorde
 
 A simple tool to help reorder photos in galleries (photosets).
 
+** Current state:** Alpha
+
+** Latest version:** v0.3.1
+
 Author
 ------
 
@@ -45,11 +49,14 @@ TODOs
 Changelog
 ---------
 
+### v0.3.1
+* Disable "Reorder All" button when there's already a reordering processing.
+* Reduce the amount of photosets displayed per page in small device from 12 to 5.
+
 ### v0.3.0
 * Now can order in "Title", "Taken time", "Upload time" or "Views count".
 * Added a confirmation modal before doing re-order.
 * UI optimized.
-
 
 ### v0.2.1
 
