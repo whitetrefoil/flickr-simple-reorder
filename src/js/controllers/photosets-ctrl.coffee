@@ -4,6 +4,7 @@ angular.module 'flickrSimpleReorder'
 .controller 'PhotosetsCtrl', [
   '$scope'
   '$rootScope'
+  '$document'
   '$modal'
   'Photosets'
   'Orders'
@@ -12,6 +13,7 @@ angular.module 'flickrSimpleReorder'
   (
     $scope
     $rootScope
+    $document
     $modal
     Photosets
     Orders
@@ -67,11 +69,15 @@ angular.module 'flickrSimpleReorder'
       $scope.isFilterEnabled = !_.isEmpty(val)
       filter()
 
-    $scope.perPage = 12
+    $scope.perPage = if $document.outerWidth() < 768 then 5 else 12
     $scope.maxSize = 5
     $scope.page = 1
     $scope.availableOrders = Orders.Photosets.availableOrders
     $scope.selectedOrder = $scope.availableOrders[0]
     $scope.isPreferDescending = true
     $scope.setOrder = (order) -> $scope.selectedOrder = order
+    $scope.checkIsProcessing = ->
+      _.some $scope.photosets, (photoset) ->
+        photoset.state is 'reordering' or photoset.state is 'syncing'
+
 ]
