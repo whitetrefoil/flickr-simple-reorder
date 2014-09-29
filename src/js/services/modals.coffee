@@ -8,15 +8,24 @@ angular.module 'flickrSimpleReorder'
     $modal
     $rootScope
   ) ->
-    reorderAllConfirm: (args = {}, params = {}) ->
+    modal: (args = {}, params = {}) ->
       $scope = $rootScope.$new()
       _.extend $scope, args
       modalParams =
-        templateUrl: 'tpls/confirm-reorder-all-modal.html'
         scope: $scope
         backdrop: 'static'
-        controller: 'ConfirmReorderAllModalCtrl'
       _.extend modalParams, params
       $modal.open(modalParams).result
+
+    reorderAllConfirm: (args = {}, params = {}) ->
+      @modal args, _.extend params,
+        templateUrl: 'tpls/confirm-reorder-all-modal.html'
+        controller: 'ConfirmReorderAllModalCtrl'
+
+    syncProgress: (args = {}, params = {}) ->
+      @modal args, _.extend params,
+        templateUrl: 'tpls/sync-progress.html'
+        windowClass: 'modal-sync-progress'
+        controller: 'SyncProgressCtrl'
 
 ]
