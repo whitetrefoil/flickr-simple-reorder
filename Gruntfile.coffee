@@ -11,11 +11,6 @@ module.exports = (grunt) ->
           targetDir: 'src/tpls'
           install: true
           copy: false
-    concurrent:
-      preServer: [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
-      # preCompile: compile the files to optimize
-      preCompile: [ 'copy:building', 'copy:dist',
-                    'coffee:building', 'compass:dist' ]
     clean:
       dist: [ 'dist' ]
       server: [ '.server' ]
@@ -162,9 +157,14 @@ module.exports = (grunt) ->
       options:
         assetsDirs: [ 'dist', 'dist/fonts', 'dist/img' ]
 
+  grunt.registerTask 'preServer',
+      [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
+  # preCompile: compile the files to optimize
+  grunt.registerTask 'preCompile',
+      [ 'copy:building', 'copy:dist', 'coffee:building', 'compass:dist' ]
 
   grunt.registerTask 'compile', 'Compile & optimize the codes',
-      [ 'concurrent:preCompile', 'optimize' ]
+      [ 'preCompile', 'optimize' ]
 
   grunt.registerTask 'optimize', 'Optimize JS files',
       [ 'useminPrepare', 'copy:usemin', 'concat:generated'
@@ -175,7 +175,7 @@ module.exports = (grunt) ->
         'compile', 'clean:building', 'clean:cache' ]
 
   grunt.registerTask 'server', 'Start a preview server',
-      [ 'clean:dist', 'clean:server', 'concurrent:preServer'
+      [ 'clean:dist', 'clean:server', 'preServer'
         'configureProxies:server', 'connect:server', 'watch' ]
 
   grunt.registerTask 'default', 'UT (when has) & build',
