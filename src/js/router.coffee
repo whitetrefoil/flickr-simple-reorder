@@ -30,8 +30,12 @@ angular.module 'flickrSimpleReorder'
         user: ['Auth', (Auth) -> Auth.checkToken()]
 
     .state 'about',
-      url: '/about'
+      url: '/about?section'
       templateUrl: 'tpls/about.html'
-      controller: ['Auth', (Auth) -> Auth.checkToken()]
+      controller: ['Auth', '$stateParams', 'offsetScroll'
+        (Auth, $stateParams, offsetScroll) ->
+          Auth.checkToken()
+          offsetScroll($stateParams.section)
+      ]
 
 ]
