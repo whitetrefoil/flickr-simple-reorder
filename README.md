@@ -49,6 +49,9 @@ TODOs
 Changelog
 ---------
 
+### v0.3.2
+* Add a FAQ page.
+
 ### v0.3.1
 * Disable "Reorder All" button when there's already a reordering processing.
 * Reduce the amount of photosets displayed per page in small device from 12 to 5.
