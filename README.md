@@ -50,6 +50,9 @@ Changelog
 ---------
 
 ### v0.3.2
+* Fix about build process.
+
+### v0.3.2
 * Add a FAQ page.
 
 ### v0.3.1
