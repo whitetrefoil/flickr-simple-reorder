@@ -49,7 +49,10 @@ TODOs
 Changelog
 ---------
 
-### v0.3.2
+### v0.3.4
+* Totally removed grunt concurrent.
+
+### v0.3.3
 * Fix about build process.
 
 ### v0.3.2
