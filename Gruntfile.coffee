@@ -12,7 +12,6 @@ module.exports = (grunt) ->
           install: true
           copy: false
     concurrent:
-      clean: [ 'clean:dist', 'clean:server' ]
       preServer: [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
       # preCompile: compile the files to optimize
       preCompile: [ 'copy:building', 'copy:dist',
@@ -172,11 +171,11 @@ module.exports = (grunt) ->
         'uglify:generated', 'filerev', 'usemin', 'htmlmin' ]
 
   grunt.registerTask 'build', 'Build the code for production',
-      [ 'bower:install', 'concurrent:clean', 'copy:bootstrap'
+      [ 'bower:install', 'clean:dist', 'clean:server', 'copy:bootstrap'
         'compile', 'clean:building', 'clean:cache' ]
 
   grunt.registerTask 'server', 'Start a preview server',
-      [ 'concurrent:clean', 'concurrent:preServer'
+      [ 'clean:dist', 'clean:server', 'concurrent:preServer'
         'configureProxies:server', 'connect:server', 'watch' ]
 
   grunt.registerTask 'default', 'UT (when has) & build',
