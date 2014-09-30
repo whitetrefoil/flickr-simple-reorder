@@ -47,16 +47,19 @@
       </div>
       <ul class="nav navbar-nav">
         <li ui-sref="photosets" ui-sref-active="active">
-          <a href="">Photosets</a>
+          <a href="#/photosets">Photosets</a>
+        </li>
+        <li ui-sref="faq" ui-sref-active="active">
+          <a href="#/faq">FAQ</a>
         </li>
         <li ui-sref="about" ui-sref-active="active">
-          <a href="">About</a>
+          <a href="#/about">About</a>
         </li>
         <li ui-sref="logout" ui-sref-active="active" ng-if="currentUser">
-          <a href="">Log out</a>
+          <a href="#/logout">Log out</a>
         </li>
         <li ui-sref="login" ui-sref-active="active" ng-if="!currentUser">
-          <a href="">Log in</a>
+          <a href="#/login">Log in</a>
         </li>
       </ul>
       <p class="navbar-text main-navbar-user-info" ng-if="currentUser">
@@ -78,6 +81,9 @@
       <ul class="dropdown-menu dropdown-menu-right">
         <li ui-sref="photosets" ui-sref-active="active">
           <a href="">Photosets</a>
+        </li>
+        <li ui-sref="faq" ui-sref-active="active">
+          <a href="">FAQ</a>
         </li>
         <li ui-sref="about" ui-sref-active="active">
           <a href="">About</a>

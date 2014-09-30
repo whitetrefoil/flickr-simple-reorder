@@ -38,4 +38,13 @@ angular.module 'flickrSimpleReorder'
           offsetScroll($stateParams.section)
       ]
 
+    .state 'faq',
+      url: '/faq?section'
+      templateUrl: 'tpls/faq.html'
+      controller: ['Auth', '$stateParams', 'offsetScroll'
+        (Auth, $stateParams, offsetScroll) ->
+          Auth.checkToken()
+          offsetScroll($stateParams.section)
+      ]
+
 ]
