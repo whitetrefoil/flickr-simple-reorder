@@ -5,13 +5,18 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
+    bower:
+      install:
+        options:
+          targetDir: 'src/tpls'
+          install: true
+          copy: false
     concurrent:
       clean: [ 'clean:dist', 'clean:server' ]
       preServer: [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
       # preCompile: compile the files to optimize
       preCompile: [ 'copy:building', 'copy:dist',
                     'coffee:building', 'compass:dist' ]
-      afterBuild: [ 'clean:building', 'clean:cache' ]
     clean:
       dist: [ 'dist' ]
       server: [ '.server' ]
@@ -163,13 +168,16 @@ module.exports = (grunt) ->
       [ 'concurrent:preCompile', 'optimize' ]
 
   grunt.registerTask 'optimize', 'Optimize JS files',
-      [ 'useminPrepare', 'copy:usemin', 'concat:generated', 'uglify:generated', 'filerev', 'usemin', 'htmlmin' ]
+      [ 'useminPrepare', 'copy:usemin', 'concat:generated'
+        'uglify:generated', 'filerev', 'usemin', 'htmlmin' ]
 
   grunt.registerTask 'build', 'Build the code for production',
-      [ 'concurrent:clean', 'copy:bootstrap', 'compile', 'concurrent:afterBuild' ]
+      [ 'bower:install', 'concurrent:clean', 'copy:bootstrap'
+        'compile', 'clean:building', 'clean:cache' ]
 
   grunt.registerTask 'server', 'Start a preview server',
-      [ 'concurrent:clean', 'concurrent:preServer', 'configureProxies:server', 'connect:server', 'watch' ]
+      [ 'concurrent:clean', 'concurrent:preServer'
+        'configureProxies:server', 'connect:server', 'watch' ]
 
   grunt.registerTask 'default', 'UT (when has) & build',
       [ 'build' ]
