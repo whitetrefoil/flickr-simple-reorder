@@ -107,7 +107,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: '.building'
-          src: [ '**/*.html' ]
+          src: [ '**/*.html', '!lib/**/*' ]
           filter: 'isFile'
           dest: 'dist'
         ]
