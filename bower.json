@@ -1,6 +1,6 @@
 {
   "name":         "flickr-simple-reorder",
-  "version":      "0.3.4",
+  "version":      "0.5.0-dev",
   "dependencies": {
     "bootstrap-sass-official": "~3.2.0",
     "jquery":                  "~2.1.1",
