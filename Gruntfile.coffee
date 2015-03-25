@@ -80,6 +80,13 @@ module.exports = (grunt) ->
           livereload: true
 
     copy:
+      bootstrap:
+        files: [
+          expand: true
+          cwd   : 'src/lib/bootstrap-sass-official/assets/fonts/bootstrap'
+          src   : ['*.*']
+          dest  : 'src/css/lib'
+        ]
       ngMaterial:
         files: [
           expand: true
@@ -163,7 +170,7 @@ module.exports = (grunt) ->
         assetsDirs: ['dist', 'dist/fonts', 'dist/img']
 
   grunt.registerTask 'preServer',
-      ['copy:ngMaterial', 'compass:server', 'coffee:server']
+      ['copy:bootstrap', 'copy:ngMaterial', 'compass:server', 'coffee:server']
   # preCompile: compile the files to optimize
   grunt.registerTask 'preCompile',
       ['copy:building', 'copy:dist', 'coffee:building', 'compass:dist']
@@ -176,7 +183,7 @@ module.exports = (grunt) ->
        'uglify:generated', 'filerev', 'usemin', 'htmlmin']
 
   grunt.registerTask 'build', 'Build the code for production',
-      ['bower:install', 'clean:dist', 'clean:server', 'copy:ngMaterial'
+      ['bower:install', 'clean:dist', 'clean:server', 'copy:bootstrap', 'copy:ngMaterial'
        'compile', 'clean:building', 'clean:cache']
 
   grunt.registerTask 'server', 'Start a preview server',

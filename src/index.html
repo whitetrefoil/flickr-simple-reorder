@@ -39,12 +39,23 @@
 <!-- endbuild -->
 </head>
 
-<body ng-controller="RootCtrl">
-<nav>
+<body layout="column" ng-controller="RootCtrl">
+<md-toolbar id="main-toolbar">
+  <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
+    <h2 class="md-toolbar-item">Flickr Simple Reorder</h2>
+    <span class="md-toolbar-item" flex></span>
+    <span class="greeting md-toolbar-item" ng-if="currentUser">Hello, {{currentUser.username}}</span>
+    <a href="javascript:" class="user-avatar md-toolbar-item">
+      <img height="32" width="32" ng-src="{{currentUserIconUrl}}" ng-if="currentUser"/>
+    </a>
+    <span class="greeting md-toolbar-item" ng-if="!currentUser">Hello, visitor!</span>
+    <a href="javascript:" class="user-avatar md-toolbar-item" ng-if="!currentUser">
+      <span class="glyphicon glyphicon-user"></span>
+    </a>
+  </div>
+</md-toolbar>
+<!--
   <div>
-    <div>
-      <a href="#">Flickr Simple Reorder</a>
-    </div>
     <ul>
       <li ui-sref="photosets" ui-sref-active="active">
         <a href="#/photosets">Photosets</a>
@@ -62,11 +73,6 @@
         <a href="#/login">Log in</a>
       </li>
     </ul>
-    <p ng-if="currentUser">
-      <span>Hello, {{currentUser.username}}</span>
-      <img ng-src="{{currentUserIconUrl}}"
-           height="32" width="32"/>
-    </p>
   </div>
   <div>
     <div>
@@ -97,7 +103,7 @@
       </li>
     </ul>
   </div>
-</nav>
-<div id='page' ui-view></div>
+-->
+<md-content id="page" layout-padding layout="row" ui-view></md-content>
 </body>
 </html>

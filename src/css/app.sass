@@ -1,3 +1,21 @@
 @charset "UTF-8"
 
 @import "lib/angular-material.css"
+
+// Bootstrap Glyphicons
+$bootstrap-sass-asset-helper: false
+$icon-font-path: 'lib/'
+$icon-font-name: "glyphicons-halflings-regular"
+$icon-font-svg-id: "glyphicons_halflingsregular"
+
+@import "../lib/bootstrap-sass-official/assets/stylesheets/bootstrap/glyphicons"
+
+#main-toolbar
+  .greeting
+    font-size: 70%
+  .user-avatar
+    margin-left: 16px
+
+#page
+  > article
+    margin: 0 auto
