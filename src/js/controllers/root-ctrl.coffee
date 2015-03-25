@@ -3,29 +3,15 @@
 angular.module 'flickrSimpleReorder'
 .controller 'RootCtrl', [
   '$rootScope'
-  '$modal'
   '$location'
   '$state'
   'People'
   (
     $rootScope
-    $modal
     $location
     $state
     People
   ) ->
-    unless $location.host() is 'localhost'
-      $modal.open
-        templateUrl: 'tpls/development-warning.html'
-        backdrop: 'static'
-        keyboard: false
-        size: 'lg'
-        windowClass: 'modal-danger'
-        controller: ['$scope', '$modalInstance', '$window', ($scope, $modalInstance, $window) ->
-          $scope.ok = -> $modalInstance.close()
-          $scope.no = -> $window.open('http://www.flickr.com', '_self')
-        ]
-
     iconUrl = 'http://farm<%=farm%>.staticflickr.com/<%=server%>/buddyicons/<%=nsid%>.jpg'
     parseIconUrl = (params) -> _.template iconUrl, params
 
