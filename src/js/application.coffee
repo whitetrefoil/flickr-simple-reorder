@@ -20,13 +20,13 @@ angular.module 'flickrSimpleReorder', ['ui.router', 'angularMoment', 'offsetScro
     '700': '004EAA'
     '800': '004291'
     '900': '003778'
-    'A100': '0063DC'
-    'A200': '0063DC'
-    'A400': '0063DC'
-    'A700': '0063DC'
+    'A100': 'B0BFFA'
+    'A200': '829BF5'
+    'A400': '2953E6'
+    'A700': '0026AA'
     contrastDefaultColor: 'light'
     contrastDarkColors: [
-      '50', '100', '200'
+      '50', '100', '200', 'A100', 'A200'
     ]
     contrastLightColors: undefined
 
@@ -35,19 +35,19 @@ angular.module 'flickrSimpleReorder', ['ui.router', 'angularMoment', 'offsetScro
     '100': 'FFB4DA'
     '200': 'FF87C4'
     '300': 'FF5AAE'
-    '400': 'FF2D98'
+    '400': 'FF2D62'
     '500': 'FF0084'
     '600': 'E60075'
     '700': 'CD0068'
     '800': 'B4005C'
     '900': '9B004F'
-    'A100': 'FF0084'
-    'A200': 'FF0084'
+    'A100': 'FFB4C5'
+    'A200': 'FF87A2'
     'A400': 'FF0084'
-    'A700': 'FF0084'
+    'A700': 'CD0034'
     contrastDefaultColor: 'light'
     contrastDarkColors: [
-      '50', '100', '200'
+      '50', '100', '200', 'A100', 'A200'
     ]
     contrastLightColors: undefined
 
