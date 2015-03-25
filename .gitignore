@@ -15,6 +15,7 @@ data/
 dist/
 bower_components/
 src/lib/
+src/css/lib/
 src/fonts/bootstrap
 Gemfile.lock
 playground/
