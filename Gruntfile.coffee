@@ -85,7 +85,7 @@ module.exports = (grunt) ->
           expand: true
           cwd   : 'src/lib/angular-material'
           src   : ['angular-material.css']
-          dest  : 'src/css'
+          dest  : 'src/css/lib'
         ]
       dist      :
         files: [
