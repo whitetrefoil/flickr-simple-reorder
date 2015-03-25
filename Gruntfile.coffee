@@ -5,61 +5,60 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
+
     bower:
       install:
         options:
-          targetDir: 'src/tpls'
-          install: true
-          copy: false
+          targetDir: 'src/lib'
+          install  : true
+          copy     : false
+
     clean:
-      dist: [ 'dist' ]
-      server: [ '.server' ]
-      building: [ '.building', '.tmp' ]
-      cache: [ '.sass-cache' ]
+      dist    : ['dist']
+      server  : ['.server']
+      building: ['.building', '.tmp']
+      cache   : ['.sass-cache']
+
     coffee:
-      server:
+      server  :
         files: [
           expand: true
-          cwd: 'src'
-          src: [ '**/*.+(coffee|litcoffee)' ]
-          dest: '.server/'
-          ext: '.js'
+          cwd   : 'src'
+          src   : ['**/*.+(coffee|litcoffee)']
+          dest  : '.server/'
+          ext   : '.js'
           extDot: 'last'
         ]
       building:
         files: [
           expand: true
-          cwd: 'src'
-          src: [ '**/*.+(coffee|litcoffee)' ]
-          dest: '.building'
-          ext: '.js'
+          cwd   : 'src'
+          src   : ['**/*.+(coffee|litcoffee)']
+          dest  : '.building'
+          ext   : '.js'
           extDot: 'last'
         ]
+
     compass:
-      dist:
+      dist  :
         options:
-          sassDir: 'src/css'
-          cssDir: 'dist/css'
+          sassDir    : 'src/css'
+          cssDir     : 'dist/css'
           environment: 'production'
           outputStyle: 'compressed'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec : true
       server:
         options:
-          sassDir: 'src/css'
-          cssDir: '.server/css'
+          sassDir    : 'src/css'
+          cssDir     : '.server/css'
           outputStyle: 'expanded'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec : true
+
     connect:
       options:
-        port: 8000
-        base: ['.server', 'src']
-        open: 'http://localhost:8000'
+        port      : 8000
+        base      : ['.server', 'src']
+        open      : 'http://localhost:8000'
         middleware: (connect, options) ->
           options.base = [options.base] unless Array.isArray(options.base)
           middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest]
@@ -71,77 +70,81 @@ module.exports = (grunt) ->
             console.log req.url
             next()
           middlewares
-      server:
+      server :
         proxies: [
-          context:      '/api'
-          host:         'localhost'
-          port:         9999
+          context: '/api'
+          host   : 'localhost'
+          port   : 9999
         ]
         options:
           livereload: true
+
     copy:
-      bootstrap:
+      ngMaterial:
         files: [
           expand: true
-          cwd: 'src/lib/bootstrap-sass-official/assets/fonts'
-          src: [ 'bootstrap/**/*' ]
-          dest: 'src/fonts/'
+          cwd   : 'src/lib/angular-material'
+          src   : ['angular-material.css']
+          dest  : 'src/css'
         ]
-      dist:
+      dist      :
         files: [
           expand: true
-          cwd: 'src'
-          src: [ '**/*', '!lib/**/*', '!**/*.{coffee,litcoffee,sass,scss,js}' ]
+          cwd   : 'src'
+          src   : ['**/*', '!lib/**/*', '!**/*.{coffee,litcoffee,sass,scss,js}']
           filter: 'isFile'
-          dest: 'dist/'
+          dest  : 'dist/'
         ]
-      building:
+      building  :
         files: [
           expand: true
-          cwd: 'src'
-          src: [ '**/*.js', '**/*.html' ]
+          cwd   : 'src'
+          src   : ['**/*.js', '**/*.html']
           filter: 'isFile'
-          dest: '.building'
+          dest  : '.building'
         ]
-      usemin:
+      usemin    :
         files: [
           expand: true
-          cwd: '.building'
-          src: [ '**/*.html' ]
+          cwd   : '.building'
+          src   : ['**/*.html']
           filter: 'isFile'
-          dest: 'dist'
+          dest  : 'dist'
         ]
+
     htmlmin:
       options:
-        removeComments: true
-        removeCommentsFromCDATA: true
+        removeComments              : true
+        removeCommentsFromCDATA     : true
         removeCDATASectionsFromCDATA: true
-        collapseWhitespace: true
-        conservativeCollapse: true
-        collapseBooleanAttributes: true
-        removeOptionalTags: true
-      dist:
+        collapseWhitespace          : true
+        conservativeCollapse        : true
+        collapseBooleanAttributes   : true
+        removeOptionalTags          : true
+      dist   :
         files: [
           expand: true
-          cwd: 'dist'
-          src: [ '**/*.html' ]
-          dest: 'dist'
+          cwd   : 'dist'
+          src   : ['**/*.html']
+          dest  : 'dist'
         ]
+
     watch:
       options:
-        spawn: false
-        forever: true
+        spawn     : false
+        forever   : true
         livereload: true
       compass:
         files: 'src/**/*.+(sass|scss)'
         tasks: 'compass:server'
-      coffee:
+      coffee :
         files: 'src/**/*.+(coffee|litcoffee)'
         tasks: 'coffee:server'
-      html:
+      html   :
         files: 'src/**/*.html'
-      css:
+      css    :
         files: 'src/**/*.css'
+
     filerev:
       dist:
         src: [
@@ -149,34 +152,36 @@ module.exports = (grunt) ->
           'dist/fonts/**/*.*'
           'dist/js/**/*.js'
         ]
+
     useminPrepare:
-      html: [ '.building/**/*.html' ]
+      html: ['.building/**/*.html']
+
     usemin:
-      html: [ 'dist/**/*.html' ]
-      css: [ 'dist/css/**/*.css' ]
+      html   : ['dist/**/*.html']
+      css    : ['dist/css/**/*.css']
       options:
-        assetsDirs: [ 'dist', 'dist/fonts', 'dist/img' ]
+        assetsDirs: ['dist', 'dist/fonts', 'dist/img']
 
   grunt.registerTask 'preServer',
-      [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
+      ['copy:ngMaterial', 'compass:server', 'coffee:server']
   # preCompile: compile the files to optimize
   grunt.registerTask 'preCompile',
-      [ 'copy:building', 'copy:dist', 'coffee:building', 'compass:dist' ]
+      ['copy:building', 'copy:dist', 'coffee:building', 'compass:dist']
 
   grunt.registerTask 'compile', 'Compile & optimize the codes',
-      [ 'preCompile', 'optimize' ]
+      ['preCompile', 'optimize']
 
   grunt.registerTask 'optimize', 'Optimize JS files',
-      [ 'useminPrepare', 'copy:usemin', 'concat:generated'
-        'uglify:generated', 'filerev', 'usemin', 'htmlmin' ]
+      ['useminPrepare', 'copy:usemin', 'concat:generated'
+       'uglify:generated', 'filerev', 'usemin', 'htmlmin']
 
   grunt.registerTask 'build', 'Build the code for production',
-      [ 'bower:install', 'clean:dist', 'clean:server', 'copy:bootstrap'
-        'compile', 'clean:building', 'clean:cache' ]
+      ['bower:install', 'clean:dist', 'clean:server', 'copy:ngMaterial'
+       'compile', 'clean:building', 'clean:cache']
 
   grunt.registerTask 'server', 'Start a preview server',
-      [ 'clean:dist', 'clean:server', 'preServer'
-        'configureProxies:server', 'connect:server', 'watch' ]
+      ['clean:dist', 'clean:server', 'preServer'
+       'configureProxies:server', 'connect:server', 'watch']
 
   grunt.registerTask 'default', 'UT (when has) & build',
-      [ 'build' ]
+      ['build']
