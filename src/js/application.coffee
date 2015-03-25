@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'flickrSimpleReorder', ['ui.router', 'ui.bootstrap', 'angularMoment', 'offsetScroll']
+angular.module 'flickrSimpleReorder', ['ui.router', 'angularMoment', 'offsetScroll', 'ngMaterial']
 .config ['$anchorScrollProvider', ($anchorScrollProvider) ->
   $anchorScrollProvider.disableAutoScrolling()
 ]
