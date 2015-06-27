@@ -56,6 +56,7 @@ Changelog
     * Use official `angular-cookies` instead of `jquery-cookie` since it has been enhanced in v1.4.
     * Fix some issues caused by breaking changes of `lodash` (`_.template()`) and `angular-bootstrap` (dropdown) upgrading.
     * `bundle exec` issue seems to have been fixed.
+* Adjust `Bootstrap` fonts location and relative `Gruntfile` configuration.
 
 ### v0.3.4
 * Totally removed grunt concurrent.

@@ -15,5 +15,5 @@ data/
 dist/
 bower_components/
 src/lib/
-src/fonts/bootstrap
+src/css/fonts/bootstrap
 Gemfile.lock

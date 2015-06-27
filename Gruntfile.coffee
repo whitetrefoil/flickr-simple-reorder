@@ -38,6 +38,8 @@ module.exports = (grunt) ->
     compass:
       dist:
         options:
+          fontsDir: 'src/css/fonts'
+          httpFontsDir: 'css/fonts'
           sassDir: 'src/css'
           cssDir: 'dist/css'
           environment: 'production'
@@ -45,6 +47,8 @@ module.exports = (grunt) ->
           bundleExec: true
       server:
         options:
+          fontsDir: 'src/css/fonts'
+          httpFontsDir: 'css/fonts'
           sassDir: 'src/css'
           cssDir: '.server/css'
           outputStyle: 'expanded'
@@ -80,7 +84,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'src/lib/bootstrap-sass-official/assets/fonts'
           src: [ 'bootstrap/**/*' ]
-          dest: 'src/fonts/'
+          dest: 'src/css/fonts/'
         ]
       dist:
         files: [
