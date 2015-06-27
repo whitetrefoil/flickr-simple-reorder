@@ -26,8 +26,8 @@ angular.module 'flickrSimpleReorder'
           $scope.no = -> $window.open('http://www.flickr.com', '_self')
         ]
 
-    iconUrl = 'http://farm<%=farm%>.staticflickr.com/<%=server%>/buddyicons/<%=nsid%>.jpg'
-    parseIconUrl = (params) -> _.template iconUrl, params
+    renderIconUrl = _.template('http://farm<%=user.farm%>.staticflickr.com/<%=user.server%>/buddyicons/<%=user.nsid%>.jpg', { variable: 'user' })
+    parseIconUrl = (params) -> renderIconUrl(params)
 
     $rootScope.cleanCurrentUser = ->
       $rootScope.currentUser = null

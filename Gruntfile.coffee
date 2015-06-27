@@ -42,19 +42,14 @@ module.exports = (grunt) ->
           cssDir: 'dist/css'
           environment: 'production'
           outputStyle: 'compressed'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec: true
       server:
         options:
           sassDir: 'src/css'
           cssDir: '.server/css'
           outputStyle: 'expanded'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec: true
+
     connect:
       options:
         port: 8000

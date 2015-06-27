@@ -49,6 +49,14 @@ TODOs
 Changelog
 ---------
 
+### v0.4.0
+
+* Upgrade dependencies.
+    * Majorly AngularJS from v1.3 to v1.4
+    * Use official `angular-cookies` instead of `jquery-cookie` since it has been enhanced in v1.4.
+    * Fix some issues caused by breaking changes of `lodash` (`_.template()`) and `angular-bootstrap` (dropdown) upgrading.
+    * `bundle exec` issue seems to have been fixed.
+
 ### v0.3.4
 * Totally removed grunt concurrent.
 
