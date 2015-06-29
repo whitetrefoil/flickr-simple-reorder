@@ -12,10 +12,10 @@ module.exports = (grunt) ->
           install: true
           copy: false
     clean:
-      dist: [ 'dist' ]
-      server: [ '.server' ]
-      building: [ '.building', '.tmp' ]
-      cache: [ '.sass-cache' ]
+      dist: [ 'dist/**/*' ]
+      server: [ '.server/**/*' ]
+      building: [ '.building/**/*', '.tmp/**/*' ]
+      cache: [ '.sass-cache/**/*' ]
     coffee:
       server:
         files: [
