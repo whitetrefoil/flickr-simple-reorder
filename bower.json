@@ -1,15 +1,15 @@
 {
-  "name":         "flickr-simple-reorder",
-  "version":      "0.3.4",
+  "name"        : "flickr-simple-reorder",
+  "version"     : "0.4.0",
   "dependencies": {
-    "bootstrap-sass-official": "~3.2.0",
-    "jquery":                  "~2.1.1",
-    "angular":                 "~1.2.25",
-    "angular-ui-router":       "~0.2.11",
-    "angular-bootstrap":       "~0.11.0",
-    "lodash":                  "~2.4.1",
-    "jshashes":                "~1.0.5",
-    "jquery-cookie":           "~1.4.1",
-    "angular-moment":          "~0.8.2"
+    "angular"                : "~1.4.1",
+    "angular-bootstrap"      : "~0.13.0",
+    "angular-cookies"        : "~1.4.1",
+    "angular-moment"         : "~0.10.1",
+    "angular-ui-router"      : "~0.2.15",
+    "bootstrap-sass-official": "~3.3.5",
+    "jquery"                 : "~2.1.4",
+    "jshashes"               : "~1.0.5",
+    "lodash"                 : "~3.9.3"
   }
 }

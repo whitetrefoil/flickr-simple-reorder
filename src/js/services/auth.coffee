@@ -15,90 +15,99 @@ angular.module 'flickrSimpleReorder'
   @sigMethod = (new Hashes.MD5).hex
   @format = 'json'
 
-  @signUrl = (url, params = {}, step = 'normal') =>
-    if _.isString(params)
-      step = params
-      params = {}
-
-    strToSign = @apiSecret
-    convertedUrl = url + '?'
-    params.api_key = @apiKey
-    switch step
-      when 'login' then null  # nothing to do
-      when 'token'
-        params.format ||= @format unless _.isEmpty @format
-        params.nojsoncallback ||= 1
-      else
-        params.format ||= @format unless _.isEmpty @format
-        params.nojsoncallback ||= 1
-        params.auth_token = $.cookie 'token'
-
-    _(params).pairs().sortBy(0).forEach (param) ->
-      strToSign += param[0] + param[1]
-      convertedUrl += "#{param[0]}=#{param[1]}&"
-
-    sig = @sigMethod strToSign
-    "#{convertedUrl}api_sig=#{sig}"
-
   @$get = [
     '$http'
     '$q'
     '$state'
     '$rootScope'
+    '$cookies'
     (
       $http
       $q
       $state
       $rootScope
+      $cookies
     ) ->
-      signUrl: config.signUrl
+      signUrl = (url, params = {}, step = 'normal') ->
+        if _.isString(params)
+          step = params
+          params = {}
 
-      authUrl: ->
-        config.signUrl config.authUrl,
-          perms: config.perms
-        , 'login'
-
-      getToken: (frob) ->
-        def = $q.defer()
-        url = config.signUrl config.endpoint,
-          method: config.methods.getToken
-          frob: frob
-        , 'token'
-        $http.get(url)
-        .then (res) ->
-          if res.data.stat isnt 'ok'
-            def.reject()
-            $state.go 'login',{isFrobInvalid: true}, {inherit: false}
+        strToSign = config.apiSecret
+        convertedUrl = url + '?'
+        params.api_key = config.apiKey
+        switch step
+          when 'login' then null  # nothing to do
+          when 'token'
+            params.format ||= config.format unless _.isEmpty config.format
+            params.nojsoncallback ||= 1
           else
-            _token = res.data.auth.token._content
-            _user = res.data.auth.user
-            $.cookie 'token', _token, { expires: 30 }
-            $rootScope.setCurrentUser _user
-            def.resolve _user
-        def.promise
+            params.format ||= config.format unless _.isEmpty config.format
+            params.nojsoncallback ||= 1
+            params.auth_token = $cookies.get('token')
 
-      checkToken: ->
-        def = $q.defer()
-        url = config.signUrl config.endpoint,
-          method: config.methods.checkToken
-        if $.cookie('token')?
+        _(params).pairs().sortBy(0)
+        .forEach (param) ->
+          strToSign += param[0] + param[1]
+          convertedUrl += "#{param[0]}=#{param[1]}&"
+        .value()
+
+        sig = config.sigMethod strToSign
+        "#{convertedUrl}api_sig=#{sig}"
+
+      exports =
+        signUrl: signUrl
+
+        authUrl: ->
+          signUrl config.authUrl,
+            perms: config.perms
+          , 'login'
+
+        getToken: (frob) ->
+          def = $q.defer()
+          url = signUrl config.endpoint,
+            method: config.methods.getToken
+            frob: frob
+          , 'token'
           $http.get(url)
           .then (res) ->
             if res.data.stat isnt 'ok'
-              def.reject 'authExpired'
+              def.reject()
+              $state.go 'login',{isFrobInvalid: true}, {inherit: false}
             else
+              _token = res.data.auth.token._content
               _user = res.data.auth.user
-              $.cookie 'token', $.cookie('token'), { expires: 30 }
+              $cookies.put 'token', _token,
+                expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
               $rootScope.setCurrentUser _user
               def.resolve _user
-        else
-          def.reject 'authExpired'
-        def.promise
+          def.promise
 
-      clearAuth: ->
-        $.removeCookie 'token'
-        $.removeCookie 'user'
-        $rootScope.cleanCurrentUser()
+        checkToken: ->
+          def = $q.defer()
+          url = signUrl config.endpoint,
+            method: config.methods.checkToken
+          if $cookies.get('token')?
+            $http.get(url)
+            .then (res) ->
+              if res.data.stat isnt 'ok'
+                def.reject 'authExpired'
+              else
+                _user = res.data.auth.user
+                $cookies.put 'token', $cookies.get('token'),
+                  expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
+                $rootScope.setCurrentUser _user
+                def.resolve _user
+          else
+            def.reject 'authExpired'
+          def.promise
+
+        clearAuth: ->
+          $cookies.remove('token')
+          $rootScope.cleanCurrentUser()
+
+
+      exports
   ]
 
-  return
+  this

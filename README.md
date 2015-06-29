@@ -7,7 +7,7 @@ A simple tool to help reorder photos in galleries (photosets).
 
 ** Current state:** Alpha
 
-** Latest version:** v0.3.1
+** Latest version:** v0.4.0
 
 Author
 ------
@@ -48,6 +48,16 @@ TODOs
 
 Changelog
 ---------
+
+### v0.4.0
+
+* Upgrade dependencies.
+    * Majorly AngularJS from v1.3 to v1.4
+    * Use official `angular-cookies` instead of `jquery-cookie` since it has been enhanced in v1.4.
+    * Fix some issues caused by breaking changes of `lodash` (`_.template()`) and `angular-bootstrap` (dropdown) upgrading.
+    * `bundle exec` issue seems to have been fixed.
+* Adjust `Bootstrap` fonts location and relative `Gruntfile` configuration.
+* Use cookie to remember the selection of warning dialog, life to 7 days.
 
 ### v0.3.4
 * Totally removed grunt concurrent.

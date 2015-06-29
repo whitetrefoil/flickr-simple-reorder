@@ -12,10 +12,10 @@ module.exports = (grunt) ->
           install: true
           copy: false
     clean:
-      dist: [ 'dist' ]
-      server: [ '.server' ]
-      building: [ '.building', '.tmp' ]
-      cache: [ '.sass-cache' ]
+      dist: [ 'dist/**/*' ]
+      server: [ '.server/**/*' ]
+      building: [ '.building/**/*', '.tmp/**/*' ]
+      cache: [ '.sass-cache/**/*' ]
     coffee:
       server:
         files: [
@@ -38,23 +38,22 @@ module.exports = (grunt) ->
     compass:
       dist:
         options:
+          fontsDir: 'src/css/fonts'
+          httpFontsDir: 'css/fonts'
           sassDir: 'src/css'
           cssDir: 'dist/css'
           environment: 'production'
           outputStyle: 'compressed'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec: true
       server:
         options:
+          fontsDir: 'src/css/fonts'
+          httpFontsDir: 'css/fonts'
           sassDir: 'src/css'
           cssDir: '.server/css'
           outputStyle: 'expanded'
-          # TODO: bundle has problem on Windows by now.
-          #       waiting for the fix.
-          #       refer to: [https://github.com/gruntjs/grunt-contrib-compass/issues/176]()
-          #bundleExec: true
+          bundleExec: true
+
     connect:
       options:
         port: 8000
@@ -85,7 +84,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'src/lib/bootstrap-sass-official/assets/fonts'
           src: [ 'bootstrap/**/*' ]
-          dest: 'src/fonts/'
+          dest: 'src/css/fonts/'
         ]
       dist:
         files: [
@@ -107,7 +106,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: '.building'
-          src: [ '**/*.html' ]
+          src: [ '**/*.html', '!lib/**/*' ]
           filter: 'isFile'
           dest: 'dist'
         ]
