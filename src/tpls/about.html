@@ -5,7 +5,7 @@
   <section>
     <p>A simple tool to help reorder photos in galleries (photosets).</p>
     <p><strong>Current state:</strong> Alpha</p>
-    <p><strong>Latest version:</strong> v0.3.1</p>
+    <p><strong>Latest version:</strong> v0.4.0</p>
   </section>
   <div class="row">
     <div class="col-md-4 col-md-push-8">
@@ -58,6 +58,21 @@
       </section>
       <section id="changelog">
         <h3>Changelog</h3>
+        <section>
+          <h4>v0.4.0</h4>
+          <ul>
+            <li>Upgrade dependencies.
+              <ul>
+                <li>Majorly AngularJS from v1.3 to v1.4</li>
+                <li>Use official <code>angular-cookies</code> instead of <code>jquery-cookie</code> since it has been enhanced in v1.4.</li>
+                <li>Fix some issues caused by breaking changes of <code>lodash</code> (<code>_.template()</code>) and <code>angular-bootstrap</code> (dropdown) upgrading.</li>
+                <li><code>bundle exec</code> issue seems to have been fixed.</li>
+              </ul>
+            </li>
+            <li>Adjust <code>Bootstrap</code> fonts location and relative <code>Gruntfile</code> configuration.</li>
+            <li>Use cookie to remember the selection of warning dialog, life to 7 days.</li>
+          </ul>
+        </section>
         <section>
           <h4>v0.3.4</h4>
           <ul>
