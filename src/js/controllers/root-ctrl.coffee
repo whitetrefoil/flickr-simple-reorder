@@ -6,15 +6,17 @@ angular.module 'flickrSimpleReorder'
   '$modal'
   '$location'
   '$state'
+  '$cookies'
   'People'
   (
     $rootScope
     $modal
     $location
     $state
+    $cookies
     People
   ) ->
-    unless $location.host() is 'localhost'
+    unless $cookies.get('ignore_warning_v1')
       $modal.open
         templateUrl: 'tpls/development-warning.html'
         backdrop: 'static'
@@ -22,7 +24,10 @@ angular.module 'flickrSimpleReorder'
         size: 'lg'
         windowClass: 'modal-danger'
         controller: ['$scope', '$modalInstance', '$window', ($scope, $modalInstance, $window) ->
-          $scope.ok = -> $modalInstance.close()
+          $scope.ok = ->
+            $cookies.put 'ignore_warning_v1', true,
+              expires: new Date(new Date().valueOf() + 7 * 24 * 60 * 60 * 1000)
+            $modalInstance.close()
           $scope.no = -> $window.open('http://www.flickr.com', '_self')
         ]
 

@@ -57,6 +57,7 @@ Changelog
     * Fix some issues caused by breaking changes of `lodash` (`_.template()`) and `angular-bootstrap` (dropdown) upgrading.
     * `bundle exec` issue seems to have been fixed.
 * Adjust `Bootstrap` fonts location and relative `Gruntfile` configuration.
+* Use cookie to remember the selection of warning dialog, life to 7 days.
 
 ### v0.3.4
 * Totally removed grunt concurrent.
