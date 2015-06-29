@@ -77,7 +77,8 @@ angular.module 'flickrSimpleReorder'
             else
               _token = res.data.auth.token._content
               _user = res.data.auth.user
-              $cookies.put('token', _token)
+              $cookies.put 'token', _token,
+                expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
               $rootScope.setCurrentUser _user
               def.resolve _user
           def.promise
@@ -93,7 +94,8 @@ angular.module 'flickrSimpleReorder'
                 def.reject 'authExpired'
               else
                 _user = res.data.auth.user
-                $cookies.put('token', $cookies.get('token'))
+                $cookies.put 'token', $cookies.get('token'),
+                  expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
                 $rootScope.setCurrentUser _user
                 def.resolve _user
           else
