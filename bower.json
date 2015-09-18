@@ -1,6 +1,6 @@
 {
   "name"        : "flickr-simple-reorder",
-  "version"     : "0.5.0",
+  "version"     : "0.6.0-alpha.1",
   "dependencies": {
     "angular"                : "~1.4.6",
     "angular-bootstrap"      : "~0.13.4",
