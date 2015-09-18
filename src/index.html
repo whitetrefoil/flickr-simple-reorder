@@ -2,7 +2,11 @@
 <html lang='zh-CN' ng-app='flickrSimpleReorder'>
   <head>
     <meta charset='utf-8'>
-    <link href='css/app.css' rel='stylesheet'>
+    <!-- build:css css/app.min.css -->
+    <link rel="stylesheet" href="lib/angular/angular-csp.css">
+    <link rel="stylesheet" href="lib/angular-bootstrap/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="css/app.css">
+    <!-- endbuild -->
     <title>Flickr Simple Reorder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -22,6 +26,7 @@
 
     <!-- build:js js/app.min.js -->
     <script src='js/application.js'></script>
+    <!-- templates: <script src='js/templates.js'></script> -->
     <script src='js/services/constants.js'></script>
     <script src='js/services/offset-scroll.js'></script>
     <script src='js/services/orders.js'></script>
@@ -64,7 +69,7 @@
         </li>
       </ul>
       <p class="navbar-text main-navbar-user-info" ng-if="currentUser">
-        <span>Hello, {{currentUser.username}}</span>
+        <span ng-cloak>Hello, {{currentUser.username}}</span>
         <img class="current-user-icon" ng-src="{{currentUserIconUrl}}"
              height="32" width="32"/>
       </p>
