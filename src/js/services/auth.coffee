@@ -20,14 +20,22 @@ angular.module 'flickrSimpleReorder'
     '$q'
     '$state'
     '$rootScope'
-    '$cookies'
+    '$localStorage'
     (
       $http
       $q
       $state
       $rootScope
-      $cookies
+      $ls
     ) ->
+      getCachedToken = ->
+        return unless $ls['temp']?
+        return unless $ls['temp'].t?
+        return unless $ls['temp'].e?
+        return if $ls['temp'].e < new Date().valueOf()
+        $ls['temp'].t
+
+
       signUrl = (url, params = {}, step = 'normal') ->
         if _.isString(params)
           step = params
@@ -44,7 +52,7 @@ angular.module 'flickrSimpleReorder'
           else
             params.format ||= config.format unless _.isEmpty config.format
             params.nojsoncallback ||= 1
-            params.auth_token = $cookies.get('token')
+            params.auth_token = getCachedToken()
 
         _(params).pairs().sortBy(0)
         .forEach (param) ->
@@ -55,13 +63,16 @@ angular.module 'flickrSimpleReorder'
         sig = config.sigMethod strToSign
         "#{convertedUrl}api_sig=#{sig}"
 
+
       exports =
         signUrl: signUrl
+
 
         authUrl: ->
           signUrl config.authUrl,
             perms: config.perms
           , 'login'
+
 
         getToken: (frob) ->
           def = $q.defer()
@@ -77,33 +88,36 @@ angular.module 'flickrSimpleReorder'
             else
               _token = res.data.auth.token._content
               _user = res.data.auth.user
-              $cookies.put 'token', _token,
-                expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
+              $ls['temp'] =
+                t: _token
+                e: new Date().valueOf() + 30 * 24 * 60 * 60 * 1000
               $rootScope.setCurrentUser _user
               def.resolve _user
           def.promise
 
+
         checkToken: ->
           def = $q.defer()
-          url = signUrl config.endpoint,
-            method: config.methods.checkToken
-          if $cookies.get('token')?
+          cachedToken = getCachedToken()
+          if cachedToken?
+            url = signUrl config.endpoint,
+              method: config.methods.checkToken
             $http.get(url)
             .then (res) ->
               if res.data.stat isnt 'ok'
                 def.reject 'authExpired'
               else
                 _user = res.data.auth.user
-                $cookies.put 'token', $cookies.get('token'),
-                  expires: new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
+                $ls['temp'].e = new Date().valueOf() + 30 * 24 * 60 * 60 * 1000
                 $rootScope.setCurrentUser _user
                 def.resolve _user
           else
             def.reject 'authExpired'
           def.promise
 
+
         clearAuth: ->
-          $cookies.remove('token')
+          delete $ls['temp']
           $rootScope.cleanCurrentUser()
 
 

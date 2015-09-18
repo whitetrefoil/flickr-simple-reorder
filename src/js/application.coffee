@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'flickrSimpleReorder', [
-  'ngCookies'
+  'ngStorage'
   'ui.router'
   'ui.bootstrap'
   'angularMoment'
@@ -13,7 +13,6 @@ angular.module 'flickrSimpleReorder', [
 .config ['offsetScrollProvider', (offsetScrollProvider) ->
   offsetScrollProvider.setOffset 70
 ]
-
-.config ['$cookiesProvider', ($cookiesProvider) ->
-  $cookiesProvider.expires =  new Date(new Date().valueOf() + 30 * 24 * 60 * 60 * 1000)
+.config ['$localStorageProvider', ($localStorageProvider) ->
+  $localStorageProvider.setKeyPrefix('flickrSimpleReorder-')
 ]
