@@ -7,7 +7,7 @@ A simple tool to help reorder photos in galleries (photosets).
 
 ** Current state:** Alpha
 
-** Latest version:** v0.4.0
+** Latest version:** v0.5.0
 
 Author
 ------
@@ -48,6 +48,13 @@ TODOs
 
 Changelog
 ---------
+
+### v0.5.0
+
+* Upgrade dependencies.
+* Use `localStorage` instead of `cookie`.
+* Fix wired modal border radius.
+* Save preferred ordering in `localStorage`.
 
 ### v0.4.0
 
