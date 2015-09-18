@@ -13,10 +13,10 @@
         </ul>
       </div>
       <button type="button" class="btn btn-default btn-sm"
-              title="{{isPreferDescending ? 'Descending' : 'Ascending'}}"
-              ng-click="isPreferDescending=!isPreferDescending">
-        <span class="glyphicon glyphicon-sort-by-attributes" ng-if="!isPreferDescending"></span>
-        <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-if="isPreferDescending"></span>
+              title="{{$ls['isPreferDescending'] ? 'Descending' : 'Ascending'}}"
+              ng-click="$ls['isPreferDescending'] = !$ls['isPreferDescending']">
+        <span class="glyphicon glyphicon-sort-by-attributes" ng-if="!$ls['isPreferDescending']"></span>
+        <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-if="$ls['isPreferDescending']"></span>
       </button>
     </div>
     <button type="button" class="btn btn-primary btn-sm"
