@@ -1,3 +1,11 @@
+KEYS =
+  dev:
+    key: '5cdc0f5ec9c28202f1098f615edba5cd'
+    secret: 'e3b842e3b923b0fb'
+  test:
+    key: '78d5aef1d2b19ea9fa6f963d32628a88'
+    secret: 'e0e22e8361fc0f27'
+
 module.exports = (grunt) ->
   require('load-grunt-tasks')(grunt)
 
@@ -12,10 +20,10 @@ module.exports = (grunt) ->
           install: true
           copy: false
     clean:
-      dist: [ 'dist/**/*' ]
-      server: [ '.server/**/*' ]
-      building: [ '.building/**/*', '.tmp/**/*' ]
-      cache: [ '.sass-cache/**/*' ]
+      dist: [ 'dist' ]
+      server: [ '.server' ]
+      building: [ '.building', '.tmp' ]
+      cache: [ '.sass-cache' ]
     coffee:
       server:
         files: [
@@ -121,6 +129,23 @@ module.exports = (grunt) ->
           src: [ '**/*.html' ]
           dest: 'dist'
         ]
+
+    replace:
+      building:
+        options:
+          usePrefix: false
+          patterns: [
+            match: KEYS.dev.key
+            replacement: KEYS.test.key
+          ,
+            match: KEYS.dev.secret
+            replacement: KEYS.test.secret
+          ]
+        files: [
+          '.building/js/services/auth.js': '.building/js/services/auth.js'
+        ]
+
+
     watch:
       options:
         spawn: false
@@ -154,19 +179,20 @@ module.exports = (grunt) ->
   grunt.registerTask 'preServer',
       [ 'copy:bootstrap', 'compass:server', 'coffee:server' ]
   # preCompile: compile the files to optimize
-  grunt.registerTask 'preCompile',
-      [ 'copy:building', 'copy:dist', 'coffee:building', 'compass:dist' ]
-
   grunt.registerTask 'compile', 'Compile & optimize the codes',
-      [ 'preCompile', 'optimize' ]
+      [ 'copy:building', 'copy:dist', 'coffee:building', 'compass:dist' ]
 
   grunt.registerTask 'optimize', 'Optimize JS files',
       [ 'useminPrepare', 'copy:usemin', 'concat:generated'
         'uglify:generated', 'filerev', 'usemin', 'htmlmin' ]
 
-  grunt.registerTask 'build', 'Build the code for production',
+  grunt.registerTask 'build', 'Build the code',
       [ 'bower:install', 'clean:dist', 'clean:server', 'copy:bootstrap'
-        'compile', 'clean:building', 'clean:cache' ]
+        'compile', 'optimize', 'clean:building', 'clean:cache' ]
+
+  grunt.registerTask 'release', 'Build the code for production',
+      [ 'bower:install', 'clean:dist', 'clean:server', 'copy:bootstrap'
+        'compile', 'replace:building', 'optimize', 'clean:building', 'clean:cache' ]
 
   grunt.registerTask 'server', 'Start a preview server',
       [ 'clean:dist', 'clean:server', 'preServer'
