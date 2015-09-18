@@ -59,13 +59,8 @@ module.exports = (grunt) ->
         port: 8000
         base: ['.server', 'src']
         open: 'http://localhost:8000'
-        middleware: (connect, options) ->
-          options.base = [options.base] unless Array.isArray(options.base)
-          middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest]
-          options.base.forEach (base) ->
-            middlewares.push(connect.static(base))
-          directory = options.directory or options.base[options.base.length - 1]
-          middlewares.push(connect.directory(directory))
+        middleware: (connect, options, middlewares) ->
+          middlewares.unshift require('grunt-connect-proxy/lib/utils').proxyRequest
           middlewares.push (req, res, next) ->
             console.log req.url
             next()

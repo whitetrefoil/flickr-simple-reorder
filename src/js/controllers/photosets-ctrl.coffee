@@ -5,6 +5,7 @@ angular.module 'flickrSimpleReorder'
   '$scope'
   '$rootScope'
   '$document'
+  '$localStorage'
   '$modal'
   'Photosets'
   'Orders'
@@ -14,6 +15,7 @@ angular.module 'flickrSimpleReorder'
     $scope
     $rootScope
     $document
+    $ls
     $modal
     Photosets
     Orders
@@ -37,7 +39,7 @@ angular.module 'flickrSimpleReorder'
 
     $scope.reorder = (photoset) ->
       orderCode = $scope.selectedOrder.code
-      isPreferDescending = $scope.isPreferDescending
+      isPreferDescending = $ls['isPreferDescending']
       photoset.state = 'reordering'
       Photosets.getPhotos photoset.id, parseInt(photoset.photos, 10)
       .then (photos) ->
@@ -73,9 +75,12 @@ angular.module 'flickrSimpleReorder'
     $scope.maxSize = 5
     $scope.page = 1
     $scope.availableOrders = Orders.Photosets.availableOrders
-    $scope.selectedOrder = $scope.availableOrders[0]
-    $scope.isPreferDescending = true
-    $scope.setOrder = (order) -> $scope.selectedOrder = order
+    if $ls['preferredOrder']?
+      $scope.selectedOrder = _.find $scope.availableOrders, 'code', $ls['preferredOrder']
+    $scope.selectedOrder ||= $scope.availableOrders[0]
+    $scope.setOrder = (order) ->
+      $scope.selectedOrder = order
+      $ls['preferredOrder'] = order.code
     $scope.checkIsProcessing = ->
       _.some $scope.photosets, (photoset) ->
         photoset.state is 'reordering' or photoset.state is 'syncing'
