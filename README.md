@@ -51,7 +51,7 @@ Changelog
 
 ### v0.6.0-alpha.2
 
-* Fix "Pagination bug when 500+ photos" (#22)
+* Fix "Pagination bug when 500+ photos" - [#22](https://github.com/whitetrefoil/flickr-simple-reorder/issues/22)
 
 ### v0.6.0-alpha.1
 
