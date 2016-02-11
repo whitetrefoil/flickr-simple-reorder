@@ -2,8 +2,8 @@
   <h2 class="hidden-xs col-sm-6">Photosets</h2>
   <div class="col-sm-6 text-right">
     <div class="btn-group btn-group-sm">
-      <div class="btn-group btn-group-sm" dropdown>
-        <button type="button" class="btn btn-default" dropdown-toggle>
+      <div class="btn-group btn-group-sm" uib-dropdown>
+        <button type="button" class="btn btn-default" uib-dropdown-toggle>
           by {{selectedOrder.display}} <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -52,21 +52,21 @@
     </li>
   </ul>
   <div class="pages">
-    <pagination class="pagination hidden-xs"
+    <uib-pagination class="pagination hidden-xs"
                 ng-model="page"
                 total-items="totalPhotosets"
                 items-per-page="perPage"
                 max-size="maxSize"
                 boundary-links="true"
                 previous-text="&lsaquo;" next-text="&rsaquo;"
-                first-text="&laquo;" last-text="&raquo;"></pagination>
-    <pagination class="pagination-sm visible-xs-inline-block"
+                first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+    <uib-pagination class="pagination-sm visible-xs-inline-block"
                 ng-model="page"
                 total-items="totalPhotosets"
                 items-per-page="perPage"
                 max-size="maxSize"
                 boundary-links="true"
                 previous-text="&lsaquo;" next-text="&rsaquo;"
-                first-text="&laquo;" last-text="&raquo;"></pagination>
+                first-text="&laquo;" last-text="&raquo;"></uib-pagination>
   </div>
 </section>

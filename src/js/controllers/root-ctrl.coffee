@@ -3,7 +3,7 @@
 angular.module 'flickrSimpleReorder'
 .controller 'RootCtrl', [
   '$rootScope'
-  '$modal'
+  '$uibModal'
   '$location'
   '$state'
   '$localStorage'
@@ -11,7 +11,7 @@ angular.module 'flickrSimpleReorder'
   'RELEASE'
   (
     $rootScope
-    $modal
+    $uibModal
     $location
     $state
     $ls
@@ -21,16 +21,16 @@ angular.module 'flickrSimpleReorder'
     $rootScope.$ls = $ls
 
     unless $ls['ignoreWarning'] is RELEASE
-      $modal.open
+      $uibModal.open
         templateUrl: 'tpls/development-warning.html'
         backdrop: 'static'
         keyboard: false
         size: 'lg'
         windowClass: 'modal-danger'
-        controller: ['$scope', '$modalInstance', '$window', ($scope, $modalInstance, $window) ->
+        controller: ['$scope', '$uibModalInstance', '$window', ($scope, $uibModalInstance, $window) ->
           $scope.ok = ->
             $ls['ignoreWarning'] = RELEASE
-            $modalInstance.close()
+            $uibModalInstance.close()
           $scope.no = -> $window.open('http://www.flickr.com', '_self')
         ]
 

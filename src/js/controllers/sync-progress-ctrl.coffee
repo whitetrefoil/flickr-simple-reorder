@@ -3,10 +3,10 @@
 angular.module 'flickrSimpleReorder'
 .controller 'SyncProgressCtrl', [
   '$scope'
-  '$modalInstance'
+  '$uibModalInstance'
   (
     $scope
-    $modalInstance
+    $uibModalInstance
   ) ->
     # Progress bar
 
@@ -49,13 +49,13 @@ angular.module 'flickrSimpleReorder'
           'modal-success'
 
     # Buttons
-    close = -> $modalInstance.close
+    close = -> $uibModalInstance.close
       total: $scope.total
       success: $scope.success
       fail: $scope.fail
     $scope.close = close
     $scope.abandon = close
     $scope.retry = ->
-      $modalInstance.dismiss(failedPhotosets)
+      $uibModalInstance.dismiss(failedPhotosets)
 
 ]

@@ -2,4 +2,4 @@
 
 angular.module 'flickrSimpleReorder'
 
-.constant 'RELEASE', '0.4.0'
+.constant 'RELEASE', 'v0.6.0-alpha.2'

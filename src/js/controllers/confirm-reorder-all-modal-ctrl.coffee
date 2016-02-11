@@ -3,16 +3,16 @@
 angular.module 'flickrSimpleReorder'
 .controller 'ConfirmReorderAllModalCtrl', [
   '$scope'
-  '$modalInstance'
+  '$uibModalInstance'
   (
     $scope
-    $modalInstance
+    $uibModalInstance
   ) ->
 
     $scope.yes = ->
-      $modalInstance.close()
+      $uibModalInstance.close()
 
     $scope.no = ->
-      $modalInstance.dismiss()
+      $uibModalInstance.dismiss()
 
 ]
