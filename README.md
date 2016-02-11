@@ -7,7 +7,7 @@ A simple tool to help reorder photos in galleries (photosets).
 
 ** Current state:** Alpha
 
-** Latest version:** v0.6.0-alpha.1
+** Latest version:** v0.6.0-alpha.2
 
 Author
 ------
@@ -48,6 +48,10 @@ TODOs
 
 Changelog
 ---------
+
+### v0.6.0-alpha.2
+
+* Fix "Pagination bug when 500+ photos" (#22)
 
 ### v0.6.0-alpha.1
 
