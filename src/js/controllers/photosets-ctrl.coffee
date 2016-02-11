@@ -4,6 +4,7 @@ angular.module 'flickrSimpleReorder'
 .controller 'PhotosetsCtrl', [
   '$scope'
   '$rootScope'
+  '$q'
   '$document'
   '$localStorage'
   '$uibModal'
@@ -14,6 +15,7 @@ angular.module 'flickrSimpleReorder'
   (
     $scope
     $rootScope
+    $q
     $document
     $ls
     $uibModal
@@ -54,14 +56,17 @@ angular.module 'flickrSimpleReorder'
             photoset.state = 'done'
       .catch ->
         photoset.state = 'failed'
+        $q.reject(photoset)
 
     $scope.reorderAll = (photosets = $scope.photosets)->
+      console.log('photosets', photosets)
       Modals.reorderAllConfirm
         photosetsCount: photosets.length
       .then ->
         Modals.syncProgress
           orderings: _.map photosets, (photoset) -> $scope.reorder photoset
         .catch (failedPhotosets) ->
+          console.log('failedPhotosets', failedPhotosets)
           $scope.reorderAll(failedPhotosets)
 
     getList()

@@ -70,6 +70,8 @@ angular.module 'flickrSimpleReorder'
         $http.post url
         .then (data) ->
           deferred.resolve data
+        , (error) ->
+          deferred.reject error
         deferred.promise
   ]
 
