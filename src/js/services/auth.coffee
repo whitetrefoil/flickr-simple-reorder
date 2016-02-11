@@ -54,11 +54,10 @@ angular.module 'flickrSimpleReorder'
             params.nojsoncallback ||= 1
             params.auth_token = getCachedToken()
 
-        _(params).pairs().sortBy(0)
+        _(params).toPairs().sortBy(0)
         .forEach (param) ->
           strToSign += param[0] + param[1]
           convertedUrl += "#{param[0]}=#{param[1]}&"
-        .value()
 
         sig = config.sigMethod strToSign
         "#{convertedUrl}api_sig=#{sig}"

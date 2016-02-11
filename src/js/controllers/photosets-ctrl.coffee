@@ -6,7 +6,7 @@ angular.module 'flickrSimpleReorder'
   '$rootScope'
   '$document'
   '$localStorage'
-  '$modal'
+  '$uibModal'
   'Photosets'
   'Orders'
   'Modals'
@@ -16,7 +16,7 @@ angular.module 'flickrSimpleReorder'
     $rootScope
     $document
     $ls
-    $modal
+    $uibModal
     Photosets
     Orders
     Modals

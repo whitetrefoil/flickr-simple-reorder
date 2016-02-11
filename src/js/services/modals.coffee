@@ -2,10 +2,10 @@
 
 angular.module 'flickrSimpleReorder'
 .factory 'Modals', [
-  '$modal'
+  '$uibModal'
   '$rootScope'
   (
-    $modal
+    $uibModal
     $rootScope
   ) ->
     modal: (args = {}, params = {}) ->
@@ -15,7 +15,7 @@ angular.module 'flickrSimpleReorder'
         scope: $scope
         backdrop: 'static'
       _.extend modalParams, params
-      $modal.open(modalParams).result
+      $uibModal.open(modalParams).result
 
     reorderAllConfirm: (args = {}, params = {}) ->
       @modal args, _.extend params,
