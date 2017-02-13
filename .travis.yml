@@ -8,3 +8,4 @@ before_install:
   - yarn
 script:
   - npm build
+  - npm test

@@ -72,6 +72,7 @@
     "merge-stream"                             : "^1.0.0",
     "mock-server-middleware"                   : "^0.1.0-alpha.2",
     "node-sass"                                : "^4.2.0",
+    "null-loader"                              : "^0.1.1",
     "phantomjs-prebuilt"                       : "^2.1.14",
     "pug"                                      : "latest",
     "pug-loader"                               : "^2.3.0",
