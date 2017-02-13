@@ -1,0 +1,20 @@
+<style lang="sass" src="./index.sass" scoped></style>
+<script lang="ts" src="./index.ts"></script>
+
+<template lang="pug">
+  nav.main-nav.navbar.navbar-toggleable-sm.navbar-inverse.bg-inverse
+    router-link.navbar-brand(:to="{name: 'index'}") Flickr Simple Reorder
+    // TODO: Collapse
+    div.navbar-collapse
+      ul.navbar-nav
+        router-link.nav-item(tag="li", active-class="active", exact, :to="{name: 'index'}")
+          a.nav-link Photosets
+        router-link.nav-item(tag="li", active-class="active", :to="{name: 'faq'}")
+          a.nav-link FAQ
+        router-link.nav-item(tag="li", active-class="active", :to="{name: 'about'}")
+          a.nav-link About
+        router-link.nav-item(tag="li", active-class="active", :to="{name: 'login'}")
+          a.nav-link Login
+        router-link.nav-item(tag="li", active-class="active", :to="{name: 'logout'}")
+          a.nav-link Logout
+</template>

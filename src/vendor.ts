@@ -1,0 +1,6 @@
+import 'axios'
+import 'av-ts'
+import 'vue'
+import 'vue-router'
+import 'vuex'
+import 'vuex-router-sync'

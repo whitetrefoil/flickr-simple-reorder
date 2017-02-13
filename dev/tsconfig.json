@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowJs"                       : true,
+    "target"                        : "es2015",
+    "lib"                           : ["es2017", "es6"],
+    "module"                        : "commonjs",
+    "moduleResolution"              : "node",
+    "inlineSources"                 : false,
+    "inlineSourceMap"               : true,
+    "sourceMap"                     : false,
+    "emitDecoratorMetadata"         : true,
+    "experimentalDecorators"        : true,
+    "removeComments"                : false,
+    "noImplicitAny"                 : true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "include"        : [
+    "../Gulpfile.js",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "../node_modules"
+  ]
+}

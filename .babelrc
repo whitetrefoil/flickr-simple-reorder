@@ -1,0 +1,19 @@
+{
+  "presets"      : [
+    ["latest", {
+      "es2015": { "modules": false }
+    }]
+  ],
+  "compact"      : false,
+  "plugins"      : [
+    "lodash",
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "syntax-trailing-function-commas",
+    "syntax-object-rest-spread"
+  ],
+  "highlightCode": true,
+  "sourceMaps"   : true,
+  "minified"     : false,
+  "comments"     : true
+}
