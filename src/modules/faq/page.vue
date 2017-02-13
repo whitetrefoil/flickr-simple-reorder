@@ -8,7 +8,7 @@
       h1.col-12.hidden-md-up FAQ
 
     .page-content.row
-      .col-12.col-md-8.push-md-2
+      .col-12.col-md-8.push-md-2.mt-4
         h3#faq-q1 Q1. What is this?
         p This is a tool to help re-ordering the photosets in Flickr.
         p I wrote this because Flickr won't order my photosets automatically, it will simply put the photo I just uploaded at the tail of photosets. I've got some long term growing photosets like the ones of cameras, lenses or locations. I prefer a "from newest to oldest" order for them.
