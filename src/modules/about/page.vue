@@ -3,6 +3,6 @@
 
 <template lang="pug">
   .page.about-page.container
-    header.row
+    header.row.page-header
       h1.col-12(@wheel="test") Scrolled {{scrollCount}} lines.
 </template>

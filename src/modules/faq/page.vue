@@ -3,7 +3,7 @@
 
 <template lang="pug">
   article.page.faq-page.container
-    header.row
+    header.row.page-header
       h1.col-12.hidden-sm-down Frequently Asked Question
       h1.col-12.hidden-md-up FAQ
 
