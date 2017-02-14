@@ -34,6 +34,8 @@ Links
 TODOs
 -----
 
+* [ ] Put POST params in body to fix HTTP 414 error
+* [ ] Use Vue and Bootstrap-v4 to refactor
 * [x] Possible damage alerts
 * [ ] Messages
 * [ ] Network error handling
@@ -49,9 +51,14 @@ TODOs
 Changelog
 ---------
 
+### v2.0.0-alpha.1
+
+* Use Vue to totally refactor the whole application.
+* Put POST params in body to fix `HTTP 414` error permanently.
+
 ### v0.6.0-alpha.2
 
-* Fix "Pagination bug when 500+ photos" - [#22](https://github.com/whitetrefoil/flickr-simple-reorder/issues/22)
+* Temporarily fix "Pagination bug when 500+ photos" ([#22](https://github.com/whitetrefoil/flickr-simple-reorder/issues/22))
 
 ### v0.6.0-alpha.1
 
