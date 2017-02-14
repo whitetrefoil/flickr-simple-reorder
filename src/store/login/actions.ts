@@ -1,5 +1,10 @@
-import * as _   from 'lodash'
-import * as md5 from 'blueimp-md5'
+import * as md5          from 'blueimp-md5'
+import * as _            from 'lodash'
+import { ActionContext } from 'vuex'
+import * as t            from '../types'
+import { ILoginState }   from './state'
+
+export type ILoginActionContext = ActionContext<ILoginState, any>
 
 const authUrl   = 'http://flickr.com/services/auth/'
 const endpoint  = 'https://api.flickr.com/services/rest/'
@@ -10,7 +15,6 @@ const methods   = {
 const apiKey    = '5cdc0f5ec9c28202f1098f615edba5cd'
 const apiSecret = 'e3b842e3b923b0fb'
 const perms     = 'write'
-const format    = 'json'
 
 
 const calculateSig = <T extends Object>(
@@ -54,4 +58,14 @@ const composeGetUrl = <T extends Object>(
 
 export const loginUrl = composeLoginUrl()
 
-export const actions = {}
+export const actions = {
+  [t.LOGIN__REQUEST_TOKEN]({ state, commit }: ILoginActionContext) {
+    const url = composeGetUrl({
+      api_key: apiKey,
+      frob: state.frob,
+      format: 'json',
+      nojsoncallback: '1',
+    })
+    commit('setToken', url)
+  },
+}
