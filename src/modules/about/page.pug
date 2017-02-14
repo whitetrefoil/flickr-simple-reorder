@@ -1,0 +1,202 @@
+article.page.about-page.container
+  header.row.page-header
+    h1.col-12 About
+
+  section
+    p A simple tool to help reorder photos in galleries (photosets).
+    p
+      strong Current state:
+      | Alpha
+    p
+      strong Latest version:
+      | v2.0.0-alpha.1
+
+  .row
+    .col-md-4.push-8
+      section#about-page-author
+        h3 Author
+        address
+          strong
+            a(href="http://en.gravatar.com/whitetrefoil", target="_blank") Gino Zhang (a.k.a. WhiteTrefoil)
+          br
+          | Email: #[a(href="mailto:whitetrefoil@gmail.com")] whitetrefoil@gmail.com
+          br
+          | Location: Shanghai, China
+
+      section#about-page-license
+        h3 License
+        p
+          a(href="https://github.com/whitetrefoil/flickr-simple-reorder/blob/master/LICENSE") Apache License 2.0
+
+      section#about-page-links
+        h3 Links
+        dl
+          dt Project Home
+          dd
+            a(href="https://github.com/whitetrefoil/flickr-simple-reorder") github.com/whitetrefoil/flickr-simple-reorder
+          dt Report Issues
+          dd
+            a(href="https://github.com/whitetrefoil/flickr-simple-reorder/issues") github.com/whitetrefoil/flickr-simple-reorder/issues
+          dt Alpha Test Environment
+          dd
+            a(href="https://flickr-simple-reorder.whitetrefoil.com") flickr-simple-reorder.whitetrefoil.com
+          dt Author's Flickr
+          dd
+            a(href="https://www.flickr.com/whitetrefoil") www.flickr.com/whitetrefoil
+
+    .col-md-8.pull-4
+      section#about-page-todos
+        h3 TODOs
+        ul.checklist
+          li
+            input(disabled, type="checkbox")
+            |  Put POST params in body to fix HTTP 414 error
+          li
+            input(disabled, type="checkbox")
+            |  Use Vue and Bootstrap-v4 to refactor
+          li
+            input(disabled, type="checkbox", checked)
+            |  Possible damage alerts
+          li
+            input(disabled, type="checkbox")
+            |  Messages
+          li
+            input(disabled, type="checkbox")
+            |  Network error handling
+          li
+            input(disabled, type="checkbox", checked)
+            |  Bulk edit
+          li
+            input(disabled, type="checkbox", checked)
+            |  Searching / filtering
+          li
+            input(disabled, type="checkbox", checked)
+            |  About page
+          li
+            input(disabled, type="checkbox", checked)
+            |  Ordering in other orders
+          li
+            input(disabled, type="checkbox")
+            |  Rollback
+          li
+            input(disabled, type="checkbox")
+            |  Logo
+          li
+            input(disabled, type="checkbox")
+            |  Public API
+          li
+            input(disabled, type="checkbox")
+            |  UT
+
+      section#about-page-changelog
+        h3 Changelog & Roadmap
+
+        section
+          h4 v2.0.0-alpha.1
+          ul
+            li Use Vue to totally refactor the whole application.
+            li Put POST params in body to fix #[code HTTP 414] error permanently.
+
+        section
+          h4 v0.6.0-alpha.2
+          ul
+            li Temporarily fix "Pagination bug when 500+ photos" (#[a(href="https://github.com/whitetrefoil/flickr-simple-reorder/issues/22") #22])
+
+        section
+          h4 v0.6.0-alpha.1
+          ul 
+            li Migrate to Gulp.
+
+        section
+          h4 v0.5.0
+          ul 
+            li Upgrade dependencies.
+            li Use #[code localStorage] instead of #[code cookie].
+            li Fix wired modal border radius.
+            li Save preferred ordering in #[code localStorage].
+
+        section 
+          h4 v0.4.0
+          ul 
+            li Upgrade dependencies.
+              ul 
+                li Majorly AngularJS from v1.3 to v1.4
+                li Use official code angular-cookies instead of #[code jquery-cookie] since it has been enhanced in v1.4.
+                li Fix some issues caused by breaking changes of lodash #[code _.template()] and #[code angular-bootstrap (dropdown)] upgrading.
+                li #[code bundle exec] issue seems to have been fixed.
+            li Adjust #[code Bootstrap] fonts location and relative #[code Gruntfile] configuration.
+            li Use cookie to remember the selection of warning dialog, life to 7 days.
+          
+        section
+          h4 v0.3.4
+          ul 
+            li Totally removed grunt concurrent.
+
+        section 
+          h4 v0.3.3
+          ul 
+            li Fix about build process.
+          
+        section
+          h4 v0.3.2
+          ul 
+            li Add a FAQ page.
+          
+        section
+          h4 v0.3.1
+          ul 
+            li Disable "Reorder All" button when there's already a reordering processing.
+            li Reduce the amount of photosets displayed per page in small device from 12 to 5.
+
+        section 
+          h4 v0.3.0
+          ul 
+            li Now can order in "Title", "Taken time", "Upload time" or "Views count".
+            li Added a confirmation modal before doing re-order.
+            li UI optimized.
+          
+        section
+          h4 v0.2.1
+          ul 
+            li About page.
+
+        section 
+          h4 v0.2.0
+          ul 
+            li Reorder all (or currently filtered out) photosets.
+            li Let the filtering to be case insensitive.
+          
+        section
+          h4 v0.1.2
+          ul 
+            li Added a warning about development.
+          
+        section
+          h4 v0.1.1
+          ul 
+            li Added searching function.
+            li Added a link to the original Flickr photoset page on the photosets' name.
+            li Fixed mistakenly calling
+              code(v-html="'{{currentUserIconUrl}}'")
+          
+        section
+          h4 v0.1.0
+          ul 
+            li Much better UI.
+          
+        section
+          h4 v0.0.3
+          ul 
+            li Improve the robustness of authentication process.
+          
+        section
+          h4 v0.0.2
+          ul 
+            li Fix wrong ordering function.
+            li Fix build issue.
+
+        section 
+          h4 v0.0.1
+          ul 
+            li Login, logout, list photosets, reorder photos in photosets.
+            li With totally no error handling.
