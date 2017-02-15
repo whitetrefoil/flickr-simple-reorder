@@ -66,6 +66,6 @@ export const actions = {
       format: 'json',
       nojsoncallback: '1',
     })
-    commit('setToken', url)
+    commit(t.LOGIN__SET_TOKEN, url)
   },
 }
