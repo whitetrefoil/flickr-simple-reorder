@@ -9,7 +9,7 @@ nav.wt-main-nav.navbar.navbar-toggleable-sm.navbar-inverse.bg-inverse
         a.nav-link FAQ
       router-link.nav-item(tag="li", active-class="active", :to="{name: 'about'}")
         a.nav-link About
-      router-link.nav-item(tag="li", active-class="active", :to="{name: 'login'}")
-        a.nav-link Login
-      router-link.nav-item(tag="li", active-class="active", :to="{name: 'logout'}")
+      router-link.nav-item(tag="li", active-class="active", :to="{name: 'logout'}", v-if="hasLoggedIn")
         a.nav-link Logout
+      router-link.nav-item(tag="li", active-class="active", :to="{name: 'login'}", v-else)
+        a.nav-link Login
