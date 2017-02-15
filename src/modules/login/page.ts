@@ -1,12 +1,12 @@
 import { Component, Lifecycle, Vue } from 'av-ts'
 import * as _                        from 'lodash'
 import { store, types as t }         from '../../store'
-import Panel                         from '../../components/panel'
+import WtPanel                       from '../../components/wt-panel'
 
 @Component({
   name      : 'login-page',
   components: {
-    Panel,
+    WtPanel,
   },
 })
 export default class LoginPage extends Vue {

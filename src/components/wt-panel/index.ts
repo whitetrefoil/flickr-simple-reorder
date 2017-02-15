@@ -1,9 +1,9 @@
 import { Component, Vue, Prop, p } from 'av-ts'
 
 @Component({
-  name: 'panel',
+  name: 'wt-panel',
 })
-export default class Panel extends Vue {
+export default class WtPanel extends Vue {
 
   @Prop title = p(String) as string
 
