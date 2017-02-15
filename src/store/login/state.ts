@@ -1,15 +1,19 @@
 import { loginUrl } from './actions'
 
-interface ILoginState {
+export interface IUserInfo {
+  fullname: string
+  nsid: string
+  username: string
+}
+
+export interface ILoginState {
   loginUrl: string
-  frob: string
   token: string
+  user: IUserInfo
 }
 
-const state: ILoginState = {
+export const state: ILoginState = {
   loginUrl,
-  frob: null,
   token: null,
+  user : null,
 }
-
-export { ILoginState, state }

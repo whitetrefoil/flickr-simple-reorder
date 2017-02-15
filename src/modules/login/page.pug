@@ -3,8 +3,7 @@
     .col-12.col-md-6.push-md-3
       // Before login
       wt-panel(v-if="status === 0", color="info", title="Redirecting you to Flickr")
-        p.card-text
-          a(:href="loginUrl") If the page doesn't redirect, please click here to try again.
+        p.card-text If the page doesn't redirect, please #[a(:href="loginUrl") click here] to try again.
 
       // Requesting token
       wt-panel(v-else-if="status === 1", color="info", title="Communicating with Flickr")

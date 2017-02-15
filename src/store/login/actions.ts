@@ -1,13 +1,13 @@
 import * as md5          from 'blueimp-md5'
 import * as _            from 'lodash'
 import { ActionContext } from 'vuex'
+import { request }       from '../../services/api'
 import * as t            from '../types'
 import { ILoginState }   from './state'
 
 export type ILoginActionContext = ActionContext<ILoginState, any>
 
 const authUrl   = 'http://flickr.com/services/auth/'
-const endpoint  = 'https://api.flickr.com/services/rest/'
 const methods   = {
   getToken  : 'flickr.auth.getToken',
   checkToken: 'flickr.auth.checkToken',
@@ -22,7 +22,7 @@ const calculateSig = <T extends Object>(
   secret: string = apiSecret,
 ): string => {
   let paramStr = secret
-  const keys = _.keys(params).sort()
+  const keys   = _.keys(params).sort()
   _.forEach(keys, (k) => {
     paramStr += k + params[k]
   })
@@ -40,32 +40,43 @@ const composeLoginUrl = (): string => {
 }
 
 
-const composeGetUrl = <T extends Object>(
+const composeFormData = <T extends Object>(
   params: T,
   secret: string = apiSecret,
-  url: string = endpoint,
-): string => {
-  let fullUrl = url
-  const apiSig = calculateSig(params, secret)
-  const keys = _.keys(params).sort()
-  _.forEach(keys, (k, i) => {
-    fullUrl += `${(i === 0) ? '?' : '&'}${k}=${params[k]}`
+): FormData => {
+  const apiSig   = calculateSig(params, secret)
+  const formData = new FormData()
+  _.forEach(params, (v, k) => {
+    formData.append(k, v)
   })
-  fullUrl += (keys.length === 0) ? '?' : '&'
-  fullUrl += `api_sig=${apiSig}`
-  return fullUrl
+  formData.append('api_sig', apiSig)
+  return formData
 }
 
 export const loginUrl = composeLoginUrl()
 
 export const actions = {
-  [t.LOGIN__REQUEST_TOKEN]({ state, commit }: ILoginActionContext) {
-    const url = composeGetUrl({
-      api_key: apiKey,
-      frob: state.frob,
-      format: 'json',
+  [t.LOGIN__REQUEST_TOKEN](
+    { state, commit }: ILoginActionContext,
+    frob: string,
+  ): Promise<any> {
+    const data = composeFormData({
+      api_key       : apiKey,
+      frob,
+      format        : 'json',
+      method        : methods.getToken,
       nojsoncallback: '1',
     })
-    commit(t.LOGIN__SET_TOKEN, url)
+
+    return request(data)
+      .then((res) => {
+        if (_.isEmpty(_.get(res, 'data.auth.user'))
+          || _.isEmpty(_.get(res, 'data.auth.token._content'))
+        ) {
+          return Promise.reject(res)
+        }
+        commit(t.LOGIN__SET_TOKEN, res.data.auth.token._content)
+        commit(t.LOGIN__SET_USER_INFO, res.data.auth.user)
+      }) as Promise<any>
   },
 }

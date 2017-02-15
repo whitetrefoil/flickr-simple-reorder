@@ -14,7 +14,7 @@ export default class LoginPage extends Vue {
   isJustFailed = false
 
   requestToken() {
-    store.dispatch(t.LOGIN__REQUEST_TOKEN)
+    return store.dispatch(t.LOGIN__REQUEST_TOKEN, this.$route.query['frob'])
   }
 
   get loginUrl(): string {
@@ -29,14 +29,18 @@ export default class LoginPage extends Vue {
    */
   get status(): number {
     if (this.isJustFailed) { return -1 }
-    if (store.state.login.token != null) { return 1 }
+    if (!_.isEmpty(_.get(this.$route.query, 'frob'))) { return 1 }
     return 0
   }
 
   @Lifecycle mounted() {
     if (!_.isEmpty(this.$route.query['frob'])) {
-      store.commit(t.LOGIN__SET_FROB, this.$route.query['frob'])
       this.requestToken()
+        .then(() => {
+          this.$router.push({ name: 'index' })
+        }, () => {
+          this.isJustFailed = true
+        })
     }
   }
 }

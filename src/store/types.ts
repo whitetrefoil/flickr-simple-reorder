@@ -4,8 +4,8 @@
 // Mutations
 // ----------
 
-export const LOGIN__SET_FROB = 'login/SET_FROB'
-export const LOGIN__SET_TOKEN = 'login/SET_TOKEN'
+export const LOGIN__SET_TOKEN     = 'login/SET_TOKEN'
+export const LOGIN__SET_USER_INFO = 'login/SET_USER_INFO'
 
 // Actions
 // ----------
