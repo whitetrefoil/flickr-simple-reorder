@@ -9,8 +9,9 @@ export type ILoginActionContext = ActionContext<ILoginState, any>
 
 const authUrl   = 'http://flickr.com/services/auth/'
 const methods   = {
-  getToken  : 'flickr.auth.getToken',
-  checkToken: 'flickr.auth.checkToken',
+  getToken     : 'flickr.auth.getToken',
+  checkToken   : 'flickr.auth.checkToken',
+  peopleGetInfo: 'flickr.people.getInfo',
 }
 const apiKey    = '5cdc0f5ec9c28202f1098f615edba5cd'
 const apiSecret = 'e3b842e3b923b0fb'
@@ -56,8 +57,9 @@ const composeFormData = <T extends Object>(
 export const loginUrl = composeLoginUrl()
 
 export const actions = {
+
   [t.LOGIN__REQUEST_TOKEN](
-    { state, commit }: ILoginActionContext,
+    { commit }: ILoginActionContext,
     frob: string,
   ): Promise<any> {
     const data = composeFormData({
@@ -77,6 +79,24 @@ export const actions = {
         }
         commit(t.LOGIN__SET_TOKEN, res.data.auth.token._content)
         commit(t.LOGIN__SET_USER_INFO, res.data.auth.user)
+      }) as Promise<any>
+  },
+
+  [t.LOGIN__REQUEST_USER_INFO]({ state, commit }: ILoginActionContext): Promise<any> {
+    if (_.isEmpty(_.get(state, 'user.nsid'))) {
+      return Promise.reject('No NSID!')
+    }
+    const data = composeFormData({
+      api_key       : apiKey,
+      user_id       : state.user.nsid,
+      format        : 'json',
+      method        : methods.peopleGetInfo,
+      nojsoncallback: '1',
+    })
+
+    return request(data)
+      .then((res) => {
+        console.log(res)
       }) as Promise<any>
   },
 }
