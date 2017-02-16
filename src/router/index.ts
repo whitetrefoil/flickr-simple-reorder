@@ -3,6 +3,8 @@ import * as VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+// TODO: Handle the error of fail loading...
+
 const AboutPage: Vue.AsyncComponent = (resolve) => {
   require.ensure([], () => {
     resolve(require('../modules/about/page'))
