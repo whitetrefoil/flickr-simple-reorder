@@ -59,7 +59,7 @@ export const loginUrl = composeLoginUrl()
 export const actions = {
 
   [t.LOGIN__REQUEST_TOKEN](
-    { commit }: ILoginActionContext,
+    { commit, dispatch, state }: ILoginActionContext,
     frob: string,
   ): Promise<any> {
     const data = composeFormData({
@@ -79,6 +79,9 @@ export const actions = {
         }
         commit(t.LOGIN__SET_TOKEN, res.data.auth.token._content)
         commit(t.LOGIN__SET_USER_INFO, res.data.auth.user)
+      })
+      .then(() => {
+        return dispatch(t.LOGIN__REQUEST_USER_INFO)
       }) as Promise<any>
   },
 
@@ -96,7 +99,11 @@ export const actions = {
 
     return request(data)
       .then((res) => {
-        console.log(res)
+        const person = _.get(res, 'data.person')
+        if (_.isEmpty(person)) {
+          return Promise.reject('Failed to get user info.')
+        }
+        commit(t.LOGIN__SET_USER_INFO, person)
       }) as Promise<any>
   },
 }
