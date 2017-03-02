@@ -1,15 +1,17 @@
-const ExtractTextPlugin      = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin      = require('html-webpack-plugin')
-const isEmpty                = require('lodash/isEmpty')
-const webpack                = require('webpack')
-const { config, initialize } = require('../config')
+const ExtractTextPlugin          = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin          = require('html-webpack-plugin')
+const LodashPlugin               = require('lodash-webpack-plugin')
+const isEmpty                    = require('lodash/isEmpty')
+const webpack                    = require('webpack')
+const { config, initialize }     = require('../config')
+const { sassLoader, scssLoader } = require('./configs/sass')
+const { vueLoaderProd }          = require('./configs/vue')
 
 if (config.isInitialized !== true) {
   initialize()
 }
 
-const BOOTSTRAP_REQUIRED_MINIMAL_PRECISION = 8
-const SIZE_14KB                            = 14336
+const SIZE_14KB = 14336
 
 module.exports = {
 
@@ -35,53 +37,53 @@ module.exports = {
   module: {
     rules: [
       {
-        test  : /\.ts$/,
-        loader: 'babel-loader!ts-loader?configFileName=tsconfig.json',
-      },
-      {
-        test  : /\.js$/,
-        loader: 'babel-loader',
-      },
-      {
-        test  : /\.(pug|jade)$/,
-        loader: 'pug-loader',
-      },
-      {
-        test: /\.vue/,
+        test: /\.ts$/,
         use : [
-          {
-            loader : 'vue-loader',
-            options: {
-              autoprefixer: {
-                browsers: ['last 2 versions'],
-              },
-              loaders     : {
-                js  : 'babel-loader',
-                ts  : 'babel-loader!ts-loader?configFileName=tsconfig.json',
-                css : ExtractTextPlugin.extract('css-loader?minimize&safe'),
-                sass: ExtractTextPlugin.extract('css-loader?minimize&safe!resolve-url-loader?keepQuery!sass-loader?config=sassLoader'),
-                scss: ExtractTextPlugin.extract('css-loader?minimize&safe!resolve-url-loader?keepQuery!sass-loader?config=scssLoader'),
-              },
-            },
-          },
+          'babel-loader',
+          'ts-loader?configFileName=tsconfig.json',
         ],
       },
       {
+        test: /\.js$/,
+        use : ['babel-loader'],
+      },
+      {
+        test: /\.(pug|jade)$/,
+        use : ['pug-loader'],
+      },
+      {
+        test: /\.vue/,
+        use : [vueLoaderProd],
+      },
+      {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('css-loader?minimize&safe'),
+        use : ExtractTextPlugin.extract({
+          use: ['css-loader?minimize&safe'],
+        }),
       },
       {
-        test  : /\.sass$/,
-        loader: ExtractTextPlugin.extract('css-loader?minimize&safe!resolve-url-loader?keepQuery!sass-loader?config=sassLoader'),
+        test: /\.sass$/,
+        use : ExtractTextPlugin.extract({
+          use: [
+            'css-loader?minimize&safe',
+            'resolve-url-loader?keepQuery',
+            sassLoader,
+          ],
+        }),
       },
       {
-        test  : /\.scss$/,
-        loader: ExtractTextPlugin.extract('css-loader?minimize&safe!resolve-url-loader?keepQuery!sass-loader?config=scssLoader'),
+        test: /\.scss$/,
+        use : ExtractTextPlugin.extract({
+          use: [
+            'css-loader?minimize&safe',
+            'resolve-url-loader?keepQuery',
+            scssLoader,
+          ],
+        }),
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff2?|ttf|eot|ico)(\?\S*)?$/,
-        exclude: /weixin/,
-        use    : [
+        use : [
           {
             loader: 'url-loader',
             query : {
@@ -94,19 +96,11 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /weixin.*\.(png|jpe?g|gif|svg|woff2?|ttf|eot|ico)(\?\S*)?$/,
-        use : [{
-          loader: 'file-loader',
-          query : {
-            name: 'assets/[hash].[ext]',
-          },
-        }],
-      },
     ],
   },
 
   plugins: [
+    new LodashPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
@@ -117,11 +111,7 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       names: ['index', 'theme', 'vendor', 'polyfills'],
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
-    }),
+    new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin({
       filename : 'css/[name]-[contenthash].css',
       allChunks: true,
@@ -137,23 +127,6 @@ module.exports = {
       base          : isEmpty(process.env.VUE_ROUTER_BASE)
         ? '/'
         : process.env.VUE_ROUTER_BASE,
-    }),
-    new webpack.LoaderOptionsPlugin({
-      context: config.absSource(''),
-
-      sassLoader: {
-        includePaths  : [config.source('css')],
-        indentedSyntax: true,
-        outputStyle   : 'compressed',
-        precision     : BOOTSTRAP_REQUIRED_MINIMAL_PRECISION,
-      },
-
-      scssLoader: {
-        includePaths  : [config.source('css')],
-        indentedSyntax: false,
-        outputStyle   : 'compressed',
-        precision     : BOOTSTRAP_REQUIRED_MINIMAL_PRECISION,
-      },
     }),
   ],
 }

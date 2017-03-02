@@ -1,5 +1,14 @@
+const path = require('path')
+
+require('ts-node').register({
+  project: path.join(__dirname, '../tsconfig.json'),
+  fast   : true,
+  cache  : false,
+})
+
 const webpack                = require('webpack')
 const { config, initialize } = require('../config')
+const { vueLoaderTest }      = require('./configs/vue')
 
 if (config.isInitialized !== true) {
   initialize()
@@ -11,9 +20,9 @@ module.exports = {
 
   context: config.absSource(''),
 
-  entry: {
-    'webpack-entry': '../tests/webpack-entry.js',
-  },
+  // entry: {
+  //   'webpack-entry': '../tests/webpack-entry.js',
+  // },
 
   resolve: {
     extensions: ['.vue', '.ts', '.js', '.json'],
@@ -29,32 +38,24 @@ module.exports = {
     rules: [
       {
         enforce: 'pre',
-        test   : /\.js/,
-        loader : 'source-map-loader',
+        test   : /\.[jt]s/,
+        use    : ['source-map-loader'],
         exclude: /node_modules/,
       },
       {
-        test  : /\.ts$/,
-        loader: 'babel-loader!ts-loader?configFileName=tsconfig.json',
+        test: /\.ts$/,
+        use : [
+          'babel-loader',
+          'ts-loader?configFileName=tsconfig.json',
+        ],
       },
       {
-        test  : /\.js$/,
-        loader: 'babel-loader',
+        test: /\.js$/,
+        use : ['babel-loader'],
       },
       {
         test: /\.vue/,
-        use : [
-          {
-            loader : 'vue-loader',
-            options: {
-              loaders: {
-                ts  : 'ts-loader?configFileName=tsconfig.json',
-                css : 'null-loader',
-                sass: 'null-loader',
-              },
-            },
-          },
-        ],
+        use : [vueLoaderTest],
       },
       {
         test  : /\.css$/,
@@ -62,6 +63,10 @@ module.exports = {
       },
       {
         test  : /\.sass$/,
+        loader: 'null-loader',
+      },
+      {
+        test  : /\.scss$/,
         loader: 'null-loader',
       },
       {
@@ -82,4 +87,8 @@ module.exports = {
       context: config.absSource(''),
     }),
   ],
+
+  performance: {
+    hints: false,
+  },
 }
