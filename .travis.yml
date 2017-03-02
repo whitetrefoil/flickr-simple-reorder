@@ -5,6 +5,7 @@ node_js:
 before_install:
   - npm -g up npm
   - npm -g install yarn
+  - npm config set tmp "/tmp"
   - yarn
 script:
   - npm build
