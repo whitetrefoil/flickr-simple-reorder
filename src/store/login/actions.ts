@@ -18,13 +18,13 @@ const apiSecret = 'e3b842e3b923b0fb'
 const perms     = 'write'
 
 
-const calculateSig = <T extends Object>(
+const calculateSig = <T extends object>(
   params: T,
   secret: string = apiSecret,
 ): string => {
   let paramStr = secret
   const keys   = _.keys(params).sort()
-  _.forEach(keys, (k) => {
+  _.forOwn(keys, (k) => {
     paramStr += k + params[k]
   })
   return md5(paramStr)
@@ -41,13 +41,13 @@ const composeLoginUrl = (): string => {
 }
 
 
-const composeFormData = <T extends Object>(
+const composeFormData = <T extends object>(
   params: T,
   secret: string = apiSecret,
 ): FormData => {
   const apiSig   = calculateSig(params, secret)
   const formData = new FormData()
-  _.forEach(params, (v, k) => {
+  _.forOwn(params, (v, k) => {
     formData.append(k, v)
   })
   formData.append('api_sig', apiSig)
@@ -79,19 +79,20 @@ export const actions = {
         }
         commit(t.LOGIN__SET_TOKEN, res.data.auth.token._content)
         commit(t.LOGIN__SET_USER_INFO, res.data.auth.user)
-      })
-      .then(() => {
-        return dispatch(t.LOGIN__REQUEST_USER_INFO)
+        return dispatch(t.LOGIN__REQUEST_USER_INFO, res.data.auth.user.nsid)
       }) as Promise<any>
   },
 
-  [t.LOGIN__REQUEST_USER_INFO]({ state, commit }: ILoginActionContext): Promise<any> {
+  [t.LOGIN__REQUEST_USER_INFO](
+    { state, commit }: ILoginActionContext,
+    userId: string,
+  ): Promise<any> {
     if (_.isEmpty(_.get(state, 'user.nsid'))) {
       return Promise.reject('No NSID!')
     }
     const data = composeFormData({
       api_key       : apiKey,
-      user_id       : state.user.nsid,
+      user_id       : userId,
       format        : 'json',
       method        : methods.peopleGetInfo,
       nojsoncallback: '1',

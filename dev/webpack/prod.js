@@ -1,6 +1,5 @@
 const ExtractTextPlugin          = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin          = require('html-webpack-plugin')
-const LodashPlugin               = require('lodash-webpack-plugin')
 const isEmpty                    = require('lodash/isEmpty')
 const webpack                    = require('webpack')
 const { config, initialize }     = require('../config')
@@ -100,7 +99,6 @@ module.exports = {
   },
 
   plugins: [
-    new LodashPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {

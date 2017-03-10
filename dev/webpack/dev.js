@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin          = require('html-webpack-plugin')
-const LodashPlugin               = require('lodash-webpack-plugin')
 const isEmpty                    = require('lodash/isEmpty')
 const webpack                    = require('webpack')
 const { config, initialize }     = require('../config')
@@ -107,7 +106,6 @@ module.exports = {
   },
 
   plugins: [
-    new LodashPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
