@@ -1,3 +1,4 @@
+// tslint:disable:no-import-side-effect
 require('./styles/theme.sass')
 
 // Do not use below JSes if possible to avoid including big jQuery library.

@@ -11,12 +11,11 @@ export const axios = Axios.create({
   },
 })
 
-export const request = (data: any) => {
-  return axios.post('', data)
+export const request = (data: any) =>
+  axios.post('', data)
     .then((res) => {
       if (_.isEmpty(res.data) || res.data.stat !== 'ok') {
         return Promise.reject(res) as Promise<any>
       }
       return res
     })
-}
