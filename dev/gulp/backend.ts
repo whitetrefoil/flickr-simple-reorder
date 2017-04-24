@@ -21,7 +21,7 @@ gulp.task('backend', (done: Noop) => {
   const server = connect.server({
     root      : [config.source('')],
     port      : config.serverPort + 1,
-    fallback  : `${config.source(config.serverIndex)}`,
+    fallback  : `${config.outputByEnv(config.serverIndex)}`,
     middleware: () => {
       const middleware = []
 
