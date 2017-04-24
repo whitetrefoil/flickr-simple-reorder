@@ -13,7 +13,7 @@ gulp.task('build', (done: () => void) => {
     ? devConfig
     : prodConfig
 
-  return del([config.outputByEnv('')])
+  del([config.outputByEnv('')])
     .then((): void => {
       webpack(webpackConfig, (err: Error, stats: any) => {
         if (err != null) {

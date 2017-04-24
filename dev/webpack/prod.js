@@ -29,6 +29,8 @@ module.exports = {
   },
 
   output: {
+    path         : config.absOutput(''),
+    publicPath   : '/',
     filename     : 'js/[name]-[chunkHash].js',
     chunkFilename: 'js/chunks/[name]-[chunkHash].chunk.js',
   },

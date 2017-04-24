@@ -48,13 +48,13 @@ const argv = meow(`
       n: 'ping',
     },
     default: {
-      development : DEFAULT_IS_DEVELOPMENT,
-      port        : DEFAULT_PORT,
-      prefix      : DEFAULT_PREFIX,
-      index       : DEFAULT_INDEX,
-      livereload  : DEFAULT_LIVERELOAD,
-      ping        : DEFAULT_PING,
-      backend     : DEFAULT_BACKEND,
+      development: DEFAULT_IS_DEVELOPMENT,
+      port       : DEFAULT_PORT,
+      prefix     : DEFAULT_PREFIX,
+      index      : DEFAULT_INDEX,
+      livereload : DEFAULT_LIVERELOAD,
+      ping       : DEFAULT_PING,
+      backend    : DEFAULT_BACKEND,
     },
   },
 )
@@ -63,25 +63,25 @@ export class ConfigNotInitializedError extends Error {
   isConfigNotInitializedError = true
 }
 
-const root = path.join(__dirname, '..')
-const source = DEFAULT_SOURCE_BASE_DIR
+const root     = path.join(__dirname, '..')
+const source   = DEFAULT_SOURCE_BASE_DIR
 const building = DEFAULT_BUILDING_DIR
-const output = DEFAULT_OUTPUT_DIR
+const output   = DEFAULT_OUTPUT_DIR
 
 interface IConfig {
   isInitialized: boolean
   argv?: any
   pkg?: any
-  root?: (...pathInRoot: string[]) => string
-  absRoot?: (...pathInRoot: string[]) => string
-  source?: (...pathInSource: string[]) => string
-  absSource?: (...pathInSource: string[]) => string
-  building?: (...pathInBuilding: string[]) => string
-  absBuilding?: (...pathInBuilding: string[]) => string
-  output?: (...pathInOutput: string[]) => string
-  absOutput?: (...pathInOutput: string[]) => string
-  outputByEnv?: (...pathInOutput: string[]) => string
-  absOutputByEnv?: (...pathInOutput: string[]) => string
+  root?(...pathInRoot: string[]): string
+  absRoot?(...pathInRoot: string[]): string
+  source?(...pathInSource: string[]): string
+  absSource?(...pathInSource: string[]): string
+  building?(...pathInBuilding: string[]): string
+  absBuilding?(...pathInBuilding: string[]): string
+  output?(...pathInOutput: string[]): string
+  absOutput?(...pathInOutput: string[]): string
+  outputByEnv?(...pathInOutput: string[]): string
+  absOutputByEnv?(...pathInOutput: string[]): string
   themeBuildDir?: string
   themeConfigBasename?: string
   serverPort?: number
@@ -96,35 +96,28 @@ export const config: IConfig = {
   isInitialized: false,
 }
 
-config.root = (...pathInRoot) => {
-  return path.join(root, ...pathInRoot)
-}
+config.root = (...pathInRoot) =>
+  path.join(root, ...pathInRoot)
 
 config.absRoot = config.root
 
-config.source = (...pathInSource) => {
-  return path.join(source, ...pathInSource)
-}
+config.source = (...pathInSource) =>
+  path.join(source, ...pathInSource)
 
-config.absSource = (...pathInSource) => {
-  return config.root(source, ...pathInSource)
-}
+config.absSource = (...pathInSource) =>
+  config.root(source, ...pathInSource)
 
-config.building = (...pathInBuilding) => {
-  return path.join(building, ...pathInBuilding)
-}
+config.building = (...pathInBuilding) =>
+  path.join(building, ...pathInBuilding)
 
-config.absBuilding = (...pathInBuilding) => {
-  return config.root(building, ...pathInBuilding)
-}
+config.absBuilding = (...pathInBuilding) =>
+  config.root(building, ...pathInBuilding)
 
-config.output = (...pathInOutput) => {
-  return path.join(output, ...pathInOutput)
-}
+config.output = (...pathInOutput) =>
+  path.join(output, ...pathInOutput)
 
-config.absOutput = (...pathInOutput) => {
-  return config.root(output, ...pathInOutput)
-}
+config.absOutput = (...pathInOutput) =>
+  config.root(output, ...pathInOutput)
 
 config.outputByEnv = (...pathInOutput) => {
   const dir = process.env.NODE_ENV === 'production' ? output : building
@@ -136,7 +129,7 @@ config.absOutputByEnv = (...pathInOutput) => {
   return config.root(dir, ...pathInOutput)
 }
 
-config.themeBuildDir = config.source('theme', 'build')
+config.themeBuildDir       = config.source('theme', 'build')
 config.themeConfigBasename = config.source('theme', 'element-config.css')
 
 // tslint:disable-next-line complexity,max-statements
