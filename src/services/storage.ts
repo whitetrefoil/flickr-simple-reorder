@@ -1,38 +1,36 @@
 interface IInternalStorageContent {
   'flickrSimpleReorder-temp-t': string
-  'flickrSimpleReorder-temp-e': number
 }
 
 interface IStorageContent {
   token: string
-  usid: number
 }
 
 interface IStorage {
-  set<K extends keyof IInternalStorageContent>(key: K, value: IInternalStorageContent[K]): void
+  set<K extends keyof IInternalStorageContent>(
+    key: K,
+    value: IInternalStorageContent[K],
+    expiration: number | Date,
+  ): void
   get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]
   remove<K extends keyof IInternalStorageContent>(key: K): void
   clearAll(): void
   addPlugin(plugin: any): void
 }
 
-const WrongStorageKeyError = new Error()
+const SEVEN_DAYS_AS_MS = 7 * 24 * 60 * 60 * 1000
 
 const storage = require('store') as IStorage
-// TODO
-// storage.addPlugin(require('store/plugins/expire'))
+storage.addPlugin(require('store/plugins/expire'))
 
-export class Storage {
+export default class Storage {
   static set<K extends keyof IStorageContent>(key: K, value: IStorageContent[K]): void {
     switch (key) {
       case 'token':
-        storage.set('flickrSimpleReorder-temp-t', value as string)
-        break
-      case 'usid':
-        storage.set('flickrSimpleReorder-temp-e', value as number)
+        storage.set('flickrSimpleReorder-temp-t', value as string, Date.now() + SEVEN_DAYS_AS_MS)
         break
       default:
-        throw WrongStorageKeyError
+      // Do nothing
     }
   }
 
@@ -40,10 +38,8 @@ export class Storage {
     switch (key) {
       case 'token':
         return storage.get('flickrSimpleReorder-temp-t')
-      case 'usid':
-        return storage.get('flickrSimpleReorder-temp-e')
       default:
-        throw WrongStorageKeyError
+        return null
     }
   }
 }

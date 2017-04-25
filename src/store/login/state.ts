@@ -1,4 +1,6 @@
-import { loginUrl } from './actions'
+import Storage       from '../../services/storage'
+import { loginUrl }  from './actions'
+import { getLogger } from '../../services/log'
 
 export interface IUserInfo {
   fullname: string
@@ -12,8 +14,14 @@ export interface ILoginState {
   user: IUserInfo
 }
 
+const log = getLogger('/store/login/state.ts')
+
+const existingToken = Storage.get('token')
+
+log.debug(`Existing token: ${existingToken}`)
+
 export const state: ILoginState = {
   loginUrl,
-  token: null,
+  token: Storage.get('token'),
   user : null,
 }

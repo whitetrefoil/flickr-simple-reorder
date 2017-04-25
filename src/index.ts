@@ -6,6 +6,10 @@ import { store }   from './store'
 
 sync(store, router)
 
+if (process.env.NODE_ENV === 'development') {
+  localStorage.debug = '/*'
+}
+
 new Vue({
   router,
   store,

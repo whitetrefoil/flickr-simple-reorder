@@ -1,13 +1,11 @@
-interface String {
-  toString(encoding: any): string
-}
+// tslint:disable
 
 declare namespace NodeJS {
   export interface Process {
     env: any | {
-      API_PREFIX     : string,
-      BABEL_ENV      : string,
-      NODE_ENV       : string,
+      API_PREFIX: string,
+      BABEL_ENV: string,
+      NODE_ENV: string,
       VUE_ROUTER_BASE: string,
     },
   }
@@ -24,3 +22,4 @@ declare module 'blueimp-md5' {
   const md5 = MD5.MD5Function
   export = md5
 }
+

@@ -11,4 +11,8 @@ export const store = new Vuex.Store({
   },
 })
 
+if (typeof store.state.login.token === 'string') {
+  store.dispatch(t.LOGIN__CHECK_TOKEN)
+}
+
 export const types = t
