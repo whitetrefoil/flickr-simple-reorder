@@ -11,4 +11,15 @@ export default class WtMainNav extends Vue {
     return !_.isEmpty(_.get(store.state, 'login.token'))
       && !_.isEmpty(_.get(store.state, 'login.user'))
   }
+
+  get userName(): string {
+    return _.get(store.state, 'login.user.username._content') as string
+  }
+
+  get userAvatarUrl(): string {
+    const farm = _.get(store.state, 'login.user.iconfarm')
+    const server = _.get(store.state, 'login.user.iconserver')
+    const nsid = _.get(store.state, 'login.user.nsid')
+    return `http://farm${farm}.staticflickr.com/${server}/buddyicons/${nsid}.jpg`
+  }
 }
