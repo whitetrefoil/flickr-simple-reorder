@@ -49,10 +49,6 @@ module.exports = {
         use : ['babel-loader'],
       },
       {
-        test: /\.(pug|jade)$/,
-        use : ['pug-loader'],
-      },
-      {
         test: /\.vue/,
         use : [vueLoaderProd],
       },
@@ -118,7 +114,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename      : 'index.html',
-      template      : './index.pug',
+      template      : './index.html',
       chunks        : ['polyfills', 'vendor', 'theme', 'index'],
       hash          : false,
       minify        : false,

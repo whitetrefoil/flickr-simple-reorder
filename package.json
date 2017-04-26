@@ -80,8 +80,6 @@
     "null-loader"                              : "^0.1.1",
     "phantomjs-prebuilt"                       : "^2.1.14",
     "prerender-spa-plugin"                     : "^2.0.1",
-    "pug"                                      : "latest",
-    "pug-loader"                               : "^2.3.0",
     "require-uncached"                         : "^1.0.3",
     "resolve-url-loader"                       : "^2.0.2",
     "run-sequence"                             : "^1.2.2",
