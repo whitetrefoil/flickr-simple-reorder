@@ -1,36 +1,26 @@
-import * as md5          from 'blueimp-md5'
 import * as _            from 'lodash'
 import { ActionContext } from 'vuex'
 import { request }       from '../../services/api'
 import * as t            from '../types'
 import { ILoginState }   from './state'
 import { getLogger }     from '../../services/log'
+import {
+  apiKey,
+  apiSecret,
+  perms,
+  calculateSig,
+  composeFormData,
+} from '../helpers'
 
 export type ILoginActionContext = ActionContext<ILoginState, any>
 
 const log = getLogger('/store/login/actions.ts')
 
-const authUrl   = 'http://flickr.com/services/auth/'
-const methods   = {
+const authUrl = 'http://flickr.com/services/auth/'
+const methods = {
   getToken     : 'flickr.auth.getToken',
   checkToken   : 'flickr.auth.checkToken',
   peopleGetInfo: 'flickr.people.getInfo',
-}
-const apiKey    = '5cdc0f5ec9c28202f1098f615edba5cd'
-const apiSecret = 'e3b842e3b923b0fb'
-const perms     = 'write'
-
-
-const calculateSig = <T extends object>(
-  params: T,
-  secret: string = apiSecret,
-): string => {
-  let paramStr = secret
-  const keys   = _.keys(params).sort()
-  _.forOwn(keys, (k) => {
-    paramStr += k + params[k]
-  })
-  return md5(paramStr)
 }
 
 
@@ -43,26 +33,7 @@ const composeLoginUrl = (): string => {
   return `${authUrl}?api_key=${apiKey}&perms=${perms}&api_sig=${apiSig}`
 }
 
-
 export const loginUrl = composeLoginUrl()
-
-
-const composeFormData = <T extends object>(
-  params: T,
-  secret: string = apiSecret,
-): FormData => {
-  const paramsWithJson = _.defaults(params, {
-    format        : 'json',
-    nojsoncallback: '1',
-  })
-  const apiSig         = calculateSig(paramsWithJson, secret)
-  const formData       = new FormData()
-  _.forOwn(paramsWithJson, (v, k) => {
-    formData.append(k, v)
-  })
-  formData.append('api_sig', apiSig)
-  return formData
-}
 
 
 export const actions = {
@@ -120,12 +91,12 @@ export const actions = {
       throw new Error('Invalid NSID!')
     }
 
-    const data = composeFormData({
+    const data   = composeFormData({
       api_key: apiKey,
       user_id: nsid,
       method : methods.peopleGetInfo,
     })
-    const res = await request(data)
+    const res    = await request(data)
     const person = _.get(res, 'data.person')
 
     log.debug('Got person info:', person)
