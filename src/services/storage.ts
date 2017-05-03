@@ -42,4 +42,14 @@ export default class Storage {
         return null
     }
   }
+
+  static remove<K extends keyof IStorageContent>(key: K): void {
+    switch (key) {
+      case 'token':
+        storage.remove('flickrSimpleReorder-temp-t')
+        break
+      default:
+        // Do nothing
+    }
+  }
 }

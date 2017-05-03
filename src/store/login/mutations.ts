@@ -1,7 +1,8 @@
-import Storage                    from '../../services/storage'
+import * as Vue                   from 'vue'
 import * as t                     from '../types'
 import { ILoginState, IUserInfo } from './state'
 import { getLogger }              from '../../services/log'
+import Storage                    from '../../services/storage'
 
 const log = getLogger('/store/login/mutations.ts')
 
@@ -16,5 +17,11 @@ export const mutations = {
   [t.LOGIN__SET_USER_INFO](state: ILoginState, user: IUserInfo) {
     state.user = user
     log.debug('Set userinfo into state.')
+  },
+
+  [t.LOGIN__LOGOUT](state: ILoginState) {
+    Vue.delete(state, 'token')
+    Storage.remove('token')
+    Vue.delete(state, 'user')
   },
 }
