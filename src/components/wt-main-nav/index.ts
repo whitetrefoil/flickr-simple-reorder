@@ -25,6 +25,9 @@ export default class WtMainNav extends Vue {
     const farm = _.get(store.state, 'login.user.iconfarm')
     const server = _.get(store.state, 'login.user.iconserver')
     const nsid = _.get(store.state, 'login.user.nsid')
+    if (_.isNil(farm) || _.isNil(server) || _.isNil(nsid)) {
+      return 'about:blank'
+    }
     return `http://farm${farm}.staticflickr.com/${server}/buddyicons/${nsid}.jpg`
   }
 
