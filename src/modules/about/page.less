@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.about-page-row {
+  display: flex;
+}
+
+.about-page-secondary-info {
+  flex: 4 4 40%;
+  order: 1;
+}
+
+.about-page-main-info {
+  flex: 6 6 60%;
+  order: -1;
+
+  > section {
+    margin-top: 20px;
+
+    > section {
+      margin-top: 10px;
+    }
+  }
+}

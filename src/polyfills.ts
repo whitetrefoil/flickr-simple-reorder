@@ -1,4 +1,9 @@
 // tslint:disable:no-import-side-effect
-import 'rxjs/Observable'
+import 'babel-polyfill'
 
-require('babel-polyfill')
+if (process.env.ENV === 'production') {
+  // Production
+} else {
+  // Development
+  Error['stackTraceLimit'] = Infinity
+}

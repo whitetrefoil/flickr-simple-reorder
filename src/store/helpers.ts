@@ -1,9 +1,12 @@
-import * as md5 from 'blueimp-md5'
-import * as _   from 'lodash'
+import * as md5      from 'blueimp-md5'
+import * as _        from 'lodash'
+import { getLogger } from '../services/log'
 
 export const apiKey    = '5cdc0f5ec9c28202f1098f615edba5cd'
 export const apiSecret = 'e3b842e3b923b0fb'
 export const perms     = 'write'
+
+const { debug }  = getLogger('/store/helpers.ts')
 
 export const calculateSig = <T extends object>(
   params: T,
@@ -28,7 +31,7 @@ export const composeFormData = <T extends object>(
   const paramsWithJson = _.defaults(params, {
     format        : 'json',
     nojsoncallback: '1',
-  })
+  }) as object
 
   const apiSig = calculateSig(paramsWithJson, secret)
 
@@ -38,6 +41,8 @@ export const composeFormData = <T extends object>(
     formData.append(k, v)
   })
   formData.append('api_sig', apiSig)
+
+  debug('Composed form data:', { ...paramsWithJson, api_sig: apiSig })
 
   return formData
 }

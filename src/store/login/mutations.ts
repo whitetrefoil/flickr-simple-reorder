@@ -1,4 +1,4 @@
-import * as Vue                   from 'vue'
+import Vue                        from 'vue'
 import * as t                     from '../types'
 import { ILoginState, IUserInfo } from './state'
 import { getLogger }              from '../../services/log'

@@ -16,7 +16,7 @@ export type ILoginActionContext = ActionContext<ILoginState, any>
 
 const log = getLogger('/store/login/actions.ts')
 
-const authUrl = 'http://flickr.com/services/auth/'
+const authUrl = 'https://flickr.com/services/auth/'
 const methods = {
   getToken     : 'flickr.auth.getToken',
   checkToken   : 'flickr.auth.checkToken',
@@ -49,6 +49,8 @@ export const actions = {
 
     const res = await request(data)
 
+    log.debug('Response of "getToken":', res)
+
     if (_.isEmpty(_.get(res, 'data.auth.user'))
       || _.isEmpty(_.get(res, 'data.auth.token._content'))
     ) {
@@ -69,7 +71,14 @@ export const actions = {
       auth_token: state.token,
     })
 
-    const res = await request(data)
+    let res: any
+    try {
+      res = await request(data)
+    } catch (e) {
+      // Token is invalid, nothing to do.
+      // TODO: Cleanup existing token.
+      return
+    }
 
     if (_.isEmpty(_.get(res, 'data.auth.user'))
       || _.isEmpty(_.get(res, 'data.auth.token._content'))

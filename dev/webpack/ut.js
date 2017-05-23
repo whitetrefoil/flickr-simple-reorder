@@ -8,6 +8,7 @@ require('ts-node').register({
 
 const webpack                = require('webpack')
 const { config, initialize } = require('../config')
+const { lodashPlugin }       = require('./configs/lodash')
 const { vueLoaderTest }      = require('./configs/vue')
 
 if (config.isInitialized !== true) {
@@ -77,6 +78,7 @@ module.exports = {
   },
 
   plugins: [
+    lodashPlugin,
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),

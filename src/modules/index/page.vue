@@ -1,4 +1,4 @@
-<style lang="sass" src="./page.sass" scoped></style>
+<style lang="less" src="./page.less" scoped></style>
 <script lang="ts" src="./page.ts"></script>
 
 <template>

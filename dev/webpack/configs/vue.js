@@ -1,23 +1,16 @@
-const ExtractTextPlugin          = require('extract-text-webpack-plugin')
-const { sassLoader, scssLoader } = require('./sass')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const vueOptionsDev = {
   loaders: {
     ts  : [
       'babel-loader',
       'ts-loader?configFileName=tsconfig.json',
+      'tslint-loader',
     ],
-    sass: [
+    less: [
       'vue-style-loader',
-      'css-loader',
-      'resolve-url-loader',
-      sassLoader,
-    ],
-    scss: [
-      'vue-style-loader',
-      'css-loader',
-      'resolve-url-loader',
-      scssLoader,
+      'css-loader?sourceMap',
+      'less-loader?sourceMap',
     ],
   },
 }
@@ -33,19 +26,10 @@ const vueOptionsProd = {
       use: 'css-loader?minimize&safe',
     }),
 
-    sass: ExtractTextPlugin.extract({
+    less: ExtractTextPlugin.extract({
       use: [
         'css-loader?minimize&safe',
-        'resolve-url-loader?keepQuery',
-        sassLoader,
-      ],
-    }),
-
-    scss: ExtractTextPlugin.extract({
-      use: [
-        'css-loader?minimize&safe',
-        'resolve-url-loader?keepQuery',
-        scssLoader,
+        'less-loader',
       ],
     }),
   },
@@ -58,8 +42,7 @@ const vueOptionsTest = {
       'ts-loader?configFileName=tsconfig.json',
     ],
     css : 'null-loader',
-    sass: 'null-loader',
-    scss: 'null-loader',
+    less: 'null-loader',
   },
 }
 

@@ -1,8 +1,13 @@
 {
   "presets"      : [
-    ["latest", {
-      "es2015": { "modules": false }
-    }]
+    [
+      "env",
+      {
+        "modules"    : false,
+        "browsers"   : "Android >= 4.3, iOS >= 8.0, last 5 Chrome versions, last 5 Firefox versions, last 5 Opera versions, IE >= 10, last 5 Edge versions",
+        "useBuiltIns": true
+      }
+    ]
   ],
   "compact"      : false,
   "plugins"      : [
@@ -12,7 +17,7 @@
     "syntax-trailing-function-commas",
     "syntax-object-rest-spread"
   ],
-  "highlightCode": true,
+  "highlightCode": false,
   "sourceMaps"   : true,
   "minified"     : false,
   "comments"     : true

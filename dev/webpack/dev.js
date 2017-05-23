@@ -1,9 +1,9 @@
-const HtmlWebpackPlugin          = require('html-webpack-plugin')
-const isEmpty                    = require('lodash/isEmpty')
-const webpack                    = require('webpack')
-const { config, initialize }     = require('../config')
-const { sassLoader, scssLoader } = require('./configs/sass')
-const { vueLoaderDev }           = require('./configs/vue')
+const HtmlWebpackPlugin      = require('html-webpack-plugin')
+const isEmpty                = require('lodash/isEmpty')
+const webpack                = require('webpack')
+const { config, initialize } = require('../config')
+const { lodashPlugin }       = require('./configs/lodash')
+const { vueLoaderDev }       = require('./configs/vue')
 
 if (config.isInitialized !== true) {
   initialize()
@@ -24,7 +24,6 @@ module.exports = {
 
   resolve: {
     extensions: ['.vue', '.ts', '.js', '.json'],
-    mainFields: ['webpack', 'jsnext:main', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
   },
 
   output: {
@@ -77,21 +76,11 @@ module.exports = {
         ],
       },
       {
-        test: /\.sass$/,
+        test: /\.less$/,
         use : [
           'vue-style-loader',
           'css-loader?sourceMap',
-          'resolve-url-loader?sourceMap',
-          sassLoader,
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use : [
-          'vue-style-loader',
-          'css-loader?sourceMap',
-          'resolve-url-loader?sourceMap',
-          scssLoader,
+          'less-loader?sourceMap',
         ],
       },
       {
@@ -102,6 +91,7 @@ module.exports = {
   },
 
   plugins: [
+    lodashPlugin,
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),

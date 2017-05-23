@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+@import "../../styles/_vars.less";
+
+.wt-main-nav {
+  height: @main-nav-height;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+  border-bottom: 1px solid @border-color-base;
+
+  * { white-space: nowrap }
+}
+
+.app-title {
+  flex: 1 0 280px;
+  padding: 0 20px;
+  font-size: 120%;
+  font-weight: bold;
+  line-height: @main-nav-height;
+
+  a {
+    color: @non-content-link-color;
+    &:hover { color: @non-content-link-hover-color }
+    &:active { color: @non-content-link-active-color }
+  }
+}
+
+.menu-items {
+  flex: 1 0 400px;
+  font-weight: bold;
+
+  a {
+    display: block;
+    padding: 0 20px;
+    height: @main-nav-height;
+    line-height: @main-nav-height;
+    float: left;
+    color: @non-content-link-color;
+
+    &:hover {
+      color: @non-content-link-hover-color;
+      border-bottom: 2px solid @non-content-link-hover-color;
+    }
+
+    &:active {
+      color: @non-content-link-active-color;
+      border-bottom: 2px solid @non-content-link-active-color;
+    }
+
+    &.router-link-active {
+      border-bottom: 2px solid @non-content-link-color;
+
+      &:hover {
+        border-bottom: 2px solid @non-content-link-hover-color;
+      }
+    }
+  }
+}
+
+.user-greeting {
+  flex: 1 0 100px;
+  padding: 0 20px;
+  line-height: @main-nav-height;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.user-avatar {
+  width: @main-nav-height * 0.50;
+  height: @main-nav-height * 0.50;
+  margin-left: 10px;
+  border: 2px solid white;
+  border-radius: @main-nav-height * 0.50;
+  vertical-align: middle;
+  box-shadow: 0 0 0 1px @border-color-base;
+}

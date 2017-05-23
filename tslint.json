@@ -72,7 +72,7 @@
     "no-shadowed-variable"           : true,
     "no-sparse-arrays"               : true,
     "no-string-literal"              : false,
-    "no-string-throw"                : true,
+    "no-string-throw"                : false,
     "no-switch-case-fall-through"    : true,
     "no-unsafe-finally"              : true,
     "no-unused-expression"           : [true, "allow-new"],

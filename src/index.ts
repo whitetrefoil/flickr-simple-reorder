@@ -1,4 +1,4 @@
-import * as Vue    from 'vue'
+import Vue        from 'vue'
 import { sync }    from 'vuex-router-sync'
 import WtApp       from './components/wt-app'
 import { router }  from './router'

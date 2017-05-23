@@ -16,6 +16,14 @@ export const LOGIN__CHECK_TOKEN       = 'login/CHECK_TOKEN'
 export const LOGIN__REQUEST_USER_INFO = 'login/REQUEST_USER_INFO'
 
 // Photosets
+// ==========
+
+// Mutations
+// ----------
+
+export const PHOTOSETS__SET_LIST = 'photosets/SET_LIST'
+
+// Actions
 // ----------
 
 export const PHOTOSETS__GET_LIST = 'photosets/GET_LIST'

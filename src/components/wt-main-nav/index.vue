@@ -1,28 +1,23 @@
-<style lang="sass" src="./index.sass" scoped></style>
+<style lang="less" src="./index.less" scoped></style>
 <script lang="ts" src="./index.ts"></script>
 
 <template>
-  <nav class="wt-main-nav navbar navbar-toggleable-sm navbar-inverse bg-inverse">
-    <button class="navbar-toggler navbar-toggler-left" type="button">
-      <span class="navbar-toggler-icon" @click="toggleMenu()"></span>
-    </button>
+  <nav class="wt-main-nav">
+    <div class="app-title">
+      <router-link :to="{name: 'index'}">Flickr Simple Reorder</router-link>
+    </div>
+    <!-- /.app-title -->
 
-    <router-link class="navbar-brand mx-sm-auto mx-auto" :to="{name: 'index'}">Flickr Simple Reorder</router-link>
-
-    <div ref="menu" class="navbar-collapse collapse" @transitionend="menuTransitionEnd()">
-      <ul class="navbar-nav">
-        <router-link class="nav-item" tag="li" active-class="active" :to="{name: 'index'}" exact><a class="nav-link">Photosets</a></router-link>
-        <router-link class="nav-item" tag="li" active-class="active" :to="{name: 'faq'}"><a class="nav-link">FAQ</a></router-link>
-        <router-link class="nav-item" tag="li" active-class="active" :to="{name: 'about'}"><a class="nav-link">About</a></router-link>
-        <router-link class="nav-item" tag="li" active-class="active" :to="{name: 'logout'}" v-if="hasLoggedIn"><a class="nav-link">Logout</a></router-link>
-        <router-link class="nav-item" tag="li" active-class="active" :to="{name: 'login'}" v-else><a class="nav-link">Login</a></router-link>
-      </ul>
+    <div class="menu-items">
+      <router-link :to="{name: 'index'}" exact>Photosets</router-link>
+      <router-link :to="{name: 'faq'}">FAQ</router-link>
+      <router-link :to="{name: 'about'}">About</router-link>
+      <router-link :to="{name: 'logout'}" v-if="hasLoggedIn">Logout</router-link>
+      <router-link :to="{name: 'login'}" v-else>Login</router-link>
     </div>
 
-    <div class="user-greeting" v-show="userName">
-      <div class="navbar-text hidden-sm-down">
-        <span>Hello, {{userName}}!</span>
-      </div>
+    <div class="user-greeting">
+      <span>Hello, {{userName || 'guest'}}!</span>
 
       <img class="user-avatar" :src="userAvatarUrl" :alt="userName">
     </div>

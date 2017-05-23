@@ -1,4 +1,4 @@
-<style lang="sass" src="./page.sass" scoped></style>
+<style lang="less" src="./page.less" scoped></style>
 <script lang="ts" src="./page.ts"></script>
 
 <template>
@@ -14,7 +14,7 @@
           <p class="card-text">Just a second&hellip;</p>
         </wt-panel>
         <!-- Invalid-->
-        <wt-panel v-else="v-else" color="warning" title="Your authentication is invalid">
+        <wt-panel v-else color="warning" title="Your authentication is invalid">
           <p class="card-text">This may due to your previous authentication is timeout or some other small problem. <a :href="loginUrl">Please click here to login again.</a>
           </p>
         </wt-panel>

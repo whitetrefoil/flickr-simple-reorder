@@ -1,10 +1,10 @@
-const ExtractTextPlugin          = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin          = require('html-webpack-plugin')
-const isEmpty                    = require('lodash/isEmpty')
-const webpack                    = require('webpack')
-const { config, initialize }     = require('../config')
-const { sassLoader, scssLoader } = require('./configs/sass')
-const { vueLoaderProd }          = require('./configs/vue')
+const ExtractTextPlugin      = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin      = require('html-webpack-plugin')
+const isEmpty                = require('lodash/isEmpty')
+const webpack                = require('webpack')
+const { config, initialize } = require('../config')
+const { lodashPlugin }       = require('./configs/lodash')
+const { vueLoaderProd }      = require('./configs/vue')
 
 if (config.isInitialized !== true) {
   initialize()
@@ -25,7 +25,6 @@ module.exports = {
 
   resolve: {
     extensions: ['.vue', '.ts', '.js', '.json'],
-    mainFields: ['webpack', 'jsnext:main', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
   },
 
   output: {
@@ -59,22 +58,11 @@ module.exports = {
         }),
       },
       {
-        test: /\.sass$/,
+        test: /\.less/,
         use : ExtractTextPlugin.extract({
           use: [
             'css-loader?minimize&safe',
-            'resolve-url-loader?keepQuery',
-            sassLoader,
-          ],
-        }),
-      },
-      {
-        test: /\.scss$/,
-        use : ExtractTextPlugin.extract({
-          use: [
-            'css-loader?minimize&safe',
-            'resolve-url-loader?keepQuery',
-            scssLoader,
+            'less-loader?sourceMap',
           ],
         }),
       },
@@ -97,7 +85,7 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
+    lodashPlugin,
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
