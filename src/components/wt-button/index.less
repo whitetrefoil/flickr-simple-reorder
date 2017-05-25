@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+@import "../../styles/_vars";
+
+.colorize-button(@color) {
+  border: none;
+  background-color: @color;
+
+  & when (luma(@color) < 50) {
+    color: white;
+  }
+
+  &:hover {
+    background-color: tint(@color, 20%);
+  }
+
+  &:active {
+    background-color: shade(@color, 5%);
+    padding: @btn-padding-base-active;
+  }
+}
+
+.wt-button {
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  padding: @btn-padding-base;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.wt-button-error {
+  .colorize-button(@error-color)
+}
+
+.wt-button-warning {
+  .colorize-button(@warning-color)
+}
+
+.wt-button-success {
+  .colorize-button(@success-color)
+}
+
+//.wt-button-info {
+//  .colorize-button(@info-color)
+//}
+//
+//.wt-button-primary {
+//  .colorize-button(@primary-color)
+//}

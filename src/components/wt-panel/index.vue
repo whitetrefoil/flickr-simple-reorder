@@ -2,10 +2,10 @@
 <script lang="ts" src="./index.ts"></script>
 
 <template>
-  <section class="wt-panel" :class="cardClass">
-    <h4 class="wt-panel-title" :class="titleClass">{{title}}</h4>
-    <p class="wt-panel-content">
+  <section class="wt-panel" :class="panelClass">
+    <h4 class="wt-panel-title">{{title}}</h4>
+    <div class="wt-panel-content">
       <slot></slot>
-    </p>
+    </div>
   </section>
 </template>

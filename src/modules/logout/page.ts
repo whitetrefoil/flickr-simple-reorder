@@ -1,12 +1,18 @@
 import { Component, Vue }    from 'av-ts'
 import { isUndefined }       from 'lodash'
+import WtButton              from '../../components/wt-button'
+import WtPanel               from '../../components/wt-panel'
 import { getLogger }         from '../../services/log'
 import { store, types as t } from '../../store'
 
 const log = getLogger('/modules/logout/page.ts')
 
 @Component({
-  name: 'logout-page',
+  name      : 'logout-page',
+  components: {
+    WtButton,
+    WtPanel,
+  },
 })
 export default class LogoutPage extends Vue {
 

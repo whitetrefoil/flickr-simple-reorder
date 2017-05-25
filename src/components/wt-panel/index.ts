@@ -12,11 +12,7 @@ export default class WtPanel extends Vue {
     default: 'secondary',
   }) as string
 
-  get cardClass(): string {
-    return `card-outline-${this.color}`
-  }
-
-  get titleClass(): string {
-    return `text-${this.color}`
+  get panelClass(): string {
+    return `wt-panel-${this.color}`
   }
 }
