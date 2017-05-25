@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+  "compilerOptions"               : {
     "allowJs"                       : true,
     "allowSyntheticDefaultImports"  : true,
     "target"                        : "es2017",
@@ -16,10 +16,14 @@
     "noImplicitAny"                 : true,
     "suppressImplicitAnyIndexErrors": true
   },
-  "include"        : [
+  "include"                       : [
     "src/**/*"
   ],
-  "exclude"        : [
+  "exclude"                       : [
     "node_modules"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": true
+  }
 }

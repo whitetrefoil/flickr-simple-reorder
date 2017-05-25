@@ -39,8 +39,7 @@ module.exports = {
       {
         test: /\.ts$/,
         use : [
-          'babel-loader',
-          'ts-loader?configFileName=tsconfig.json',
+          'awesome-typescript-loader?configFileName=tsconfig.json',
         ],
       },
       {

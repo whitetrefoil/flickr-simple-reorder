@@ -240,6 +240,7 @@ typings/
 
 
 ### Project Specific
+.awcache/
 .sass-cache/
 .building/
 .serving/
