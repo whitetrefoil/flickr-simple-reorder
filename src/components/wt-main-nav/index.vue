@@ -16,7 +16,7 @@
       <router-link :to="{name: 'login'}" v-else>Login</router-link>
     </div>
 
-    <div class="user-greeting">
+    <div class="user-greeting" v-show="hasLoggedIn">
       <span>Hello, {{userName || 'guest'}}!</span>
 
       <img class="user-avatar" :src="userAvatarUrl" :alt="userName">
