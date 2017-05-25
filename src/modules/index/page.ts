@@ -16,5 +16,4 @@ export default class IndexPage extends Vue {
         this.failedToGetList = true
       })
   }
-
 }

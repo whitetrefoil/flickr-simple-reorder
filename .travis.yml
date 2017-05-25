@@ -6,6 +6,7 @@ before_install:
   - npm -g up npm
   - npm -g install yarn
   - npm config set tmp "/tmp"
+  - echo 'registry "https://registry.npm.taobao.org/"' > .yarnrc
   - yarn
 script:
   - npm build
