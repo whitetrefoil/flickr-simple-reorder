@@ -1,7 +1,9 @@
 export interface IPhotoset {
   id: string
   photos: number
-  url_q: string
+  url_m: string
+  height_m: number
+  width_m: number
   title: string
 }
 

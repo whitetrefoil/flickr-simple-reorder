@@ -23,7 +23,9 @@ interface IPhotosetsGetListResponse {
         id: string,
         photos: number,
         primary_photo_extras: {
-          url_q: string,
+          url_m: string,
+          height_m: string,
+          width_m: string,
         },
         title: {
           _content: string,
@@ -39,7 +41,7 @@ export const actions = {
     debug('Get photosets')
 
     const data = composeFormData({
-      primary_photo_extras: 'url_q',
+      primary_photo_extras: 'url_m',
       api_key             : apiKey,
       method              : methods.getList,
       auth_token          : rootState.login.token,
@@ -53,10 +55,12 @@ export const actions = {
 
     _.forEach(res.data.photosets.photoset, (p) => {
       const photoset: IPhotoset = {
-        id    : p.id,
-        photos: p.photos,
-        title : p.title._content,
-        url_q : p.primary_photo_extras.url_q,
+        id      : p.id,
+        photos  : p.photos,
+        title   : p.title._content,
+        url_m   : p.primary_photo_extras.url_m,
+        height_m: parseInt(p.primary_photo_extras.height_m, 10),
+        width_m : parseInt(p.primary_photo_extras.width_m, 10),
       }
 
       photosets.push(photoset)

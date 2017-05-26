@@ -1,1 +1,28 @@
 @charset "UTF-8";
+
+@import "../../styles/_vars";
+
+.wt-panel {
+  width: @screen-sm;
+  margin: 40px auto;
+}
+
+.photosets-page {
+  width: @screen-md;
+  margin: 40px auto;
+  overflow: hidden;
+
+  ol {
+    list-style: decimal;
+    padding-left: 2em;
+  }
+
+  .photosets {
+    margin: 0 -10px;
+  }
+
+  .wt-photoset {
+    float: left;
+    margin: 0 10px 40px;
+  }
+}
