@@ -1,16 +1,20 @@
 interface IInternalStorageContent {
   'flickrSimpleReorder-temp-t': string
+  'flickrSimpleReorder-temp-f': string
+  'flickrSimpleReorder-temp-o': boolean
 }
 
 interface IStorageContent {
   token: string
+  orderBy: 'datetaken' | 'dateupload' | 'title' | 'views'
+  isDesc: boolean
 }
 
 interface IStorage {
   set<K extends keyof IInternalStorageContent>(
     key: K,
     value: IInternalStorageContent[K],
-    expiration: number | Date,
+    expiration?: number | Date,
   ): void
   get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]
   remove<K extends keyof IInternalStorageContent>(key: K): void
@@ -29,6 +33,12 @@ export default class Storage {
       case 'token':
         storage.set('flickrSimpleReorder-temp-t', value as string, Date.now() + SEVEN_DAYS_AS_MS)
         break
+      case 'orderBy':
+        storage.set('flickrSimpleReorder-temp-f', value as 'datetaken' | 'dateupload' | 'title' | 'views')
+        break
+      case 'isDesc':
+        storage.set('flickrSimpleReorder-temp-o', value as boolean)
+        break
       default:
       // Do nothing
     }
@@ -38,6 +48,10 @@ export default class Storage {
     switch (key) {
       case 'token':
         return storage.get('flickrSimpleReorder-temp-t')
+      case 'orderBy':
+        return storage.get('flickrSimpleReorder-temp-f')
+      case 'isDesc':
+        return storage.get('flickrSimpleReorder-temp-o')
       default:
         return null
     }

@@ -31,6 +31,12 @@
 
     <div class="photosets-page" v-else>
       <div class="photosets">
+        <div class="toolbar">
+          <i-select></i-select>
+          <wt-button color="primary">Reorder All</wt-button>
+        </div>
+        <!-- /.toolbar -->
+
         <wt-photoset v-for="photoset in photosets" :key="photoset.id" :photoset="photoset"></wt-photoset>
       </div>
       <!-- /.photosets -->

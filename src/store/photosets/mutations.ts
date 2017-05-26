@@ -1,7 +1,13 @@
-import * as _                                         from 'lodash'
-import { getLogger }                                  from '../../services/log'
-import * as t                                         from '../types'
-import { IPhotoset, IPhotosetsState, PhotosetStatus } from './state'
+import * as _        from 'lodash'
+import { getLogger } from '../../services/log'
+import Storage       from '../../services/storage'
+import * as t        from '../types'
+import {
+  IPhotoset,
+  IPhotosetsState,
+  PhotosetStatus,
+  PreferenceOrderBy,
+} from './state'
 
 const { debug } = getLogger('/store/photosets/mutations.ts')
 
@@ -26,5 +32,15 @@ export const mutations = {
     }
 
     photoset.status = payload.status
+  },
+
+  [t.PHOTOSETS__SET_PREFERENCE_ORDER_BY](state: IPhotosetsState, orderBy: PreferenceOrderBy) {
+    state.preference.orderBy = orderBy
+    Storage.set('orderBy', orderBy)
+  },
+
+  [t.PHOTOSETS__SET_PREFERENCE_IS_DESC](state: IPhotosetsState, isDesc: boolean) {
+    state.preference.isDesc = isDesc
+    Storage.set('isDesc', isDesc)
   },
 }

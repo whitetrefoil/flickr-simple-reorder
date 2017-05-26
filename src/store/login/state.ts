@@ -1,6 +1,6 @@
-import Storage       from '../../services/storage'
 import { loginUrl }  from './actions'
 import { getLogger } from '../../services/log'
+import Storage       from '../../services/storage'
 
 export interface IUserInfo {
   fullname: string

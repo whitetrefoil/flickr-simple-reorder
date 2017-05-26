@@ -1,14 +1,27 @@
 import { Component, Lifecycle, Vue, Watch } from 'av-ts'
 import * as _                               from 'lodash'
+import ISelect                              from 'iview/src/components/select/select'
+import IOption                              from 'iview/src/components/select/option'
+import WtButton                             from '../../components/wt-button'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
 import { IPhotoset }                        from '../../store/photosets/state'
 import { store, types as t }                from '../../store'
 
 
+const ORDER_BY_OPTIONS = [
+  { value: 'dateupload', label: 'Upload Time' },
+  { value: 'datetaken', label: 'Taken Time' },
+  { value: 'title', label: 'Title' },
+  { value: 'views', label: 'Views Count' },
+]
+
 @Component({
   name      : 'index-page',
   components: {
+    ISelect,
+    IOption,
+    WtButton,
     WtPanel,
     WtPhotoset,
   },

@@ -40,9 +40,10 @@ interface IPhotosetsGetListResponse {
 
 interface IPhoto {
   id: string,
-  secret: string,
+  title: string,
   datetaken: string,
   dateupload: string,
+  views: string,
 }
 
 interface IPhotosetsGetPhotosResponse {

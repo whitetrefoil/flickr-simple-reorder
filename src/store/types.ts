@@ -21,8 +21,10 @@ export const LOGIN__REQUEST_USER_INFO = 'login/REQUEST_USER_INFO'
 // Mutations
 // ----------
 
-export const PHOTOSETS__SET_LIST   = 'photosets/SET_LIST'
-export const PHOTOSETS__SET_STATUS = 'photosets/SET_STATUS'
+export const PHOTOSETS__SET_LIST                = 'photosets/SET_LIST'
+export const PHOTOSETS__SET_STATUS              = 'photosets/SET_STATUS'
+export const PHOTOSETS__SET_PREFERENCE_ORDER_BY = 'photosets/SET_PREFERENCE_ORDER_BY'
+export const PHOTOSETS__SET_PREFERENCE_IS_DESC  = 'photosets/SET_PREFERENCE_IS_DESC'
 
 // Actions
 // ----------
