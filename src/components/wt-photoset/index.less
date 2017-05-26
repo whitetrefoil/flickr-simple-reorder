@@ -57,30 +57,21 @@
 
   .actions {
     height: 40px;
-    //border-top: 1px solid @border-color-split;
     background-color: #FFFFFF;
 
-    .button-theme(@bg-color, @text-color) {
-      background-color: @bg-color;
-      border-left: 1px solid @text-color;
-      border-right: 1px solid @text-color;
-      border-bottom: 1px solid @text-color;
-      color: @text-color;
+    .button-theme(@color) {
+      @border-color: tint(@color, 80%);
+      border-left: 1px solid @border-color;
+      border-right: 1px solid @border-color;
+      border-bottom: 1px solid @border-color;
+      color: @color;
 
       &:hover {
-        @color: tint(@text-color, 20%);
-        color: @color;
-        border-left-color: @color;
-        border-right-color: @color;
-        border-bottom-color: @color;
+        color: tint(@color, 20%);
       }
 
       &:active {
-        @color: shade(@text-color, 5%);
-        color: @color;
-        border-left-color: @color;
-        border-right-color: @color;
-        border-bottom-color: @color;
+        color: shade(@color, 5%);
       }
     }
 
@@ -93,7 +84,24 @@
       cursor: pointer;
       transition: all @transition-time ease;
       outline: none;
-      .button-theme(white, @primary-color)
+      background-color: white;
+      .button-theme(@primary-color);
+
+      &.processing {
+        .button-theme(@info-color);
+      }
+
+      &.done {
+        .button-theme(@success-color);
+      }
+
+      &.skipped {
+        .button-theme(@warning-color);
+      }
+
+      &.error {
+        .button-theme(@error-color);
+      }
     }
   }
 }

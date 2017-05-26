@@ -1,3 +1,5 @@
+export type PhotosetStatus = null | 'processing' | 'skipped' | 'done' | 'error'
+
 export interface IPhotoset {
   id: string
   photos: number
@@ -5,6 +7,7 @@ export interface IPhotoset {
   height_m: number
   width_m: number
   title: string
+  status: PhotosetStatus
 }
 
 export interface IPhotosetsState {

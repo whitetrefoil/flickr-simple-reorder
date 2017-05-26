@@ -12,8 +12,11 @@ export type IPhotosetsActionContext = ActionContext<IPhotosetsState, IRootState>
 const { debug } = getLogger('/store/photosets/actions.ts')
 
 const methods = {
-  getList: 'flickr.photosets.getList',
+  getList  : 'flickr.photosets.getList',
+  getPhotos: 'flickr.photosets.getPhotos',
 }
+
+const PHOTOS_PER_PAGE = 500
 
 
 interface IPhotosetsGetListResponse {
@@ -31,6 +34,21 @@ interface IPhotosetsGetListResponse {
           _content: string,
         },
       }[],
+    },
+  },
+}
+
+interface IPhoto {
+  id: string,
+  secret: string,
+  datetaken: string,
+  dateupload: string,
+}
+
+interface IPhotosetsGetPhotosResponse {
+  data: {
+    photoset: {
+      photo: IPhoto[],
     },
   },
 }
@@ -61,11 +79,52 @@ export const actions = {
         url_m   : p.primary_photo_extras.url_m,
         height_m: parseInt(p.primary_photo_extras.height_m, 10),
         width_m : parseInt(p.primary_photo_extras.width_m, 10),
+        status  : null,
       }
 
       photosets.push(photoset)
     })
 
     commit(t.PHOTOSETS__SET_LIST, photosets)
+  },
+
+  async [t.PHOTOSETS__ORDER_SET]({ commit, rootState }: IPhotosetsActionContext, photoset: IPhotoset): Promise<void> {
+    debug('Order set')
+
+    commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'processing' })
+
+
+    let photos: IPhoto[] = []
+
+    const pages = Math.ceil(photoset.photos / PHOTOS_PER_PAGE)
+
+    debug(`There are ${photoset.photos} photos in photoset "${photoset.title}", which needs ${pages} request(s) to fetch all photos.`)
+
+    debug('Start requesting photos.')
+    for (let p = 0; p < pages; p++) {
+      const data = composeFormData({
+        api_key    : apiKey,
+        method     : methods.getPhotos,
+        auth_token : rootState.login.token,
+        photoset_id: photoset.id,
+        page       : 0,
+        per_page   : PHOTOS_PER_PAGE,
+        extras     : 'date_upload,date_taken,views',
+      })
+
+      try {
+        const res = await request(data) as IPhotosetsGetPhotosResponse
+        photos = photos.concat(res.data.photoset.photo)
+      } catch (e) {
+        debug('Failed to request photos!', e)
+        commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'error' })
+        return
+      }
+    }
+    debug('Done requesting photos.')
+
+    // TODO
+    debug(photos)
+    commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'done' })
   },
 }
