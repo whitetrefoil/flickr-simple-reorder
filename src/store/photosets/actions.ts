@@ -12,8 +12,9 @@ export type IPhotosetsActionContext = ActionContext<IPhotosetsState, IRootState>
 const { debug } = getLogger('/store/photosets/actions.ts')
 
 const methods = {
-  getList  : 'flickr.photosets.getList',
-  getPhotos: 'flickr.photosets.getPhotos',
+  getList      : 'flickr.photosets.getList',
+  getPhotos    : 'flickr.photosets.getPhotos',
+  reorderPhotos: 'flickr.photosets.reorderPhotos',
 }
 
 const PHOTOS_PER_PAGE = 500
@@ -55,6 +56,15 @@ interface IPhotosetsGetPhotosResponse {
 }
 
 
+function order(photos: IPhoto[], state: IPhotosetsState): IPhoto[] {
+  const orderBy = state.preferences.orderBy
+  const isDesc  = state.preferences.isDesc
+  const sorted  = _.orderBy(photos, [_.property(orderBy)], [isDesc ? 'desc' : 'asc']) as IPhoto[]
+  debug(sorted)
+  return sorted
+}
+
+
 export const actions = {
   async [t.PHOTOSETS__GET_LIST]({ commit, rootState }: IPhotosetsActionContext): Promise<void> {
     debug('Get photosets')
@@ -89,7 +99,10 @@ export const actions = {
     commit(t.PHOTOSETS__SET_LIST, photosets)
   },
 
-  async [t.PHOTOSETS__ORDER_SET]({ commit, rootState }: IPhotosetsActionContext, photoset: IPhotoset): Promise<void> {
+  async [t.PHOTOSETS__ORDER_SET](
+    { commit, state, rootState }: IPhotosetsActionContext,
+    photoset: IPhotoset,
+  ): Promise<void> {
     debug('Order set')
 
     commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'processing' })
@@ -115,7 +128,7 @@ export const actions = {
 
       try {
         const res = await request(data) as IPhotosetsGetPhotosResponse
-        photos = photos.concat(res.data.photoset.photo)
+        photos    = photos.concat(res.data.photoset.photo)
       } catch (e) {
         debug('Failed to request photos!', e)
         commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'error' })
@@ -124,8 +137,25 @@ export const actions = {
     }
     debug('Done requesting photos.')
 
-    // TODO
-    debug(photos)
+    const sortedPhotos = order(photos, state)
+    const photoIds     = _.map(sortedPhotos, _.property('id')).join(',')
+    debug(photoIds)
+
+    const data = composeFormData({
+      api_key    : apiKey,
+      method     : methods.reorderPhotos,
+      auth_token : rootState.login.token,
+      photoset_id: photoset.id,
+      photo_ids  : photoIds,
+    })
+
+    try {
+      await request(data)
+    } catch (e) {
+      debug('Failed to reorder photos!', e)
+      commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'error' })
+      return
+    }
     commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'done' })
   },
 }
