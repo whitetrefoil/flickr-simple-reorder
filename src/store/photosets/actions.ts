@@ -60,6 +60,10 @@ function order(photos: IPhoto[], state: IPhotosetsState): IPhoto[] {
   const orderBy = state.preferences.orderBy
   const isDesc  = state.preferences.isDesc
   const sorted  = _.orderBy(photos, [_.property(orderBy)], [isDesc ? 'desc' : 'asc']) as IPhoto[]
+  if (_.isEqual(sorted, photos)) {
+    debug('Skipped!')
+    return null
+  }
   debug(sorted)
   return sorted
 }
@@ -138,7 +142,14 @@ export const actions = {
     debug('Done requesting photos.')
 
     const sortedPhotos = order(photos, state)
-    const photoIds     = _.map(sortedPhotos, _.property('id')).join(',')
+
+    if (sortedPhotos === null) {
+      debug('No need to reorder.')
+      commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'skipped' })
+      return
+    }
+
+    const photoIds = _.map(sortedPhotos, _.property('id')).join(',')
     debug(photoIds)
 
     const data = composeFormData({
