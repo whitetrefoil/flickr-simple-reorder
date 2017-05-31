@@ -1,12 +1,14 @@
-import { Component, Lifecycle, Vue, Watch } from 'av-ts'
-import * as _                               from 'lodash'
-import ISelect                              from 'iview/src/components/select/select'
-import IOption                              from 'iview/src/components/select/option'
-import WtButton                             from '../../components/wt-button'
-import WtPanel                              from '../../components/wt-panel'
-import WtPhotoset                           from '../../components/wt-photoset'
-import { IPhotoset }                        from '../../store/photosets/state'
-import { store, types as t }                from '../../store'
+import { Component, Data, Lifecycle, Vue, Watch } from 'av-ts'
+import * as _                                     from 'lodash'
+import IIcon                                      from 'iview/src/components/icon'
+import IOption                                    from 'iview/src/components/select/option'
+import ISelect                                    from 'iview/src/components/select/select'
+import ISwitch                                    from 'iview/src/components/switch'
+import WtButton                                   from '../../components/wt-button'
+import WtPanel                                    from '../../components/wt-panel'
+import WtPhotoset                                 from '../../components/wt-photoset'
+import { IPhotoset, PreferenceOrderBy }                              from '../../store/photosets/state'
+import { store, types as t }                      from '../../store'
 
 
 const ORDER_BY_OPTIONS = [
@@ -19,8 +21,10 @@ const ORDER_BY_OPTIONS = [
 @Component({
   name      : 'index-page',
   components: {
-    ISelect,
+    IIcon,
     IOption,
+    ISelect,
+    ISwitch,
     WtButton,
     WtPanel,
     WtPhotoset,
@@ -30,6 +34,13 @@ export default class IndexPage extends Vue {
 
   isLoading       = false
   failedToGetList = false
+
+  orderByOptions = {
+    datetaken : 'Taken',
+    dateupload: 'Uploaded',
+    title     : 'Title',
+    views     : 'Views',
+  }
 
   get hasLoggedIn(): boolean {
     return !_.isEmpty(_.get(store.state, 'login.token'))
@@ -54,6 +65,14 @@ export default class IndexPage extends Vue {
         this.isLoading       = false
         this.failedToGetList = true
       })
+  }
+
+  onOrderByChange(value: PreferenceOrderBy) {
+    store.commit(t.PHOTOSETS__SET_PREFERENCE_ORDER_BY, value)
+  }
+
+  onIsDescChange(value: boolean) {
+    store.commit(t.PHOTOSETS__SET_PREFERENCE_IS_DESC, value)
   }
 
   @Watch('hasLoggedIn')

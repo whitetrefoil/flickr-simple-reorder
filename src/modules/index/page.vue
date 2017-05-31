@@ -30,13 +30,20 @@
     <!-- /.loading -->
 
     <div class="photosets-page" v-else>
-      <div class="photosets">
-        <div class="toolbar">
-          <i-select></i-select>
-          <wt-button color="primary">Reorder All</wt-button>
-        </div>
-        <!-- /.toolbar -->
+      <div class="toolbar">
+        <span>Order by</span>
+        <i-select size="large" :value="$store.state.photosets.preferences.orderBy" @on-change="onOrderByChange">
+          <i-option v-for="(display, key) in orderByOptions" :key="key" :value="key" :label="display"></i-option>
+        </i-select>
 
+        <span>Desc?</span>
+        <i-switch :value="$store.state.photosets.preferences.isDesc" @on-change="onIsDescChange"></i-switch>
+
+        <wt-button color="primary">Reorder All</wt-button>
+      </div>
+      <!-- /.toolbar -->
+
+      <div class="photosets">
         <wt-photoset v-for="photoset in photosets" :key="photoset.id" :photoset="photoset"></wt-photoset>
       </div>
       <!-- /.photosets -->

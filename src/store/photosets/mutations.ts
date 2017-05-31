@@ -35,12 +35,12 @@ export const mutations = {
   },
 
   [t.PHOTOSETS__SET_PREFERENCE_ORDER_BY](state: IPhotosetsState, orderBy: PreferenceOrderBy) {
-    state.preference.orderBy = orderBy
+    state.preferences.orderBy = orderBy
     Storage.set('orderBy', orderBy)
   },
 
   [t.PHOTOSETS__SET_PREFERENCE_IS_DESC](state: IPhotosetsState, isDesc: boolean) {
-    state.preference.isDesc = isDesc
+    state.preferences.isDesc = isDesc
     Storage.set('isDesc', isDesc)
   },
 }

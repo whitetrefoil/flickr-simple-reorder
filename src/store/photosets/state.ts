@@ -13,7 +13,7 @@ export interface IPhotoset {
   status: PhotosetStatus
 }
 
-export interface IPreference {
+export interface IPreferences {
   orderBy: PreferenceOrderBy
   isDesc: boolean
 }
@@ -22,13 +22,13 @@ export interface IPhotosetsState {
   // `undefined` means not initialized yet.
   // `[]` means it's just empty.
   photosets: IPhotoset[] | undefined
-  preference: IPreference
+  preferences: IPreferences
 }
 
 export const state: IPhotosetsState = {
-  photosets : undefined,
-  preference: {
+  photosets  : undefined,
+  preferences: {
     orderBy: Storage.get('orderBy') || 'dateupload',
-    isDesc : Storage.get('isDesc') || false,
+    isDesc : Storage.get('isDesc') !== false,
   },
 }

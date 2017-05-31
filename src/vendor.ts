@@ -10,5 +10,7 @@ import 'vue-router'
 import 'vuex'
 import 'vuex-router-sync'
 
+import 'iview/src/components/icon'
 import 'iview/src/components/select/select'
+import 'iview/src/components/switch'
 import 'iview/src/components/select/option'
