@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+@import "../../styles/_vars";
+
+.wt-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  z-index: @zindex-modal + 1;
+
+  .wt-panel {
+    position: relative;
+    margin: 100px auto;
+    z-index: @zindex-modal + 2;
+  }
+
+  &.wt-modal-large {
+    .wt-panel {
+      width: @screen-lg - 20px;
+    }
+  }
+  &.wt-modal-medium {
+    .wt-panel {
+      width: @screen-md - 20px;
+    }
+  }
+  &.wt-modal-small {
+    .wt-panel {
+      width: @screen-sm - 20px;
+    }
+  }
+  &.wt-modal-tiny {
+    .wt-panel {
+      width: @screen-xs - 20px;
+    }
+  }
+}

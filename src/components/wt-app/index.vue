@@ -7,5 +7,6 @@
     <transition>
       <router-view></router-view>
     </transition>
+    <wt-mask :is-showing="isMaskShowing"></wt-mask>
   </div>
 </template>

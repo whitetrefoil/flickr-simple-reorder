@@ -1,3 +1,12 @@
+// App
+// ==========
+
+// Mutations
+// ----------
+
+export const ONE_MORE_MODAL = 'ONE_MORE_MODAL'
+export const ONE_LESS_MODAL = 'ONE_LESS_MODAL'
+
 // Login
 // ==========
 

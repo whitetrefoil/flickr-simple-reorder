@@ -10,9 +10,14 @@
     background-color: tint(@color, 90%);
     color: shade(@color, 10%);
   }
+
+  strong {
+    color: @color;
+  }
 }
 
 .wt-panel {
+  background-color: @body-background;
   border: 1px solid @border-color-base;
   border-radius: @border-radius-base;
 }

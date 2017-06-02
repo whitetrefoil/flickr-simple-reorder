@@ -6,7 +6,8 @@
     <div class="welcome" v-if="!hasLoggedIn">
       <wt-panel color="warning" title="Warning!">
         <p>This application is still under development.</p>
-        <p>It contains a lot of bugs, errors, incomplete features, bad things.  And it functions very unstable.  This means it will possibly <strong>mess up, damage or even totally destroy your data</strong>.</p>
+        <p>It contains a lot of bugs, errors, incomplete features, bad things.  And it functions very unstable.  This means it will possibly <strong>mess up, damage or even totally destroy your data</strong>.
+        </p>
         <p>Please:</p>
         <ol>
           <li>Do <strong>backup</strong> your data before using.</li>
@@ -14,10 +15,17 @@
           <li>Use this application at your own risk.</li>
         </ol>
         <p>Although I will not take any responsibility for your loss
-          (but I really don't want to see this happen, and hopefully you have followed the recommendations above), <a href="https://github.com/whitetrefoil/flickr-simple-reorder/issues" target="_blank">any bug report is appreciated</a>.</p>
+          (but I really don't want to see this happen, and hopefully you have followed the recommendations above), <a href="https://github.com/whitetrefoil/flickr-simple-reorder/issues" target="_blank">any bug report is appreciated</a>.
+        </p>
         <p>Starting to use this application is deemed to read, acknowledge and agree with these terms.</p>
-        <p>If you really want to take a try, <router-link :to="{name: 'login'}">click here to login with flickr</router-link>.</p>
-        <p>You can also <router-link :to="{name: 'faq'}">checkout the FAQ for more information</router-link>.</p>
+        <p>If you really want to take a try,
+          <router-link :to="{name: 'login'}">click here to login with flickr</router-link>
+          .
+        </p>
+        <p>You can also
+          <router-link :to="{name: 'faq'}">checkout the FAQ for more information</router-link>
+          .
+        </p>
       </wt-panel>
     </div>
     <!-- /.welcome -->
@@ -39,7 +47,7 @@
         <span>Desc?</span>
         <i-switch :value="$store.state.photosets.preferences.isDesc" @on-change="onIsDescChange"></i-switch>
 
-        <wt-button color="primary">Reorder All</wt-button>
+        <wt-button color="primary" @click.native="onReorderAllClick">Reorder All</wt-button>
       </div>
       <!-- /.toolbar -->
 
@@ -49,5 +57,20 @@
       <!-- /.photosets -->
     </div>
     <!-- /.photosets-page -->
+
+    <reorder-all-confirm
+        :is-showing="isConfirming"
+        :total="totalPhotosets"
+        @confirm="confirmed"
+        @cancel="canceled"
+    ></reorder-all-confirm>
+    <reordering-all
+        :is-showing="isReorderingAll"
+        :total="totalPhotosets"
+        :successes="reorderingAllStatus.successes"
+        :skipped="reorderingAllStatus.skipped"
+        :failures="reorderingAllStatus.failures"
+        @close="closed"
+    ></reordering-all>
   </div>
 </template>

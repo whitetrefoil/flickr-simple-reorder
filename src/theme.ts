@@ -2,4 +2,8 @@
 
 import './styles/theme.less'
 
-// import 'iview/src/components/button'
+import 'iview/src/components/circle'
+import 'iview/src/components/icon'
+import 'iview/src/components/select/select'
+import 'iview/src/components/select/option'
+import 'iview/src/components/switch'

@@ -8,15 +8,27 @@
 
   & when (luma(@color) < 50) {
     color: white;
+    &:hover, &:active, &[disabled] {
+      color: white;
+    }
   }
 
   &:hover {
     background-color: tint(@color, 20%);
+    border: none;
   }
 
   &:active {
     background-color: shade(@color, 5%);
+    border: none;
     //padding: @btn-padding-base-active;
+  }
+
+  &[disabled] {
+    color: @btn-disable-color;
+    border-color: @btn-disable-border;
+    background-color: @btn-disable-bg;
+    cursor: @cursor-disabled;
   }
 }
 
@@ -24,8 +36,26 @@
   border: 1px solid @border-color-base;
   border-radius: @border-radius-base;
   padding: @btn-padding-base;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   user-select: none;
+  color: @primary-color;
+
+  &:hover {
+    border-color: tint(@primary-color, 20%);
+    color: tint(@primary-color, 20%);
+  }
+
+  &:active {
+    border-color: shade(@primary-color, 5%);
+    color: shade(@primary-color, 5%);
+  }
+
+  &[disabled] {
+    color: @btn-disable-color;
+    border-color: @btn-disable-border;
+    background-color: @btn-disable-bg;
+    cursor: @cursor-disabled;
+  }
 }
 
 .wt-button-error {
@@ -43,7 +73,7 @@
 //.wt-button-info {
 //  .colorize-button(@info-color)
 //}
-//
+
 .wt-button-primary {
   .colorize-button(@primary-color)
 }

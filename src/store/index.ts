@@ -1,8 +1,10 @@
-import Vue           from 'vue'
-import Vuex          from 'vuex'
-import { login }     from './login'
-import { photosets } from './photosets'
-import * as t        from './types'
+import Vue                from 'vue'
+import Vuex               from 'vuex'
+import { login }          from './login'
+import { mutations }      from './mutations'
+import { photosets }      from './photosets'
+import { getters, state } from './state'
+import * as t             from './types'
 
 Vue.use(Vuex)
 
@@ -12,6 +14,9 @@ export const store = new Vuex.Store({
     login,
     photosets,
   },
+  mutations,
+  state,
+  getters,
 })
 
 if (typeof store.state.login.token === 'string') {
