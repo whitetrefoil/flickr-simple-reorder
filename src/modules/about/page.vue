@@ -55,13 +55,13 @@
             <h3>TODOs</h3>
             <ul class="checklist">
               <li>
-                <input disabled="disabled" type="checkbox"/> Put POST params in body to fix HTTP 414 error
+                <input disabled="disabled" type="checkbox" checked/> Put POST params in body to fix HTTP 414 error
               </li>
               <li>
-                <input disabled="disabled" type="checkbox"/> Use Vue and Bootstrap-v4 to refactor
+                <input disabled="disabled" type="checkbox" checked/> Use Vue to refactor
               </li>
               <li>
-                <input disabled="disabled" type="checkbox" checked="checked"/> Possible damage alerts
+                <input disabled="disabled" type="checkbox" checked/> Possible damage alerts
               </li>
               <li>
                 <input disabled="disabled" type="checkbox"/> Messages
@@ -70,16 +70,16 @@
                 <input disabled="disabled" type="checkbox"/> Network error handling
               </li>
               <li>
-                <input disabled="disabled" type="checkbox" checked="checked"/> Bulk edit
+                <input disabled="disabled" type="checkbox" checked/> Bulk edit
               </li>
               <li>
-                <input disabled="disabled" type="checkbox" checked="checked"/> Searching / filtering
+                <input disabled="disabled" type="checkbox"/> Searching / filtering
               </li>
               <li>
-                <input disabled="disabled" type="checkbox" checked="checked"/> About page
+                <input disabled="disabled" type="checkbox" checked/> About page
               </li>
               <li>
-                <input disabled="disabled" type="checkbox" checked="checked"/> Ordering in other orders
+                <input disabled="disabled" type="checkbox" checked/> Ordering in other orders
               </li>
               <li>
                 <input disabled="disabled" type="checkbox"/> Rollback
