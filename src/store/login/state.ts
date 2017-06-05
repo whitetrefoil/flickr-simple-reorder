@@ -6,6 +6,10 @@ export interface IUserInfo {
   fullname: string
   nsid: string
   username: string
+  iconfarm?: number
+  iconserver?: string
+  photosurl?: string
+  profileurl?: string
 }
 
 export interface ILoginState {

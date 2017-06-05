@@ -19,7 +19,8 @@
     <div class="user-greeting" v-show="hasLoggedIn">
       <span>Hello, {{userName || 'guest'}}!</span>
 
-      <img class="user-avatar" :src="userAvatarUrl" :alt="userName">
+      <a :href="profileUrl" target="_blank"><img class="user-avatar" :src="userAvatarUrl" :alt="userName"></a>
+
     </div>
   </nav>
 </template>

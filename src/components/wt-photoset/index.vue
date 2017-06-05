@@ -7,7 +7,7 @@
     <!-- /.preview -->
 
     <div class="info" :title="photoset.title">
-      <div>{{photoset.title}}</div>
+      <div><a :href="photosetUrl" target="_blank">{{photoset.title}}</a></div>
       <p>{{photoset.photos}} photos</p>
     </div>
     <!-- /.info -->

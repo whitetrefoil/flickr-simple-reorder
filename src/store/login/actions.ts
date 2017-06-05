@@ -2,7 +2,7 @@ import * as _            from 'lodash'
 import { ActionContext } from 'vuex'
 import { request }       from '../../services/api'
 import * as t            from '../types'
-import { ILoginState }   from './state'
+import { ILoginState, IUserInfo }   from './state'
 import { getLogger }     from '../../services/log'
 import {
   apiKey,
@@ -13,6 +13,22 @@ import {
 } from '../helpers'
 
 export type ILoginActionContext = ActionContext<ILoginState, any>
+
+interface IOfficialUserInfoResponse {
+  id: string
+  nsid: string
+  username: {
+    _content: string,
+  }
+  iconfarm: number,
+  iconserver: string,
+  photosurl: {
+    _content: string,
+  }
+  profileurl: {
+    _content: string,
+  }
+}
 
 const log = getLogger('/store/login/actions.ts')
 
@@ -100,19 +116,31 @@ export const actions = {
       throw new Error('Invalid NSID!')
     }
 
-    const data   = composeFormData({
+    const data = composeFormData({
       api_key: apiKey,
       user_id: nsid,
       method : methods.peopleGetInfo,
     })
-    const res    = await request(data)
-    const person = _.get(res, 'data.person')
 
-    log.debug('Got person info:', person)
-    if (_.isEmpty(person)) {
+    const res            = await request(data)
+    const officialPerson = _.get(res, 'data.person') as IOfficialUserInfoResponse
+
+    log.debug('Got person info:', officialPerson)
+    if (_.isEmpty(officialPerson)) {
       return Promise.reject('Failed to get user info.')
     }
 
+    const person: IUserInfo = {
+      fullname  : state.user.fullname,
+      username  : officialPerson.username._content,
+      nsid      : officialPerson.nsid,
+      iconfarm  : officialPerson.iconfarm,
+      iconserver: officialPerson.iconserver,
+      photosurl : officialPerson.photosurl._content,
+      profileurl: officialPerson.photosurl._content,
+    }
+
+    log.debug('Converted person info:', person)
     log.debug('Committing person info into store.')
     commit(t.LOGIN__SET_USER_INFO, person)
   },

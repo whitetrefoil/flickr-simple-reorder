@@ -1,6 +1,6 @@
 import { Component, p, Prop, Vue } from 'av-ts'
 import { IPhotoset }               from '../../store/photosets/state'
-import * as t                      from '../../store/types'
+import { store, types as t }       from '../../store'
 
 const ASPECT_RADIO_THRESHOLD = 2 / 3
 
@@ -43,6 +43,10 @@ export default class WtPhotoset extends Vue {
       case 'error': return ['ivu-icon-alert']
       default: return ['ivu-icon-compose']
     }
+  }
+
+  get photosetUrl(): string {
+    return `${store.state.login.user.photosurl}sets/${this.photoset.id}`
   }
 
   click(photoset: IPhotoset) {
