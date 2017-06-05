@@ -6,12 +6,19 @@
   height: 10px;
   background-color: #F3F3F3;
   border-radius: 5px;
+  overflow: hidden;
+
+  .success, .skipped, .failure {
+    height: 100%;
+    float: left;
+    transition: width @transition-time linear;
+  }
 
   .success {
     background-color: @success-color;
   }
 
-  .warning {
+  .skipped {
     background-color: @warning-color;
   }
 

@@ -22,13 +22,17 @@ export default class ReorderingAll extends Vue {
   @Prop skipped   = p({ type: Number, required: true }) as number
   @Prop failures  = p({ type: Number, required: true }) as number
 
+  get finished(): boolean {
+    return this.successes + this.skipped + this.failures >= this.total
+  }
+
   get color(): string {
     switch (true) {
       case this.failures > 0 :
         return 'error'
       case this.total === this.skipped:
         return 'warning'
-      case this.total === this.successes:
+      case this.finished:
         return 'success'
       default:
         return 'info'

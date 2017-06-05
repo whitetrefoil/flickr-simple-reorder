@@ -1,16 +1,16 @@
-import { Component, Lifecycle, Vue, Watch } from 'av-ts'
-import * as _                               from 'lodash'
-import IIcon                                from 'iview/src/components/icon'
-import IOption                              from 'iview/src/components/select/option'
-import ISelect                              from 'iview/src/components/select/select'
-import ISwitch                              from 'iview/src/components/switch'
-import WtButton                             from '../../components/wt-button'
-import WtPanel                              from '../../components/wt-panel'
-import WtPhotoset                           from '../../components/wt-photoset'
-import { IPhotoset, PreferenceOrderBy }     from '../../store/photosets/state'
-import { store, types as t }                from '../../store'
-import ReorderAllConfirm                    from './reorder-all-confirm'
-import ReorderingAll                        from './reordering-all'
+import { Component, Lifecycle, Vue, Watch }               from 'av-ts'
+import * as _                                             from 'lodash'
+import IIcon                                              from 'iview/src/components/icon'
+import IOption                                            from 'iview/src/components/select/option'
+import ISelect                                            from 'iview/src/components/select/select'
+import ISwitch                                            from 'iview/src/components/switch'
+import WtButton                                           from '../../components/wt-button'
+import WtPanel                                            from '../../components/wt-panel'
+import WtPhotoset                                         from '../../components/wt-photoset'
+import { IPhotoset, IPhotosetStatus, IPreferenceOrderBy } from '../../store/photosets/state'
+import { store, types as t }                              from '../../store'
+import ReorderAllConfirm                                  from './reorder-all-confirm'
+import ReorderingAll                                      from './reordering-all'
 
 
 const ORDER_BY_OPTIONS = [
@@ -83,17 +83,25 @@ export default class IndexPage extends Vue {
       })
   }
 
-  reorderAll(): void {
-    // TODO
-    const handler = window.setInterval(() => {
-      this.reorderingAllStatus.successes += 1
-      if (this.reorderingAllStatus.successes >= this.totalPhotosets) {
-        window.clearInterval(handler)
+  async reorderAll(): Promise<void> {
+    this.reorderingAllStatus.successes = 0
+    this.reorderingAllStatus.skipped = 0
+    this.reorderingAllStatus.failures = 0
+    _.forEach(store.state.photosets.photosets, async(photoset) => {
+      try {
+        const result = await store.dispatch(t.PHOTOSETS__ORDER_SET, photoset) as any as IPhotosetStatus
+        switch (result) {
+          case 'done': this.reorderingAllStatus.successes += 1; return
+          case 'skipped': this.reorderingAllStatus.skipped += 1; return
+          default: throw new Error(`Unknown reorder result: ${result}`)
+        }
+      } catch (e) {
+        this.reorderingAllStatus.failures += 1
       }
-    }, 20)
+    })
   }
 
-  onOrderByChange(value: PreferenceOrderBy) {
+  onOrderByChange(value: IPreferenceOrderBy) {
     store.commit(t.PHOTOSETS__SET_PREFERENCE_ORDER_BY, value)
   }
 

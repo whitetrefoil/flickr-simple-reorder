@@ -1,7 +1,7 @@
 import Storage from '../../services/storage'
 
-export type PhotosetStatus = null | 'processing' | 'skipped' | 'done' | 'error'
-export type PreferenceOrderBy = 'datetaken' | 'dateupload' | 'title' | 'views'
+export type IPhotosetStatus = null | 'processing' | 'skipped' | 'done' | 'error'
+export type IPreferenceOrderBy = 'datetaken' | 'dateupload' | 'title' | 'views'
 
 export interface IPhotoset {
   id: string
@@ -10,11 +10,11 @@ export interface IPhotoset {
   height_m: number
   width_m: number
   title: string
-  status: PhotosetStatus
+  status: IPhotosetStatus
 }
 
 export interface IPreferences {
-  orderBy: PreferenceOrderBy
+  orderBy: IPreferenceOrderBy
   isDesc: boolean
 }
 

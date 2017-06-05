@@ -20,7 +20,7 @@
     <!-- /.progress -->
 
     <div class="actions">
-      <wt-button :color="color" @click.native="close" :disabled="color === 'info'">OK</wt-button>
+      <wt-button :color="color" @click.native="close" :disabled="!finished">OK</wt-button>
     </div>
     <!-- /.actions -->
   </wt-modal>

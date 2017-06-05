@@ -3,11 +3,11 @@
 
 <template>
   <div class="wt-progress">
-    <div class="success"></div>
+    <div class="success" :style="successStyle"></div>
     <!-- /.success -->
-    <div class="warning"></div>
+    <div class="skipped" :style="skippedStyle"></div>
     <!-- /.warning -->
-    <div class="failure"></div>
+    <div class="failure" :style="failureStyle"></div>
     <!-- /.failure -->
   </div>
   <!-- /.wt-progress -->

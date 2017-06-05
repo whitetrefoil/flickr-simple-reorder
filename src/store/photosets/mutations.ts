@@ -5,15 +5,15 @@ import * as t        from '../types'
 import {
   IPhotoset,
   IPhotosetsState,
-  PhotosetStatus,
-  PreferenceOrderBy,
+  IPhotosetStatus,
+  IPreferenceOrderBy,
 } from './state'
 
 const { debug } = getLogger('/store/photosets/mutations.ts')
 
 interface ISetStatusPayload {
   id: string
-  status: PhotosetStatus
+  status: IPhotosetStatus
 }
 
 export const mutations = {
@@ -34,7 +34,7 @@ export const mutations = {
     photoset.status = payload.status
   },
 
-  [t.PHOTOSETS__SET_PREFERENCE_ORDER_BY](state: IPhotosetsState, orderBy: PreferenceOrderBy) {
+  [t.PHOTOSETS__SET_PREFERENCE_ORDER_BY](state: IPhotosetsState, orderBy: IPreferenceOrderBy) {
     state.preferences.orderBy = orderBy
     Storage.set('orderBy', orderBy)
   },

@@ -1,11 +1,11 @@
-import * as _                         from 'lodash'
-import { ActionContext }              from 'vuex'
-import { request }                    from '../../services/api'
-import { getLogger }                  from '../../services/log'
-import { apiKey, composeFormData }    from '../helpers'
-import { IRootState }                 from '../state'
-import * as t                         from '../types'
-import { IPhotoset, IPhotosetsState } from './state'
+import * as _                                          from 'lodash'
+import { ActionContext }                               from 'vuex'
+import { request }                                     from '../../services/api'
+import { getLogger }                                   from '../../services/log'
+import { apiKey, composeFormData }                     from '../helpers'
+import { IRootState }                                  from '../state'
+import * as t                                          from '../types'
+import { IPhotoset, IPhotosetsState, IPhotosetStatus } from './state'
 
 export type IPhotosetsActionContext = ActionContext<IPhotosetsState, IRootState>
 
@@ -106,7 +106,7 @@ export const actions = {
   async [t.PHOTOSETS__ORDER_SET](
     { commit, state, rootState }: IPhotosetsActionContext,
     photoset: IPhotoset,
-  ): Promise<void> {
+  ): Promise<IPhotosetStatus> {
     debug('Order set')
 
     commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'processing' })
@@ -125,7 +125,7 @@ export const actions = {
         method     : methods.getPhotos,
         auth_token : rootState.login.token,
         photoset_id: photoset.id,
-        page       : 0,
+        page       : p + 1,
         per_page   : PHOTOS_PER_PAGE,
         extras     : 'date_upload,date_taken,views',
       })
@@ -136,7 +136,7 @@ export const actions = {
       } catch (e) {
         debug('Failed to request photos!', e)
         commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'error' })
-        return
+        throw new Error('Failed to reorder photos!')
       }
     }
     debug('Done requesting photos.')
@@ -146,7 +146,7 @@ export const actions = {
     if (sortedPhotos === null) {
       debug('No need to reorder.')
       commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'skipped' })
-      return
+      return 'skipped'
     }
 
     const photoIds = _.map(sortedPhotos, _.property('id')).join(',')
@@ -165,8 +165,9 @@ export const actions = {
     } catch (e) {
       debug('Failed to reorder photos!', e)
       commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'error' })
-      return
+      throw new Error('Failed to reorder photos!')
     }
     commit(t.PHOTOSETS__SET_STATUS, { id: photoset.id, status: 'done' })
+    return 'done'
   },
 }
