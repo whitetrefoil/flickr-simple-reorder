@@ -19,7 +19,7 @@ module.exports.karmaConfig = {
     'tests/webpack-entry.js': ['webpack', 'sourcemap'],
   },
 
-  reporters: ['junit'],
+  reporters: ['progress', 'junit'],
 
   junitReporter: {
     outputDir : 'test_results/junit', // results will be saved as $outputDir/$browserName.xml

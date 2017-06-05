@@ -1,6 +1,7 @@
 import { config }       from '../config'
 const del             = require('del')
 const gulp            = require('gulp')
+const gutil           = require('gulp-util')
 const { Server }      = require('karma')
 const merge           = require('merge-stream')
 const webpack         = require('webpack')
@@ -13,10 +14,15 @@ gulp.task('ut', (done: Noop) => {
     if (exitCode === 0) {
       // tslint:disable-next-line:no-console
       console.log('Karma tests all passed.')
+      done()
     } else {
-      console.error(`Karma has exited with code: ${exitCode}`)
+      // tslint:disable-next-line:no-console
+      throw new gutil.PluginError({
+        plugin   : 'ut',
+        message  : `Karma has exited with code: ${exitCode}`,
+        showStack: false,
+      })
     }
-    done()
   }).start()
 })
 

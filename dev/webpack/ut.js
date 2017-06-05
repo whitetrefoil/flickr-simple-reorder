@@ -62,11 +62,7 @@ module.exports = {
         loader: 'null-loader',
       },
       {
-        test  : /\.sass$/,
-        loader: 'null-loader',
-      },
-      {
-        test  : /\.scss$/,
+        test  : /\.less$/,
         loader: 'null-loader',
       },
       {
