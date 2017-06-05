@@ -39,20 +39,28 @@
 
     <div class="photosets-page" v-else>
       <div class="toolbar">
-        <span>Order by</span>
-        <i-select size="large" :value="$store.state.photosets.preferences.orderBy" @on-change="onOrderByChange">
-          <i-option v-for="(display, key) in orderByOptions" :key="key" :value="key" :label="display"></i-option>
-        </i-select>
+        <div class="toolbar-section">
+          <i-input size="large" class="search" v-model="filter" placeholder="Search……" icon="search"></i-input>
+        </div>
+        <!-- /.toolbar-section -->
 
-        <span>Desc?</span>
-        <i-switch :value="$store.state.photosets.preferences.isDesc" @on-change="onIsDescChange"></i-switch>
+        <div class="toolbar-section">
+          <span class="toolbar-label">Order by</span>
+          <i-select size="large" :value="$store.state.photosets.preferences.orderBy" @on-change="onOrderByChange">
+            <i-option v-for="(display, key) in orderByOptions" :key="key" :value="key" :label="display"></i-option>
+          </i-select>
 
-        <wt-button color="primary" @click.native="onReorderAllClick">Reorder All</wt-button>
+          <span class="toolbar-label">Desc?</span>
+          <i-switch :value="$store.state.photosets.preferences.isDesc" @on-change="onIsDescChange"></i-switch>
+
+          <i-button size="large" class="reorder-all" type="primary" @click.native="onReorderAllClick">Reorder All</i-button>
+        </div>
+        <!-- /.toolbar-section -->
       </div>
       <!-- /.toolbar -->
 
       <div class="photosets">
-        <wt-photoset v-for="photoset in photosets" :key="photoset.id" :photoset="photoset"></wt-photoset>
+        <wt-photoset v-for="photoset in filteredSets" :key="photoset.id" :photoset="photoset"></wt-photoset>
       </div>
       <!-- /.photosets -->
     </div>

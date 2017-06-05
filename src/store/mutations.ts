@@ -14,7 +14,8 @@ export const mutations = {
   [t.ONE_LESS_MODAL](state: IAppState) {
     debug('One more modal!')
     if (state.modalShowing <= 0) {
-      debug('Warning! Showing less than 0 modal.')
+      debug('Warning! Attempting to show less than 0 modal.')
+      return
     }
     state.modalShowing -= 1
     debug(`${state.modalShowing} modal(s) is showing.`)

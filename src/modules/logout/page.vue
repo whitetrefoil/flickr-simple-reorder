@@ -11,7 +11,7 @@
 
     <wt-panel v-else title="Warning" color="warning">
       <p>You are going to logout, are you sure?</p>
-      <p class="actions"><wt-button @click.native="logout()" color="warning">Yes, log me out!</wt-button></p>
+      <p class="actions"><i-button @click.native="logout()" type="warning" size="large">Yes, log me out!</i-button></p>
     </wt-panel>
   </div>
 </template>

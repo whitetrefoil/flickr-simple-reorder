@@ -1,10 +1,11 @@
 import { Component, Lifecycle, Vue, Watch }               from 'av-ts'
 import * as _                                             from 'lodash'
+import IButton                                            from 'iview/src/components/button'
 import IIcon                                              from 'iview/src/components/icon'
+import IInput                                             from 'iview/src/components/input'
 import IOption                                            from 'iview/src/components/select/option'
 import ISelect                                            from 'iview/src/components/select/select'
 import ISwitch                                            from 'iview/src/components/switch'
-import WtButton                                           from '../../components/wt-button'
 import WtPanel                                            from '../../components/wt-panel'
 import WtPhotoset                                         from '../../components/wt-photoset'
 import { IPhotoset, IPhotosetStatus, IPreferenceOrderBy } from '../../store/photosets/state'
@@ -23,11 +24,12 @@ const ORDER_BY_OPTIONS = [
 @Component({
   name      : 'index-page',
   components: {
+    IButton,
     IIcon,
+    IInput,
     IOption,
     ISelect,
     ISwitch,
-    WtButton,
     WtPanel,
     WtPhotoset,
     ReorderAllConfirm,
@@ -54,6 +56,13 @@ export default class IndexPage extends Vue {
     failures : 0,
   }
 
+  filter: string = ''
+
+  get filteredSets(): IPhotoset[] {
+    if (_.isEmpty(this.filter)) { return this.photosets }
+    return _.filter(this.photosets, (set) => _.includes(_.toLower(set.title), _.toLower(this.filter)))
+  }
+
   get hasLoggedIn(): boolean {
     return !_.isEmpty(_.get(store.state, 'login.token'))
       && !_.isEmpty(_.get(store.state, 'login.user'))
@@ -67,7 +76,7 @@ export default class IndexPage extends Vue {
   }
 
   get totalPhotosets(): number {
-    return this.photosets == null ? 0 : this.photosets.length
+    return this.filteredSets == null ? 0 : this.filteredSets.length
   }
 
   load(): void {
@@ -87,7 +96,7 @@ export default class IndexPage extends Vue {
     this.reorderingAllStatus.successes = 0
     this.reorderingAllStatus.skipped = 0
     this.reorderingAllStatus.failures = 0
-    _.forEach(store.state.photosets.photosets, async(photoset) => {
+    _.forEach(this.filteredSets, async(photoset) => {
       try {
         const result = await store.dispatch(t.PHOTOSETS__ORDER_SET, photoset) as any as IPhotosetStatus
         switch (result) {

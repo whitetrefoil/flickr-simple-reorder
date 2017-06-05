@@ -5,8 +5,8 @@
   <wt-modal title="Confirm" size="tiny" color="warning" :is-showing="isShowing">
     <p>Are you sure you want to re-order <strong>{{this.total}}</strong> photosets?</p>
     <div class="actions">
-      <wt-button color="warning" @click.native="confirm">Confirm</wt-button>
-      <wt-button color="secondary" @click.native="cancel">Cancel</wt-button>
+      <i-button size="large" type="warning" @click.native="confirm">Confirm</i-button>
+      <i-button size="large" @click.native="cancel">Cancel</i-button>
     </div>
   </wt-modal>
 </template>

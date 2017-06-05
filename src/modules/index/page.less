@@ -28,25 +28,32 @@
 
   .toolbar {
     display: flex;
-    justify-content: flex-end;
-    padding-bottom: 40px;
-    line-height: 36px;
+    justify-content: space-between;
+    margin-bottom: 40px;
 
-    > * {
-      margin-left: 10px;
+    > .toolbar-sections > * {
+      margin-left: 5px;
+    }
+
+    .toolbar-label {
+      line-height: 36px;
+      margin-left: 20px;
+    }
+
+    .search {
+      width: 233px;
     }
 
     .ivu-select {
-      width: 120px;
+      width: 100px;
     }
 
-    .ivu-switch {
-      margin-top: 6px;
+    .ivu-input {
+      display: block;
     }
 
-    .wt-button {
-      padding-top: 0;
-      padding-bottom: 0;
+    .reorder-all {
+      margin-left: 20px;
     }
   }
 }

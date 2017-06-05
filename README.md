@@ -35,12 +35,12 @@ TODOs
 -----
 
 * [x] Put POST params in body to fix HTTP 414 error
-* [ ] Use Vue to refactor
+* [x] Use Vue to refactor
 * [x] Possible damage alerts
 * [ ] Messages
 * [ ] Network error handling
 * [x] Bulk edit
-* [ ] Searching / filtering
+* [x] Searching / filtering
 * [x] About page
 * [x] Ordering in other orders
 * [ ] Rollback

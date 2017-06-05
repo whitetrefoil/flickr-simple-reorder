@@ -73,7 +73,7 @@
                 <input disabled="disabled" type="checkbox" checked/> Bulk edit
               </li>
               <li>
-                <input disabled="disabled" type="checkbox"/> Searching / filtering
+                <input disabled="disabled" type="checkbox" checked/> Searching / filtering
               </li>
               <li>
                 <input disabled="disabled" type="checkbox" checked/> About page
