@@ -78,6 +78,8 @@ module.exports = {
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
+        FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
+        FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
       },
     }),
     new webpack.LoaderOptionsPlugin({
