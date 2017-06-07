@@ -7,7 +7,7 @@ A simple tool to help reorder photos in galleries (photosets).
 
 ** Current state:** Alpha
 
-** Latest version:** v0.6.0-alpha.2
+** Latest version:** v2.0.0-alpha.1
 
 Author
 ------
