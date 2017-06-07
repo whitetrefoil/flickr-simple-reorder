@@ -28,20 +28,29 @@
 
   .toolbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-bottom: 40px;
 
-    > .toolbar-sections > * {
-      margin-left: 5px;
+    > .toolbar-section {
+      &:first-child {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-end;
+      }
     }
 
     .toolbar-label {
-      line-height: 36px;
+      //line-height: 36px;
       margin-left: 20px;
     }
 
     .search {
-      width: 233px;
+      width: 100px;
+      transition: width @transition-time @ease-in-out;
+
+      &.focus {
+        width: 100%;
+      }
     }
 
     .ivu-select {

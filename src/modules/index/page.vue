@@ -40,7 +40,16 @@
     <div class="photosets-page" v-else>
       <div class="toolbar">
         <div class="toolbar-section">
-          <i-input size="large" class="search" v-model="filter" placeholder="Search……" icon="search"></i-input>
+          <i-input
+              size="large"
+              class="search"
+              v-model="filter"
+              placeholder="Search……"
+              icon="search"
+              :class="{focus: isSearchFocused || filter.length > 0}"
+              @on-focus="onSearchFocus"
+              @on-blur="onSearchBlur"
+          ></i-input>
         </div>
         <!-- /.toolbar-section -->
 
@@ -49,7 +58,10 @@
           <i-select size="large" :value="$store.state.photosets.preferences.orderBy" @on-change="onOrderByChange">
             <i-option v-for="(display, key) in orderByOptions" :key="key" :value="key" :label="display"></i-option>
           </i-select>
+        </div>
+        <!-- /.toolbar-section -->
 
+        <div class="toolbar-section">
           <span class="toolbar-label">Desc?</span>
           <i-switch :value="$store.state.photosets.preferences.isDesc" @on-change="onIsDescChange"></i-switch>
 

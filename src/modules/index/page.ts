@@ -42,6 +42,7 @@ export default class IndexPage extends Vue {
   failedToGetList = false
   isConfirming    = false
   isReorderingAll = false
+  isSearchFocused = false
 
   orderByOptions = {
     datetaken : 'Taken',
@@ -120,6 +121,14 @@ export default class IndexPage extends Vue {
 
   onReorderAllClick() {
     this.isConfirming = true
+  }
+
+  onSearchFocus() {
+    this.isSearchFocused = true
+  }
+
+  onSearchBlur() {
+    this.isSearchFocused = false
   }
 
   confirmed() {
