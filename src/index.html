@@ -1,109 +1,12 @@
 <!DOCTYPE html>
-<html lang='zh-CN' ng-app='flickrSimpleReorder'>
-  <head>
-    <meta charset='utf-8'>
-    <!-- build:css css/app.min.css -->
-    <link rel="stylesheet" href="lib/angular/angular-csp.css">
-    <link rel="stylesheet" href="lib/angular-bootstrap/ui-bootstrap-csp.css">
-    <link rel="stylesheet" href="css/app.css">
-    <!-- endbuild -->
-    <title>Flickr Simple Reorder</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- build:js js/libs.min.js -->
-    <script src='lib/jshashes/hashes.js'></script>
-    <script src='lib/jquery/dist/jquery.js'></script>
-    <script src='lib/lodash/lodash.js'></script>
-    <script src='lib/bootstrap-sass-official/assets/javascripts/bootstrap.js'></script>
-    <script src='lib/moment/moment.js'></script>
-    <script src='lib/angular/angular.js'></script>
-    <script src='lib/angular-moment/angular-moment.js'></script>
-    <script src='lib/angular-bootstrap/ui-bootstrap.js'></script>
-    <script src='lib/angular-bootstrap/ui-bootstrap-tpls.js'></script>
-    <script src='lib/angular-ui-router/release/angular-ui-router.js'></script>
-    <script src="lib/ngstorage/ngStorage.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js js/app.min.js -->
-    <script src='js/application.js'></script>
-    <!-- templates: <script src='js/templates.js'></script> -->
-    <script src='js/services/constants.js'></script>
-    <script src='js/services/offset-scroll.js'></script>
-    <script src='js/services/orders.js'></script>
-    <script src='js/services/modals.js'></script>
-    <script src='js/services/auth.js'></script>
-    <script src='js/services/people.js'></script>
-    <script src='js/services/photosets.js'></script>
-    <script src='js/filters/paginate-filter.js'></script>
-    <script src='js/controllers/root-ctrl.js'></script>
-    <script src='js/controllers/confirm-reorder-all-modal-ctrl.js'></script>
-    <script src='js/controllers/sync-progress-ctrl.js'></script>
-    <script src='js/controllers/login-ctrl.js'></script>
-    <script src='js/controllers/logout-ctrl.js'></script>
-    <script src='js/controllers/photosets-ctrl.js'></script>
-    <script src='js/router.js'></script>
-    <!-- endbuild -->
-  </head>
-
-  <body ng-controller="RootCtrl">
-  <nav id="main-navbar" class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid hidden-xs">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">Flickr Simple Reorder</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li ui-sref="photosets" ui-sref-active="active">
-          <a href="#/photosets">Photosets</a>
-        </li>
-        <li ui-sref="faq" ui-sref-active="active">
-          <a href="#/faq">FAQ</a>
-        </li>
-        <li ui-sref="about" ui-sref-active="active">
-          <a href="#/about">About</a>
-        </li>
-        <li ui-sref="logout" ui-sref-active="active" ng-if="currentUser">
-          <a href="#/logout">Log out</a>
-        </li>
-        <li ui-sref="login" ui-sref-active="active" ng-if="!currentUser">
-          <a href="#/login">Log in</a>
-        </li>
-      </ul>
-      <p class="navbar-text main-navbar-user-info" ng-if="currentUser">
-        <span ng-cloak>Hello, {{currentUser.username}}</span>
-        <img class="current-user-icon" ng-src="{{currentUserIconUrl}}"
-             height="32" width="32"/>
-      </p>
-    </div>
-    <div class="container-fluid visible-xs-block dropdown">
-      <div class="navbar-text navbar-xs-menu-toggle">
-        <img class="current-user-icon dropdown-toggle"
-             ng-src="{{currentUserIconUrl}}" ng-if="currentUser"
-             height="32" width="32"/>
-        <span class="unknown-user-icon dropdown-toggle glyphicon glyphicon-user"
-              ng-if="!currentUser">
-        </span>
-        <span class="glyphicon glyphicon-chevron-down dropdown-toggle"></span>
-      </div>
-      <ul class="dropdown-menu dropdown-menu-right">
-        <li ui-sref="photosets" ui-sref-active="active">
-          <a href="">Photosets</a>
-        </li>
-        <li ui-sref="faq" ui-sref-active="active">
-          <a href="">FAQ</a>
-        </li>
-        <li ui-sref="about" ui-sref-active="active">
-          <a href="">About</a>
-        </li>
-        <li class="divider"></li>
-        <li ui-sref="logout" ui-sref-active="active" ng-if="currentUser">
-          <a href="">Log out</a>
-        </li>
-        <li ui-sref="login" ui-sref-active="active" ng-if="!currentUser">
-          <a href="">Log in</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <div id='page' class="container" ui-view></div>
-  </body>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<title>Flickr Simple Reorder</title>
+<body>
+<div id="app"></div>
+</body>
 </html>

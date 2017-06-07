@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+@import "../../styles/_vars";
+
+.colorize-panel(@color) {
+  border-color: tint(@color, 80%);
+
+  .wt-panel-title {
+    border-bottom-color: tint(@color, 80%);
+    background-color: tint(@color, 90%);
+    color: shade(@color, 10%);
+  }
+
+  strong {
+    color: @color;
+  }
+}
+
+.wt-panel {
+  background-color: @body-background;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+}
+
+.wt-panel-title {
+  padding: 10px 20px;
+  border-bottom: 1px solid @border-color-split;
+}
+
+.wt-panel-content {
+  padding: 10px 20px;
+
+  p {
+    margin: 10px 0;
+  }
+}
+
+.wt-panel-error {
+  .colorize-panel(@error-color)
+}
+
+.wt-panel-warning {
+  .colorize-panel(@warning-color)
+}
+
+.wt-panel-success {
+  .colorize-panel(@success-color)
+}
+
+.wt-panel-info {
+  .colorize-panel(@info-color)
+}
+//
+//.wt-panel-primary {
+//  .colorize-panel(@primary-color)
+//}
