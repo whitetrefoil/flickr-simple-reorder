@@ -9,6 +9,13 @@ A simple tool to help reorder photos in galleries (photosets).
 
 ** Latest version:** v2.0.0-alpha.1
 
+IMPORTANT!!!
+------------
+
+Since Flickr suddenly removed the legacy auth API (which this application uses), this application won't work for now.  I'm currently working on a [web service](https://github.com/whitetrefoil/flickr-simple-reorder-server) for this application to use OAuth API.
+
+But since these applications are simple, the security is weak if uses OAuth.  Please read the security notice in the [web service project](https://github.com/whitetrefoil/flickr-simple-reorder-server)'s [README file](https://github.com/whitetrefoil/flickr-simple-reorder-server/blob/master/README.md).  In short, if you really care about your account security, **ONLY** use this application in well controlled environment (e.g. HTTPS, local, intranet).
+
 Author
 ------
 
