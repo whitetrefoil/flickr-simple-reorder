@@ -4,7 +4,7 @@ const DEFAULT_PREFIX         = '/services/'
 const DEFAULT_INDEX          = 'index.html'
 const DEFAULT_LIVERELOAD     = 'localhost'
 const DEFAULT_PING           = 0
-const DEFAULT_BACKEND        = 'https://www.flickr.com'
+const DEFAULT_BACKEND        = 'http://localhost:3000'
 
 const DEFAULT_BUILDING_DIR    = '.building'
 const DEFAULT_OUTPUT_DIR      = 'dist'
@@ -32,7 +32,7 @@ const argv = meow(`
         -i, --index        index page of preview server          [${colors.green('"index.html"')}]
         -l, --livereload   the hostname in livereload script     [${colors.green('"localhost"')}]
         -n, --ping         emulate the network delay (ms)        [${colors.blue('0')}]
-        -e, --backend      destination of backend proxy          [${colors.green('"https://www.flickr.com"')}]
+        -e, --backend      destination of backend proxy          [${colors.green('"http://localhost:3000"')}]
 
     For more detail of tasks / options, see code in "dev/gulp" directory.
   `,
