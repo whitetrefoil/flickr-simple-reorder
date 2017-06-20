@@ -1,5 +1,5 @@
-import Storage from '../../services/storage'
-
+// import Storage from '../../services/storage'
+//
 export type IPhotosetStatus = null | 'processing' | 'skipped' | 'done' | 'error'
 export type IPreferenceOrderBy = 'datetaken' | 'dateupload' | 'title' | 'views'
 
@@ -24,11 +24,11 @@ export interface IPhotosetsState {
   photosets: IPhotoset[] | undefined
   preferences: IPreferences
 }
-
-export const state: IPhotosetsState = {
-  photosets  : undefined,
-  preferences: {
-    orderBy: Storage.get('orderBy') || 'dateupload',
-    isDesc : Storage.get('isDesc') !== false,
-  },
-}
+//
+// export const state: IPhotosetsState = {
+//   photosets  : undefined,
+//   preferences: {
+//     orderBy: Storage.get('orderBy') || 'dateupload',
+//     isDesc : Storage.get('isDesc') !== false,
+//   },
+// }

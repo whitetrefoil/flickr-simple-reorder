@@ -10,6 +10,7 @@ declare namespace NodeJS {
       FLICKR_SECRET?: string,
       NODE_ENV?: string,
       VUE_ROUTER_BASE?: string,
+      VERSION: string,
     },
   }
 }

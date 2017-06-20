@@ -1,6 +1,6 @@
 const DEFAULT_IS_DEVELOPMENT = false
 const DEFAULT_PORT           = 8000
-const DEFAULT_PREFIX         = '/services/'
+const DEFAULT_PREFIX         = '/api/'
 const DEFAULT_INDEX          = 'index.html'
 const DEFAULT_LIVERELOAD     = 'localhost'
 const DEFAULT_PING           = 0
@@ -72,6 +72,7 @@ interface IConfig {
   isInitialized: boolean
   argv?: any
   pkg?: any
+  version?: string
   root?(...pathInRoot: string[]): string
   absRoot?(...pathInRoot: string[]): string
   source?(...pathInSource: string[]): string
@@ -136,6 +137,7 @@ config.themeConfigBasename = config.source('theme', 'element-config.css')
 export function initialize() {
 
   if (config.isInitialized) {
+    // tslint:disable-next-line:no-console
     console.warn(`Project has already been initialized.  Newer settings will be ignored.`)
     return
   }
@@ -146,6 +148,8 @@ export function initialize() {
   config.argv = argv
 
   config.pkg = argv.pkg || {}
+
+  config.version = argv.version
 
   if (typeof process.env.NODE_ENV !== 'string') {
     process.env.NODE_ENV = (argv.flags.development || DEFAULT_IS_DEVELOPMENT)
