@@ -42,6 +42,7 @@ export default class LoginPage extends Vue {
       this.loginUrl = null
     }
     this.isRequestingLoginToken = false
+    window.location.href = this.loginUrl
   }
 
   async verifyToken() {
