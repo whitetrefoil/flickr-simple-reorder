@@ -7,7 +7,7 @@ import { Response }     from 'superagent'
 const debugLoginToken = getLogger('/api/get-login-token.ts').debug
 export async function getLoginToken(): IResponseXHR<API.IGetLoginTokenResponse> {
   let res: Response
-  let data: { token: API.IToken }
+  let data: API.IGetLoginTokenResponse
   try {
     res = await request.get('/api/auth/loginToken')
       .timeout(process.env.NODE_ENV === 'development' ? 3000 : 10000)

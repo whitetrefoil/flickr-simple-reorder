@@ -149,7 +149,7 @@ export function initialize() {
 
   config.pkg = argv.pkg || {}
 
-  config.version = argv.version
+  config.version = argv.pkg.version
 
   if (typeof process.env.NODE_ENV !== 'string') {
     process.env.NODE_ENV = (argv.flags.development || DEFAULT_IS_DEVELOPMENT)

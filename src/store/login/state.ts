@@ -9,11 +9,20 @@ export interface ILoginState {
 
 const log = getLogger('/store/login/state.ts')
 
-const existingToken = Storage.get('token')
+const existingToken = Storage.get('cache')
 
-log.debug(`Existing token: ${existingToken}`)
+log.debug(`Existing auth info: ${existingToken}`)
 
 export const state: ILoginState = {
-  token: Storage.get('token'),
+  token: {
+    key   : null,
+    secret: null,
+  },
   user : null,
+}
+
+if (existingToken != null) {
+  state.token.key    = `${existingToken.k}-${existingToken.t}`
+  state.token.secret = existingToken.s
+  state.user         = existingToken.u
 }

@@ -16,14 +16,14 @@
     </wt-panel>
 
     <!-- Verifying token-->
-    <wt-panel v-else-if="status === 2" color="info" title="Communicating with Flickr">
-      <p>Just a second&hellip;</p>
+    <wt-panel v-else-if="status === 2" color="primary" title="Login">
+      <p>Verifying the authentication, just hold on a second&hellip;&hellip;</p>
     </wt-panel>
 
     <!-- Network error-->
-    <wt-panel v-else-if="status === -1" color="warning" title="Network Error">
+    <wt-panel v-else-if="status === -1" color="error" title="Network Error">
       <p>Failed to connect to the server. Please check your network connection.</p>
-      <p><i-button size="large" type="warning" @click="login">Try Again</i-button></p>
+      <p><i-button size="large" type="error" @click="login">Try Again</i-button></p>
     </wt-panel>
 
     <!-- Invalid-->

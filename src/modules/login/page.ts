@@ -1,14 +1,13 @@
 import { Component, Lifecycle, Vue } from 'av-ts'
 import * as _                        from 'lodash'
 import IButton                       from 'iview/src/components/button'
-import * as API                      from '../../api/types/api'
 import { store, types as t }         from '../../store'
 import WtPanel                       from '../../components/wt-panel'
 import { getLogger }                 from '../../services/log'
 
 const LOGIN_URL_TEMPLATE = 'https://www.flickr.com/services/oauth/authorize?oauth_token={{token}}&perms=write'
 
-const debug = getLogger('/src/modules/login/page.ts').debug
+const debug = getLogger('/modules/login/page.ts').debug
 
 @Component({
   name      : 'login-page',
@@ -25,13 +24,14 @@ export default class LoginPage extends Vue {
   loginUrl: string       = null
 
   async requestLoginUrl(): Promise<void> {
-    this.isNetworkError = false
-    this.isRespondedError = false
+    this.isNetworkError         = false
+    this.isRespondedError       = false
     this.isRequestingLoginToken = true
-    this.loginUrl = null
+    this.loginUrl               = null
     try {
-      const loginToken = await store.dispatch(t.LOGIN__REQUEST_LOGIN_TOKEN) as any as API.IToken
-      this.loginUrl = LOGIN_URL_TEMPLATE.replace('{{token}}', loginToken.key)
+      await store.dispatch(t.LOGIN__REQUEST_LOGIN_TOKEN)
+      const loginToken = store.state.login.token
+      this.loginUrl    = LOGIN_URL_TEMPLATE.replace('{{token}}', loginToken.key)
     } catch (e) {
       debug('Failed to request login token', e)
       if (e.response != null) {
@@ -45,11 +45,35 @@ export default class LoginPage extends Vue {
   }
 
   async verifyToken() {
-    throw new Error('TODO')
+    this.isNetworkError   = false
+    this.isRespondedError = false
+    try {
+      await store.dispatch(t.LOGIN__REQUEST_ACCESS_TOKEN, this.$route.query['oauth_verifier'])
+      this.$router.push({ name: 'index' })
+    } catch (e) {
+      debug('Failed to request access token', e)
+      if (e.response != null) {
+        this.isRespondedError = true
+      } else {
+        this.isNetworkError = true
+      }
+    }
   }
 
-  async login() {
+  async login(): Promise<void> {
     const url = await this.requestLoginUrl()
+  }
+
+  gotVerifier(): boolean {
+    const verifier = _.get(this.$route.query, 'oauth_verifier')
+    if (_.isEmpty(verifier)) { return false }
+
+    const token = _.get(this.$route.query, 'oauth_token')
+    if (token !== store.state.login.token.key) {
+      return false
+    }
+
+    return true
   }
 
   /**
@@ -61,21 +85,27 @@ export default class LoginPage extends Vue {
    * - _  => Invalid (failed for some reason)
    */
   get status(): number {
-    if (this.isRespondedError) { return -2 }
-    if (this.isNetworkError) { return -1 }
-    if (this.isRequestingLoginToken || this.loginUrl != null) { return 1 }
-    if (!_.isEmpty(_.get(this.$route.query, 'oauth_verifier'))) { return 2 }
-    return 0
+    switch (true) {
+      case this.isRespondedError:
+        return -2
+      case this.isNetworkError:
+        return -1
+      case this.isRequestingLoginToken || this.loginUrl != null:
+        return 1
+      case this.gotVerifier():
+        return 2
+      default:
+        return 0
+    }
   }
 
   @Lifecycle mounted() {
-    // if (this.status === 2) {
-    //   this.verifyToken()
-    //     .then(() => {
-    //       this.$router.push({ name: 'index' })
-    //     }, () => {
-    //       this.isJustFailed = true
-    //     })
-    // }
+    switch (this.status) {
+      case 2:
+        this.verifyToken()
+        break
+      default:
+      // Do nothing
+    }
   }
 }

@@ -22,6 +22,6 @@ export default class LogoutPage extends Vue {
 
   logout(): void {
     log.debug('Going to logout')
-    store.commit(t.LOGIN__LOGOUT)
+    store.commit(t.LOGIN__UNSET_AUTH_INFO)
   }
 }
