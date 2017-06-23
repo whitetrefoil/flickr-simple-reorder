@@ -11,7 +11,7 @@ export async function getPhotosetList(token: string, secret: string, nsid: strin
   let res: Response
   let data: API.IGetPhotosetListResponse
   try {
-    res = await request.get('/api/auth/accessToken')
+    res = await request.get('/api/photosets/list')
       .query({ token, secret, nsid })
       .timeout(process.env.NODE_ENV === 'development' ? 3000 : 10000)
     data = res.body.data

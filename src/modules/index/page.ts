@@ -9,15 +9,15 @@ import ISwitch                                            from 'iview/src/compon
 import * as API                                           from '../../api/types/api'
 import WtPanel                                            from '../../components/wt-panel'
 import WtPhotoset                                         from '../../components/wt-photoset'
-import { IPhotoset, IPhotosetStatus, IPreferenceOrderBy } from '../../store/photosets/state'
+import { IPhotosetWithStatus, IPhotosetStatus } from '../../store/photosets/state'
 import { store, types as t }                              from '../../store'
 import ReorderAllConfirm                                  from './reorder-all-confirm'
 import ReorderingAll                                      from './reordering-all'
 
 
 const ORDER_BY_OPTIONS = [
-  { value: 'dateupload', label: 'Upload Time' },
-  { value: 'datetaken', label: 'Taken Time' },
+  { value: 'dateUpload', label: 'Upload Time' },
+  { value: 'dateTaken', label: 'Taken Time' },
   { value: 'title', label: 'Title' },
   { value: 'views', label: 'Views Count' },
 ]
@@ -85,7 +85,11 @@ export default class IndexPage extends Vue {
     if (!this.hasLoggedIn) { return }
 
     this.isLoading = true
-    store.dispatch(t.PHOTOSETS__GET_LIST)
+    store.dispatch(t.PHOTOSETS__GET_LIST, {
+      token : this.$store.state.login.token.key,
+      secret: this.$store.state.login.token.secret,
+      nsid  : this.$store.state.login.user.nsid,
+    })
       .then(() => {
         this.isLoading = false
       }, () => {
@@ -112,12 +116,18 @@ export default class IndexPage extends Vue {
   //   })
   // }
 
-  onOrderByChange(value: IPreferenceOrderBy) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE_ORDER_BY, value)
+  onOrderByChange(value: API.IOrderByOption) {
+    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+      orderBy: value,
+      isDesc : this.$store.state.photosets.preferences.isDesc,
+    })
   }
 
   onIsDescChange(value: boolean) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE_IS_DESC, value)
+    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+      orderBy: this.$store.state.photosets.preferences.orderBy,
+      isDesc : value,
+    })
   }
 
   onReorderAllClick() {
@@ -132,21 +142,21 @@ export default class IndexPage extends Vue {
     this.isSearchFocused = false
   }
 
-  // confirmed() {
-  //   this.isReorderingAll = true
-  //   this.$nextTick(() => {
-  //     this.isConfirming = false
-  //   })
-  //   this.reorderAll()
-  // }
+  confirmed() {
+    // this.isReorderingAll = true
+    // this.$nextTick(() => {
+    //   this.isConfirming = false
+    // })
+    // this.reorderAll()
+  }
 
-  // canceled() {
-  //   this.isConfirming = false
-  // }
+  canceled() {
+    // this.isConfirming = false
+  }
 
-  // closed() {
-  //   this.isReorderingAll = false
-  // }
+  closed() {
+    // this.isReorderingAll = false
+  }
 
   @Watch('hasLoggedIn')
   handler(newVal: boolean) {

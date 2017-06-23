@@ -2,7 +2,7 @@ import Vue                from 'vue'
 import Vuex               from 'vuex'
 import { login }          from './login'
 import { mutations }      from './mutations'
-// import { photosets }      from './photosets'
+import { photosets }      from './photosets'
 import { getters, state } from './state'
 import * as t             from './types'
 
@@ -12,7 +12,7 @@ export const store = new Vuex.Store({
   strict : process.env.NODE_ENV === 'development',
   modules: {
     login,
-    // photosets,
+    photosets,
   },
   mutations,
   state,

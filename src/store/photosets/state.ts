@@ -1,34 +1,41 @@
-// import Storage from '../../services/storage'
-//
-export type IPhotosetStatus = null | 'processing' | 'skipped' | 'done' | 'error'
-export type IPreferenceOrderBy = 'datetaken' | 'dateupload' | 'title' | 'views'
+import * as _   from 'lodash'
+import * as API from '../../api/types/api'
+import Storage  from '../../services/storage'
 
-export interface IPhotoset {
+export type IStatus = null | 'processing' | 'skipped' | 'done' | 'error'
+
+export interface IPhotosetStatus {
   id: string
-  photos: number
-  url_m: string
-  height_m: number
-  width_m: number
-  title: string
-  status: IPhotosetStatus
+  status: IStatus
+}
+
+export interface IPhotosetWithStatus extends API.IPhotoset {
+  status: IStatus
 }
 
 export interface IPreferences {
-  orderBy: IPreferenceOrderBy
+  orderBy: API.IOrderByOption
   isDesc: boolean
 }
 
 export interface IPhotosetsState {
   // `undefined` means not initialized yet.
   // `[]` means it's just empty.
-  photosets: IPhotoset[] | undefined
+  photosets: API.IPhotoset[] | undefined
+  statuses: IPhotosetStatus[] | undefined
   preferences: IPreferences
 }
-//
-// export const state: IPhotosetsState = {
-//   photosets  : undefined,
-//   preferences: {
-//     orderBy: Storage.get('orderBy') || 'dateupload',
-//     isDesc : Storage.get('isDesc') !== false,
-//   },
-// }
+
+
+export const state: IPhotosetsState = {
+  photosets  : undefined,
+  statuses   : undefined,
+  preferences: {
+    orderBy: null,
+    isDesc : false,
+  },
+}
+
+const storedPreferences   = Storage.get('preferences')
+state.preferences.orderBy = _.isEmpty(_.get(storedPreferences, 'f')) ? 'dateUpload' : storedPreferences.f
+state.preferences.isDesc  = _.isEmpty(_.get(storedPreferences, 'o')) ? false : storedPreferences.o

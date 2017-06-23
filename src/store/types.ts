@@ -29,10 +29,9 @@ export const LOGIN__REQUEST_ACCESS_TOKEN = 'login/REQUEST_ACCESS_TOKEN'
 // Mutations
 // ----------
 
-export const PHOTOSETS__SET_LIST                = 'photosets/SET_LIST'
-export const PHOTOSETS__SET_STATUS              = 'photosets/SET_STATUS'
-export const PHOTOSETS__SET_PREFERENCE_ORDER_BY = 'photosets/SET_PREFERENCE_ORDER_BY'
-export const PHOTOSETS__SET_PREFERENCE_IS_DESC  = 'photosets/SET_PREFERENCE_IS_DESC'
+export const PHOTOSETS__SET_LIST       = 'photosets/SET_LIST'
+export const PHOTOSETS__SET_STATUS     = 'photosets/SET_STATUS'
+export const PHOTOSETS__SET_PREFERENCE = 'photosets/SET_PREFERENCE'
 
 // Actions
 // ----------

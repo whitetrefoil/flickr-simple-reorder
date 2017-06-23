@@ -53,7 +53,7 @@
     "eslint-plugin-babel"         : "^4.1.1",
     "extract-text-webpack-plugin" : "^2.1.2",
     "file-loader"                 : "^0.11.2",
-    "flickr-simple-reorder-server": "github:whitetrefoil/flickr-simple-reorder-server#semver:^0.1.4",
+    "flickr-simple-reorder-server": "github:whitetrefoil/flickr-simple-reorder-server#semver:^0.1.5",
     "fs-extra"                    : "^3.0.1",
     "gulp"                        : "^3.9.1",
     "gulp-connect"                : "^5.0.0",

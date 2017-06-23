@@ -1,12 +1,11 @@
-import * as _                                          from 'lodash'
-import { ActionContext }                               from 'vuex'
-import { getPhotosetList }                             from '../../api/get-photoset-list'
-import * as API                                        from '../../api/types/api'
-import { getLogger }                                   from '../../services/log'
-import { apiKey, composeFormData }                     from '../helpers'
-import { IRootState }                                  from '../state'
-import * as t                                          from '../types'
-import { IPhotoset, IPhotosetsState, IPhotosetStatus } from './state'
+import * as _                                   from 'lodash'
+import { ActionContext }                        from 'vuex'
+import { getPhotosetList }                      from '../../api/get-photoset-list'
+import * as API                                 from '../../api/types/api'
+import { getLogger }                            from '../../services/log'
+import { IRootState }                           from '../state'
+import * as t                                   from '../types'
+import { IPhotosetsState, IPhotosetWithStatus } from './state'
 
 export type IPhotosetsActionContext = ActionContext<IPhotosetsState, IRootState>
 
@@ -19,7 +18,7 @@ export const actions = {
 
     const photosets = await getPhotosetList(params.token, params.secret, params.nsid)
 
-    commit(t.PHOTOSETS__SET_LIST, photosets)
+    commit(t.PHOTOSETS__SET_LIST, photosets.data.photosets)
   },
 
   // async [t.PHOTOSETS__ORDER_SET](

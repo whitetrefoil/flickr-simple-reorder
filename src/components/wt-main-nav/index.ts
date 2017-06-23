@@ -22,8 +22,8 @@ export default class WtMainNav extends Vue {
   }
 
   get userAvatarUrl(): string {
-    const farm   = _.get(store.state, 'login.user.iconfarm')
-    const server = _.get(store.state, 'login.user.iconserver')
+    const farm   = _.get(store.state, 'login.user.iconFarm')
+    const server = _.get(store.state, 'login.user.iconServer')
     const nsid   = _.get(store.state, 'login.user.nsid')
     if (_.isNil(farm) || _.isNil(server) || _.isNil(nsid)) {
       return 'about:blank'
@@ -32,6 +32,6 @@ export default class WtMainNav extends Vue {
   }
 
   get profileUrl(): string {
-    return _.get(store.state, 'login.user.profileurl') as string
+    return _.get(store.state, 'login.user.profileUrl') as string
   }
 }
