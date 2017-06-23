@@ -37,4 +37,4 @@ export const state: IPhotosetsState = {
 
 const storedPreferences   = Storage.get('preferences')
 state.preferences.orderBy = _.isEmpty(_.get(storedPreferences, 'f')) ? 'dateUpload' : storedPreferences.f
-state.preferences.isDesc  = _.isEmpty(_.get(storedPreferences, 'o')) ? false : storedPreferences.o
+state.preferences.isDesc  = _.isBoolean(_.get(storedPreferences, 'o')) ? storedPreferences.o : true
