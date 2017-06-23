@@ -38,3 +38,8 @@ export const PHOTOSETS__SET_PREFERENCE = 'photosets/SET_PREFERENCE'
 
 export const PHOTOSETS__GET_LIST  = 'photosets/GET_LIST'
 export const PHOTOSETS__ORDER_SET = 'photosets/ORDER_SET'
+
+// // Getters
+// // ----------
+//
+// export const PHOTOSETS__PHOTOSETS_WITH_STATUS = 'photosets/PHOTOSETS_WITH_STATUS'

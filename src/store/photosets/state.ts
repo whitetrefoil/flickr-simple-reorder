@@ -4,14 +4,13 @@ import Storage  from '../../services/storage'
 
 export type IStatus = null | 'processing' | 'skipped' | 'done' | 'error'
 
-export interface IPhotosetStatus {
-  id: string
-  status: IStatus
+export interface IPhotosetStatuses {
+  [id: string]: IStatus
 }
 
-export interface IPhotosetWithStatus extends API.IPhotoset {
-  status: IStatus
-}
+// export interface IPhotosetWithStatus extends API.IPhotoset {
+//   status: IStatus
+// }
 
 export interface IPreferences {
   orderBy: API.IOrderByOption
@@ -22,14 +21,14 @@ export interface IPhotosetsState {
   // `undefined` means not initialized yet.
   // `[]` means it's just empty.
   photosets: API.IPhotoset[] | undefined
-  statuses: IPhotosetStatus[] | undefined
+  statuses: IPhotosetStatuses
   preferences: IPreferences
 }
 
 
 export const state: IPhotosetsState = {
   photosets  : undefined,
-  statuses   : undefined,
+  statuses   : {},
   preferences: {
     orderBy: null,
     isDesc : false,

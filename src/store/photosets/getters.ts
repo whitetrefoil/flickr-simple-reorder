@@ -1,17 +1,18 @@
-import * as _              from 'lodash'
-import { IPhotosetsState, IPhotosetWithStatus } from './state'
-
-function photosetWithStatus(state: IPhotosetsState): IPhotosetWithStatus[] {
-  const photosets = state.photosets
-  const statuses = state.statuses
-  const ids = _.map(photosets, _.property('id'))
-  return _.map(ids, (id) => {
-    const photoset = _.find(photosets, _.matchesProperty('id', id))
-    const status = _.find(statuses, _.matchesProperty('id', id))
-    return _.assign({}, photoset, status)
-  })
-}
-
-export const getters = {
-  photosetWithStatus,
-}
+// import * as _                                   from 'lodash'
+// import * as t                                   from '../types'
+// import { IPhotosetsState, IPhotosetWithStatus } from './state'
+//
+// function photosetWithStatus(state: IPhotosetsState): IPhotosetWithStatus[] {
+//   const ids = _.map(state.photosets, _.property('id')) as string[]
+//   return _.map(ids, (id) => {
+//     const photoset = _.find(state.photosets, _.matchesProperty('id', id))
+//
+//     const status = state.statuses[id]
+//
+//     return _.assign({}, photoset, { status })
+//   })
+// }
+//
+// export const getters = {
+//   [t.PHOTOSETS__PHOTOSETS_WITH_STATUS]: photosetWithStatus,
+// }

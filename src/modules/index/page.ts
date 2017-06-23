@@ -1,18 +1,18 @@
-import { Component, Lifecycle, Vue, Watch }               from 'av-ts'
-import * as _                                             from 'lodash'
-import IButton                                            from 'iview/src/components/button'
-import IIcon                                              from 'iview/src/components/icon'
-import IInput                                             from 'iview/src/components/input'
-import IOption                                            from 'iview/src/components/select/option'
-import ISelect                                            from 'iview/src/components/select/select'
-import ISwitch                                            from 'iview/src/components/switch'
-import * as API                                           from '../../api/types/api'
-import WtPanel                                            from '../../components/wt-panel'
-import WtPhotoset                                         from '../../components/wt-photoset'
-import { IPhotosetWithStatus, IPhotosetStatus } from '../../store/photosets/state'
-import { store, types as t }                              from '../../store'
-import ReorderAllConfirm                                  from './reorder-all-confirm'
-import ReorderingAll                                      from './reordering-all'
+import { Component, Lifecycle, Vue, Watch } from 'av-ts'
+import * as _                               from 'lodash'
+import IButton                              from 'iview/src/components/button'
+import IIcon                                from 'iview/src/components/icon'
+import IInput                               from 'iview/src/components/input'
+import IOption                              from 'iview/src/components/select/option'
+import ISelect                              from 'iview/src/components/select/select'
+import ISwitch                              from 'iview/src/components/switch'
+import * as API                             from '../../api/types/api'
+import WtPanel                              from '../../components/wt-panel'
+import WtPhotoset                           from '../../components/wt-photoset'
+// import { IPhotosetWithStatus }              from '../../store/photosets/state'
+import { store, types as t }                from '../../store'
+import ReorderAllConfirm                    from './reorder-all-confirm'
+import ReorderingAll                        from './reordering-all'
 
 
 const ORDER_BY_OPTIONS = [
@@ -71,10 +71,11 @@ export default class IndexPage extends Vue {
   }
 
   get photosets(): API.IPhotoset[] {
-    if (_.isNil(store.state.photosets.photosets) || _.isEmpty(store.state.photosets.photosets)) {
+    const photosets = store.state.photosets.photosets
+    if (_.isNil(photosets) || _.isEmpty(photosets)) {
       return
     }
-    return store.state.photosets.photosets
+    return photosets
   }
 
   get totalPhotosets(): number {
@@ -86,9 +87,9 @@ export default class IndexPage extends Vue {
 
     this.isLoading = true
     store.dispatch(t.PHOTOSETS__GET_LIST, {
-      token : this.$store.state.login.token.key,
-      secret: this.$store.state.login.token.secret,
-      nsid  : this.$store.state.login.user.nsid,
+      token : store.state.login.token.key,
+      secret: store.state.login.token.secret,
+      nsid  : store.state.login.user.nsid,
     })
       .then(() => {
         this.isLoading = false
@@ -119,13 +120,13 @@ export default class IndexPage extends Vue {
   onOrderByChange(value: API.IOrderByOption) {
     store.commit(t.PHOTOSETS__SET_PREFERENCE, {
       orderBy: value,
-      isDesc : this.$store.state.photosets.preferences.isDesc,
+      isDesc : store.state.photosets.preferences.isDesc,
     })
   }
 
   onIsDescChange(value: boolean) {
     store.commit(t.PHOTOSETS__SET_PREFERENCE, {
-      orderBy: this.$store.state.photosets.preferences.orderBy,
+      orderBy: store.state.photosets.preferences.orderBy,
       isDesc : value,
     })
   }
