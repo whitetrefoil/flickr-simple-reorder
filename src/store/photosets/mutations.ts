@@ -1,46 +1,52 @@
 import * as _        from 'lodash'
+import Vue           from 'vue'
+import * as API      from '../../api/types/api'
 import { getLogger } from '../../services/log'
 import Storage       from '../../services/storage'
 import * as t        from '../types'
 import {
-  IPhotoset,
   IPhotosetsState,
-  IPhotosetStatus,
-  IPreferenceOrderBy,
+  IPreferences,
+  IStatus,
 } from './state'
 
 const { debug } = getLogger('/store/photosets/mutations.ts')
 
-interface ISetStatusPayload {
+interface ISetStatusParams {
   id: string
-  status: IPhotosetStatus
+  status: IStatus
 }
 
 export const mutations = {
-  [t.PHOTOSETS__SET_LIST](state: IPhotosetsState, photosets: IPhotoset[] | null | undefined) {
+  [t.PHOTOSETS__SET_LIST](state: IPhotosetsState, photosets: API.IPhotoset[] | null | undefined) {
     debug('Set list')
     state.photosets = photosets
+
+    // Set default status
+    const setIds = _.map(photosets, _.property('id')) as string[]
+    if (state.statuses == null) { state.statuses = {} }
+    _.forEach(setIds, (id) => {
+      Vue.set(state.statuses, id, state.statuses[id] || null)
+    })
   },
 
-  [t.PHOTOSETS__SET_STATUS](state: IPhotosetsState, payload: ISetStatusPayload) {
-    debug(`Setting status of photoset ${payload.id} to "${payload.status}"`)
+  [t.PHOTOSETS__SET_STATUS](state: IPhotosetsState, params: ISetStatusParams) {
+    debug(`Setting status of photoset ${params.id} to "${params.status}"`)
 
-    const photoset = _.find(state.photosets, _.matches({ id: payload.id }))
+    const photoset = _.find(state.photosets, _.matches({ id: params.id }))
     if (photoset == null) {
-      debug(`no such photoset ${payload.id} found!`)
+      debug(`no such photoset ${params.id} found!`)
       return
     }
-
-    photoset.status = payload.status
+    Vue.set(state.statuses, params.id, params.status)
   },
 
-  [t.PHOTOSETS__SET_PREFERENCE_ORDER_BY](state: IPhotosetsState, orderBy: IPreferenceOrderBy) {
-    state.preferences.orderBy = orderBy
-    Storage.set('orderBy', orderBy)
-  },
-
-  [t.PHOTOSETS__SET_PREFERENCE_IS_DESC](state: IPhotosetsState, isDesc: boolean) {
-    state.preferences.isDesc = isDesc
-    Storage.set('isDesc', isDesc)
+  [t.PHOTOSETS__SET_PREFERENCE](state: IPhotosetsState, pref: IPreferences) {
+    state.preferences.orderBy = pref.orderBy
+    state.preferences.isDesc  = pref.isDesc
+    Storage.set('preferences', {
+      f: state.preferences.orderBy,
+      o: state.preferences.isDesc,
+    })
   },
 }

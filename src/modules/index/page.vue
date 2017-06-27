@@ -31,7 +31,7 @@
     <!-- /.welcome -->
 
     <div class="loading" v-else-if="isLoading">
-      <wt-panel color="info" title="Loading">
+      <wt-panel color="primary" title="Loading">
         <p>Loading photosets information from Flickr&hellip;&hellip;</p>
       </wt-panel>
     </div>

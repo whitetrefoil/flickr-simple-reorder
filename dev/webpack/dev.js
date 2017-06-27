@@ -97,6 +97,7 @@ module.exports = {
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
         FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
         FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
+        VERSION        : JSON.stringify(config.version),
       },
     }),
     new webpack.optimize.CommonsChunkPlugin({

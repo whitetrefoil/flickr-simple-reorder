@@ -1,13 +1,30 @@
-interface IInternalStorageContent {
-  'flickrSimpleReorder-temp-t': string
-  'flickrSimpleReorder-temp-f': string
-  'flickrSimpleReorder-temp-o': boolean
+import { isEmpty }   from 'lodash'
+import * as semver   from 'semver'
+import * as API      from '../api/types/api'
+import { getLogger } from './log'
+
+interface ICache {
+  k: string
+  s: string
+  t: string
+  u: API.IUser
 }
 
-interface IStorageContent {
-  token: string
-  orderBy: 'datetaken' | 'dateupload' | 'title' | 'views'
-  isDesc: boolean
+interface IPreferences {
+  f: API.IOrderByOption
+  o: boolean
+}
+
+interface IInternalStorageContent {
+  'flickrSimpleReorder-version': string
+  'flickrSimpleReorder-cache': ICache
+  'flickrSimpleReorder-pref': IPreferences
+}
+
+export interface IStorageContent {
+  version: string
+  cache: ICache
+  preferences: IPreferences
 }
 
 interface IStorage {
@@ -22,22 +39,29 @@ interface IStorage {
   addPlugin(plugin: any): void
 }
 
+const debug = getLogger('/services/storage.ts').debug
+
 const SEVEN_DAYS_AS_MS = 7 * 24 * 60 * 60 * 1000
 
 const storage = require('store') as IStorage
 storage.addPlugin(require('store/plugins/expire'))
 
+const sessionVersion = storage.get('flickrSimpleReorder-version')
+debug('Detected session for version:', sessionVersion)
+debug('Current version:', process.env.VERSION)
+if (isEmpty(sessionVersion) || semver.lt(sessionVersion, process.env.VERSION)) {
+  storage.clearAll()
+}
+storage.set('flickrSimpleReorder-version', process.env.VERSION)
+
 export default class Storage {
   static set<K extends keyof IStorageContent>(key: K, value: IStorageContent[K]): void {
     switch (key) {
-      case 'token':
-        storage.set('flickrSimpleReorder-temp-t', value as string, Date.now() + SEVEN_DAYS_AS_MS)
+      case 'cache':
+        storage.set('flickrSimpleReorder-cache', value as ICache, Date.now() + SEVEN_DAYS_AS_MS)
         break
-      case 'orderBy':
-        storage.set('flickrSimpleReorder-temp-f', value as 'datetaken' | 'dateupload' | 'title' | 'views')
-        break
-      case 'isDesc':
-        storage.set('flickrSimpleReorder-temp-o', value as boolean)
+      case 'preferences':
+        storage.set('flickrSimpleReorder-pref', value as IPreferences)
         break
       default:
       // Do nothing
@@ -46,12 +70,10 @@ export default class Storage {
 
   static get<K extends keyof IStorageContent>(key: K): IStorageContent[K] {
     switch (key) {
-      case 'token':
-        return storage.get('flickrSimpleReorder-temp-t')
-      case 'orderBy':
-        return storage.get('flickrSimpleReorder-temp-f')
-      case 'isDesc':
-        return storage.get('flickrSimpleReorder-temp-o')
+      case 'cache':
+        return storage.get('flickrSimpleReorder-cache')
+      case 'preferences':
+        return storage.get('flickrSimpleReorder-pref')
       default:
         return null
     }
@@ -59,11 +81,11 @@ export default class Storage {
 
   static remove<K extends keyof IStorageContent>(key: K): void {
     switch (key) {
-      case 'token':
-        storage.remove('flickrSimpleReorder-temp-t')
+      case 'cache':
+        storage.remove('flickrSimpleReorder-cache')
         break
       default:
-        // Do nothing
+      // Do nothing
     }
   }
 }

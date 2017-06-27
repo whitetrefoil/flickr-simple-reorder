@@ -60,6 +60,10 @@ Changelog
 
 ### v2.0.0-alpha.1
 
+* Use server-side OAuth.
+
+### v2.0.0-alpha.1
+
 * Use Vue to totally refactor the whole application.
 * Put POST params in body to fix `HTTP 414` error permanently.
 

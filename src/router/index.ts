@@ -32,7 +32,7 @@ const LogoutPage: Vue.AsyncComponent = (resolve) => {
 }
 
 export const router = new VueRouter({
-  mode  : 'history',
+  // mode  : 'history',
   routes: [
     { path: '/', name: 'index', component: IndexPage },
     { path: '/faq', name: 'faq', component: FaqPage },

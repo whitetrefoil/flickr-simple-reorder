@@ -13,16 +13,15 @@ export const ONE_LESS_MODAL = 'ONE_LESS_MODAL'
 // Mutations
 // ----------
 
-export const LOGIN__SET_TOKEN     = 'login/SET_TOKEN'
-export const LOGIN__SET_USER_INFO = 'login/SET_USER_INFO'
-export const LOGIN__LOGOUT        = 'login/LOGOUT'
+export const LOGIN__SET_TEMP_TOKEN  = 'login/SET_TEMP_TOKEN'
+export const LOGIN__SET_AUTH_INFO   = 'login/SET_AUTH_INFO'
+export const LOGIN__UNSET_AUTH_INFO = 'login/UNSET_AUTH_INFO'
 
 // Actions
 // ----------
 
-export const LOGIN__REQUEST_TOKEN     = 'login/REQUEST_TOKEN'
-export const LOGIN__CHECK_TOKEN       = 'login/CHECK_TOKEN'
-export const LOGIN__REQUEST_USER_INFO = 'login/REQUEST_USER_INFO'
+export const LOGIN__REQUEST_LOGIN_TOKEN  = 'login/REQUEST_LOGIN_TOKEN'
+export const LOGIN__REQUEST_ACCESS_TOKEN = 'login/REQUEST_ACCESS_TOKEN'
 
 // Photosets
 // ==========
@@ -30,13 +29,17 @@ export const LOGIN__REQUEST_USER_INFO = 'login/REQUEST_USER_INFO'
 // Mutations
 // ----------
 
-export const PHOTOSETS__SET_LIST                = 'photosets/SET_LIST'
-export const PHOTOSETS__SET_STATUS              = 'photosets/SET_STATUS'
-export const PHOTOSETS__SET_PREFERENCE_ORDER_BY = 'photosets/SET_PREFERENCE_ORDER_BY'
-export const PHOTOSETS__SET_PREFERENCE_IS_DESC  = 'photosets/SET_PREFERENCE_IS_DESC'
+export const PHOTOSETS__SET_LIST       = 'photosets/SET_LIST'
+export const PHOTOSETS__SET_STATUS     = 'photosets/SET_STATUS'
+export const PHOTOSETS__SET_PREFERENCE = 'photosets/SET_PREFERENCE'
 
 // Actions
 // ----------
 
 export const PHOTOSETS__GET_LIST  = 'photosets/GET_LIST'
 export const PHOTOSETS__ORDER_SET = 'photosets/ORDER_SET'
+
+// // Getters
+// // ----------
+//
+// export const PHOTOSETS__PHOTOSETS_WITH_STATUS = 'photosets/PHOTOSETS_WITH_STATUS'

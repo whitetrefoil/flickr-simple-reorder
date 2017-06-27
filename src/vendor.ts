@@ -1,6 +1,5 @@
 // tslint:disable:no-import-side-effect
-import 'axios'
-import 'blueimp-md5'
+import 'superagent'
 
 // Vue
 // ----------
