@@ -100,6 +100,23 @@
             <h3>Changelog & Roadmap</h3>
 
             <section>
+              <h4>v2.0.0-alpha.3</h4>
+              <ul>
+                <li>Fix login workflow.</li>
+                <li>Sync changelog to webpage.</li>
+                <li>Don't format "package.json" to be compatible with newest NPM standard.</li>
+                <li>Fix wrong version number in "README.md".</li>
+              </ul>
+            </section>
+
+            <section>
+              <h4>v2.0.0-alpha.2</h4>
+              <ul>
+                <li>Use server-side OAuth.</li>
+              </ul>
+            </section>
+
+            <section>
               <h4>v2.0.0-alpha.1</h4>
               <ul>
                 <li>Use Vue to totally refactor the whole application.</li>
