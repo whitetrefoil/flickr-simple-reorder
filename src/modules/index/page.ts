@@ -9,7 +9,6 @@ import ISwitch                              from 'iview/src/components/switch'
 import * as API                             from '../../api/types/api'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
-// import { IPhotosetWithStatus }              from '../../store/photosets/state'
 import { store, types as t }                from '../../store'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
@@ -99,23 +98,33 @@ export default class IndexPage extends Vue {
       })
   }
 
-  // async reorderAll(): Promise<void> {
-  //   this.reorderingAllStatus.successes = 0
-  //   this.reorderingAllStatus.skipped = 0
-  //   this.reorderingAllStatus.failures = 0
-  //   _.forEach(this.filteredSets, async(photoset) => {
-  //     try {
-  //       const result = await store.dispatch(t.PHOTOSETS__ORDER_SET, photoset) as any as IPhotosetStatus
-  //       switch (result) {
-  //         case 'done': this.reorderingAllStatus.successes += 1; return
-  //         case 'skipped': this.reorderingAllStatus.skipped += 1; return
-  //         default: throw new Error(`Unknown reorder result: ${result}`)
-  //       }
-  //     } catch (e) {
-  //       this.reorderingAllStatus.failures += 1
-  //     }
-  //   })
-  // }
+  async reorderAll(): Promise<void> {
+    this.reorderingAllStatus.successes = 0
+    this.reorderingAllStatus.skipped = 0
+    this.reorderingAllStatus.failures = 0
+    _.forEach(this.filteredSets, async(photoset) => {
+      try {
+        const params: API.IPostPhotosetReorderRequest = {
+          nsid   : store.state.login.user.nsid,
+          setId  : photoset.id,
+          orderBy: store.state.photosets.preferences.orderBy,
+          isDesc : store.state.photosets.preferences.isDesc,
+          token  : store.state.login.token.key,
+          secret : store.state.login.token.secret,
+        }
+        await store.dispatch(t.PHOTOSETS__ORDER_SET, params)
+
+        const status = store.state.photosets.statuses[photoset.id]
+        switch (status) {
+          case 'done': this.reorderingAllStatus.successes += 1; return
+          case 'skipped': this.reorderingAllStatus.skipped += 1; return
+          default: throw new Error(`Unknown reorder result: ${status}`)
+        }
+      } catch (e) {
+        this.reorderingAllStatus.failures += 1
+      }
+    })
+  }
 
   onOrderByChange(value: API.IOrderByOption) {
     store.commit(t.PHOTOSETS__SET_PREFERENCE, {
@@ -144,19 +153,19 @@ export default class IndexPage extends Vue {
   }
 
   confirmed() {
-    // this.isReorderingAll = true
-    // this.$nextTick(() => {
-    //   this.isConfirming = false
-    // })
-    // this.reorderAll()
+    this.isReorderingAll = true
+    this.$nextTick(() => {
+      this.isConfirming = false
+    })
+    this.reorderAll()
   }
 
   canceled() {
-    // this.isConfirming = false
+    this.isConfirming = false
   }
 
   closed() {
-    // this.isReorderingAll = false
+    this.isReorderingAll = false
   }
 
   @Watch('hasLoggedIn')

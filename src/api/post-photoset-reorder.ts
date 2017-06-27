@@ -20,7 +20,6 @@ export async function postPhotosetReorder(
   try {
     res  = await request.post('/api/photosets/reorder')
       .send({ nsid, setId, orderBy, isDesc, token, secret })
-      .timeout(process.env.NODE_ENV === 'development' ? 10000 : 20000)
     data = res.body.data
   } catch (e) {
     // TODO: Handle failed auth
