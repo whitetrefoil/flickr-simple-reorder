@@ -58,7 +58,14 @@ TODOs
 Changelog
 ---------
 
-### v2.0.0-alpha.1
+### v2.0.0-alpha.3
+
+* Fix login workflow.
+* Sync changelog to webpage.
+* Don't format "package.json" to be compatible with newest NPM standard.
+* Fix wrong version number in "README.md".
+
+### v2.0.0-alpha.2
 
 * Use server-side OAuth.
 

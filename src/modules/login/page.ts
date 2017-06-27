@@ -42,7 +42,9 @@ export default class LoginPage extends Vue {
       this.loginUrl = null
     }
     this.isRequestingLoginToken = false
-    window.location.href = this.loginUrl
+    if (!_.isEmpty(this.loginUrl)) {
+      window.location.href = this.loginUrl
+    }
   }
 
   async verifyToken() {
@@ -62,7 +64,7 @@ export default class LoginPage extends Vue {
   }
 
   async login(): Promise<void> {
-    const url = await this.requestLoginUrl()
+    await this.requestLoginUrl()
   }
 
   gotVerifier(): boolean {
