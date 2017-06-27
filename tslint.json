@@ -1,5 +1,5 @@
 {
-  "x-version": "v5.1.0",
+  // Started from v5.1.0,
   "extends"  : [
     "tslint:latest"
   ],
@@ -159,6 +159,21 @@
       "check-type",
       "check-typecast",
       "check-preblock"
-    ]
+    ],
+    // v5.2.0 Updates
+    "no-object-literal-type-assertion": true,
+    "no-irregular-whitespace"         : true,
+    "prefer-switch"                   : [true, {"min-cases": 3}],
+    "number-literal-format"           : true,
+    "deprecation"                     : true,
+    "no-unnecessary-type-assertion"   : true,
+    // v5.3.0 Updates
+    "prefer-object-spread"            : true,
+    "encoding"                        : true,
+    "prefer-conditional-expression"   : false,
+    // v5.4.0 Updates
+    "switch-final-break"              : true,
+    "use-default-type-parameter"      : false,
+    "binary-expression-operand-order" : true
   }
 }

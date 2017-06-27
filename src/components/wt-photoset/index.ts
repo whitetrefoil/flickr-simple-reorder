@@ -60,7 +60,7 @@ export default class WtPhotoset extends Vue {
   }
 
   get photosetUrl(): string {
-    return `${store.state.login.user.photosurl}sets/${this.photoset.id}`
+    return `${store.state.login.user.photosUrl}sets/${this.photoset.id}`
   }
 
   click(photoset: API.IPhotoset) {
