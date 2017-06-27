@@ -1,10 +1,9 @@
 language: node_js
 node_js:
   - 8
-  - 7
 before_install:
-  - npm -g up npm
+  - npm -g i npm
   - npm install
 script:
-  - npm build
+  - npm run build
   - npm test
