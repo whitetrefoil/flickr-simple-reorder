@@ -58,6 +58,10 @@ TODOs
 Changelog
 ---------
 
+### v2.0.0-alpha.5
+
+* Fix welcome panel width.
+
 ### v2.0.0-alpha.4
 
 * Small tweaks.
