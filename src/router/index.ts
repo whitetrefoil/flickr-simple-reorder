@@ -23,7 +23,7 @@ const IndexPage: Vue.AsyncComponent = (resolve) => {
   }, 'index-page')
 }
 
-const LoginPage: Vue = require('../modules/login/page')
+const LoginPage: typeof Vue = require('../modules/login/page')
 
 const LogoutPage: Vue.AsyncComponent = (resolve) => {
   require.ensure([], () => {
