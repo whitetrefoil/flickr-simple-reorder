@@ -13,6 +13,12 @@ import { store, types as t }                from '../../store'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
 
+// `null` for normal case.
+const enum Status {
+  Loading = 'loading',
+  Error   = 'error',
+  Normal  = '',
+}
 
 const ORDER_BY_OPTIONS = [
   { value: 'dateUpload', label: 'Upload Time' },
@@ -38,8 +44,7 @@ const ORDER_BY_OPTIONS = [
 })
 export default class IndexPage extends Vue {
 
-  isLoading       = false
-  failedToGetList = false
+  status          = Status.Normal
   isConfirming    = false
   isReorderingAll = false
   isSearchFocused = false
@@ -81,27 +86,30 @@ export default class IndexPage extends Vue {
     return this.filteredSets == null ? 0 : this.filteredSets.length
   }
 
+  retry(): void {
+    this.load()
+  }
+
   load(): void {
     if (!this.hasLoggedIn) { return }
 
-    this.isLoading = true
+    this.status = Status.Loading
     store.dispatch(t.PHOTOSETS__GET_LIST, {
       token : store.state.login.token.key,
       secret: store.state.login.token.secret,
       nsid  : store.state.login.user.nsid,
     })
       .then(() => {
-        this.isLoading = false
+        this.status = Status.Normal
       }, () => {
-        this.isLoading       = false
-        this.failedToGetList = true
+        this.status = Status.Error
       })
   }
 
   async reorderAll(): Promise<void> {
     this.reorderingAllStatus.successes = 0
-    this.reorderingAllStatus.skipped = 0
-    this.reorderingAllStatus.failures = 0
+    this.reorderingAllStatus.skipped   = 0
+    this.reorderingAllStatus.failures  = 0
     _.forEach(this.filteredSets, async(photoset) => {
       try {
         const params: API.IPostPhotosetReorderRequest = {
@@ -116,9 +124,14 @@ export default class IndexPage extends Vue {
 
         const status = store.state.photosets.statuses[photoset.id]
         switch (status) {
-          case 'done': this.reorderingAllStatus.successes += 1; return
-          case 'skipped': this.reorderingAllStatus.skipped += 1; return
-          default: throw new Error(`Unknown reorder result: ${status}`)
+          case 'done':
+            this.reorderingAllStatus.successes += 1
+            return
+          case 'skipped':
+            this.reorderingAllStatus.skipped += 1
+            return
+          default:
+            throw new Error(`Unknown reorder result: ${status}`)
         }
       } catch (e) {
         this.reorderingAllStatus.failures += 1

@@ -30,12 +30,20 @@
     </div>
     <!-- /.welcome -->
 
-    <div class="loading" v-else-if="isLoading">
+    <div class="loading" v-else-if="status === 'loading'">
       <wt-panel color="primary" title="Loading">
         <p>Loading photosets information from Flickr&hellip;&hellip;</p>
       </wt-panel>
     </div>
     <!-- /.loading -->
+
+    <div class="network-error" v-else-if="status === 'error'">
+      <wt-panel color="error" title="Network Error">
+        <p>Failed to connect to the server. Please check your network connection.</p>
+        <p><i-button size="large" type="error" @click="retry">Try Again</i-button></p>
+      </wt-panel>
+    </div>
+    <!-- /.network-error -->
 
     <div class="photosets-page" v-else>
       <div class="toolbar">

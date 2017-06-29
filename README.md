@@ -58,6 +58,10 @@ TODOs
 Changelog
 ---------
 
+### v2.0.0-alpha.4
+
+* Small tweaks.
+
 ### v2.0.0-alpha.3
 
 * Fix login workflow.

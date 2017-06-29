@@ -7,6 +7,14 @@ import { getLogger }                 from '../../services/log'
 
 const LOGIN_URL_TEMPLATE = 'https://www.flickr.com/services/oauth/authorize?oauth_token={{token}}&perms=write'
 
+const enum Status {
+  Before     = 0,
+  Requesting = 1,
+  Verifying  = 2,
+  Error      = -1,
+  Invalid,
+}
+
 const debug = getLogger('/modules/login/page.ts').debug
 
 @Component({
@@ -18,16 +26,12 @@ const debug = getLogger('/modules/login/page.ts').debug
 })
 export default class LoginPage extends Vue {
 
-  isNetworkError         = false
-  isRespondedError       = false
-  isRequestingLoginToken = false
-  loginUrl: string       = null
+  status           = Status.Before
+  loginUrl: string = null
 
   async requestLoginUrl(): Promise<void> {
-    this.isNetworkError         = false
-    this.isRespondedError       = false
-    this.isRequestingLoginToken = true
-    this.loginUrl               = null
+    this.status   = Status.Requesting
+    this.loginUrl = null
     try {
       await store.dispatch(t.LOGIN__REQUEST_LOGIN_TOKEN)
       const loginToken = store.state.login.token
@@ -35,30 +39,28 @@ export default class LoginPage extends Vue {
     } catch (e) {
       debug('Failed to request login token', e)
       if (e.response != null) {
-        this.isRespondedError = true
+        this.status = Status.Invalid
       } else {
-        this.isNetworkError = true
+        this.status = Status.Error
       }
       this.loginUrl = null
     }
-    this.isRequestingLoginToken = false
     if (!_.isEmpty(this.loginUrl)) {
       window.location.href = this.loginUrl
     }
   }
 
   async verifyToken() {
-    this.isNetworkError   = false
-    this.isRespondedError = false
+    this.status = Status.Verifying
     try {
       await store.dispatch(t.LOGIN__REQUEST_ACCESS_TOKEN, this.$route.query['oauth_verifier'])
       this.$router.push({ name: 'index' })
     } catch (e) {
       debug('Failed to request access token', e)
       if (e.response != null) {
-        this.isRespondedError = true
+        this.status = Status.Invalid
       } else {
-        this.isNetworkError = true
+        this.status = Status.Error
       }
     }
   }
@@ -79,36 +81,7 @@ export default class LoginPage extends Vue {
     return true
   }
 
-  /**
-   * The status of login page:
-   * - 0  => Before login
-   * - 1  => Requesting login token or redirecting to Flickr
-   * - 2  => Verifying token
-   * - -1 => Network error
-   * - _  => Invalid (failed for some reason)
-   */
-  get status(): number {
-    switch (true) {
-      case this.isRespondedError:
-        return -2
-      case this.isNetworkError:
-        return -1
-      case this.isRequestingLoginToken || this.loginUrl != null:
-        return 1
-      case this.gotVerifier():
-        return 2
-      default:
-        return 0
-    }
-  }
-
   @Lifecycle mounted() {
-    switch (this.status) {
-      case 2:
-        this.verifyToken()
-        break
-      default:
-      // Do nothing
-    }
+    if (this.gotVerifier()) { this.verifyToken() }
   }
 }
