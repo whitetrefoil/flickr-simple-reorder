@@ -46,6 +46,7 @@ const argv = meow(`
       i: 'index',
       l: 'livereload',
       n: 'ping',
+      e: 'backend',
     },
     default: {
       development: DEFAULT_IS_DEVELOPMENT,
