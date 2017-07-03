@@ -17,7 +17,7 @@
     "build": "gulp build",
     "gulp": "gulp",
     "start": "gulp serve -d",
-    "test": "gulp ut"
+    "test": "jest"
   },
   "dependencies": {
     "@types/superagent": "^3.5.1",
@@ -41,6 +41,7 @@
     "@types/debug": "^0.0.29",
     "@types/del": "^2.2.32",
     "@types/fs-extra": "^3.0.3",
+    "@types/jest": "^20.0.2",
     "@types/lodash": "^4.14.67",
     "@types/node": "^8.0.4",
     "@types/semver": "^5.3.32",
@@ -50,6 +51,7 @@
     "babel-loader": "^7.1.1",
     "babel-plugin-lodash": "^3.2.11",
     "babel-preset-env": "^1.5.2",
+    "clear-require": "^2.0.0",
     "css-loader": "^0.28.4",
     "del": "^3.0.0",
     "eslint": "^4.1.1",
@@ -66,25 +68,19 @@
     "html-webpack-plugin": "^2.29.0",
     "http-proxy": "^1.16.2",
     "jasmine-core": "^2.6.4",
-    "karma": "^1.7.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-junit-reporter": "^1.2.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.3",
+    "jest": "^20.0.4",
     "less-loader": "^4.0.4",
     "lodash-webpack-plugin": "^0.11.4",
     "meow": "^3.7.0",
     "merge-stream": "^1.0.1",
     "mock-server-middleware": "^0.2.0-alpha.3",
     "null-loader": "^0.1.1",
-    "phantomjs-prebuilt": "^2.1.14",
     "prerender-spa-plugin": "^2.0.1",
     "require-uncached": "^1.0.3",
     "run-sequence": "^1.2.2",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
+    "ts-jest": "^20.0.6",
     "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "tslint-loader": "^3.5.3",
@@ -99,5 +95,28 @@
   },
   "engines": {
     "node": ">=8.1.2"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,js}",
+      "!**/*.d.ts"
+    ],
+    "coverageDirectory": "test_results/jest",
+    "coverageReporters": [
+      "clover",
+      "lcov",
+      "text-summary"
+    ],
+    "mapCoverage": true,
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$",
+    "transform": {
+      ".ts": "ts-jest/preprocessor.js"
+    }
   }
 }

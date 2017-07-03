@@ -43,7 +43,7 @@ gulp.task('devServer', (done: () => void) => {
     stats             : 'minimal',
     proxy             : [
       {
-        context: map(config.apiPrefixes, (p: string): string => p + '**'),
+        context: map(config.apiPrefixes, (p: string): string => `${p}**`),
         target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
       },
     ],
@@ -53,9 +53,9 @@ gulp.task('devServer', (done: () => void) => {
 
   server.listen(config.serverPort, (error?: Error) => {
     if (error) {
-      // eslint-disable-next-line no-console
+      // tslint:disable-next-line:no-console
       console.error('Webpack Dev Server startup failed!  Detail:')
-      // eslint-disable-next-line no-console
+      // tslint:disable-next-line:no-console
       console.error(error)
       return
     }
@@ -70,9 +70,9 @@ gulp.task('devServer', (done: () => void) => {
       res.on('end', done)
     })
       .on('error', (err?: Error) => {
-        // eslint-disable-next-line no-console
+        // tslint:disable-next-line:no-console
         console.warn('There must be something wrong with webpack dev server:')
-        // eslint-disable-next-line no-console
+        // tslint:disable-next-line:no-console
         console.warn(err)
         done()
       })
