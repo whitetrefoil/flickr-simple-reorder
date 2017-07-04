@@ -11,7 +11,7 @@ afterEach(() => {
 })
 
 describe('services :: log', () => {
-  it('should have a function names "getLogger"', () => {
+  test('should have a function names "getLogger"', () => {
     expect(log.getLogger).toBeDefined()
   })
 })
