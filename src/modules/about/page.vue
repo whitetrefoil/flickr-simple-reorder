@@ -11,7 +11,7 @@
       <section>
         <p>A simple tool to help reorder photos in galleries (photosets).</p>
         <p><strong>Current state:</strong>Alpha</p>
-        <p><strong>Latest version:</strong>v2.0.0-alpha.1</p>
+        <p><strong>Latest version:</strong>v2.0.0-alpha.6</p>
       </section>
 
       <div class="about-page-row">
@@ -98,6 +98,27 @@
 
           <section id="about-page-changelog">
             <h3>Changelog & Roadmap</h3>
+
+            <section>
+              <h4>v2.0.0-alpha.6</h4>
+              <ul>
+                <li>Use the new features in webpack v3 & av-ts v0.8.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h4>v2.0.0-alpha.5</h4>
+              <ul>
+                <li>Fix welcome panel width.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h4>v2.0.0-alpha.4</h4>
+              <ul>
+                <li>Small tweaks.</li>
+              </ul>
+            </section>
 
             <section>
               <h4>v2.0.0-alpha.3</h4>

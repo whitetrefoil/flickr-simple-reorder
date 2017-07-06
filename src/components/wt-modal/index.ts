@@ -14,9 +14,9 @@ const { debug } = getLogger('/components/wt-modal/index.ts')
   },
 })
 export default class WtModal extends Vue {
-  @Prop isShowing = p({ type: Boolean, default: false }) as boolean
-  @Prop title     = p({ type: String }) as string
-  @Prop color     = p({ type: String }) as string
+  @Prop isShowing = p({ type: Boolean, default: false })
+  @Prop title     = p({ type: String })
+  @Prop color     = p({ type: String })
   @Prop size      = p({ type: String, default: 'medium' }) as Size
 
   get sizeClass() {
