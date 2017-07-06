@@ -4,10 +4,10 @@ import { Component, Vue, Prop, p } from 'av-ts'
   name: 'wt-progress',
 })
 export default class WtProgress extends Vue {
-  @Prop total     = p({ type: Number, required: true }) as number
-  @Prop successes = p({ type: Number, required: true }) as number
-  @Prop skipped   = p({ type: Number, required: true }) as number
-  @Prop failures  = p({ type: Number, required: true }) as number
+  @Prop total     = p({ type: Number, required: true })
+  @Prop successes = p({ type: Number, required: true })
+  @Prop skipped   = p({ type: Number, required: true })
+  @Prop failures  = p({ type: Number, required: true })
 
   get successStyle(): object {
     return { width: `${this.successes / this.total * 100}%` }

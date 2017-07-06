@@ -12,8 +12,8 @@ import WtPanel                     from '../../../components/wt-panel'
   },
 })
 export default class ReorderAllConfirm extends Vue {
-  @Prop isShowing = p({ type: Boolean, default: false }) as boolean
-  @Prop total     = p({ type: Number, required: true }) as number
+  @Prop isShowing = p({ type: Boolean, default: false })
+  @Prop total     = p({ type: Number, required: true })
 
   confirm() {
     this.$emit('confirm')
