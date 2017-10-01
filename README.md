@@ -58,6 +58,10 @@ TODOs
 Changelog
 ---------
 
+### v2.0.0-alpha.7
+
+* Some routine dependencies update.
+
 ### v2.0.0-alpha.6
 
 * Use the new features in webpack v3 & av-ts v0.8.
