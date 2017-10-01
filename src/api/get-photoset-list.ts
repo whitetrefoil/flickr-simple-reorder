@@ -2,13 +2,12 @@ import * as request     from 'superagent'
 import { getLogger }    from '../services/log'
 import * as API         from './types/api'
 import { IResponseXHR } from './types/response'
-import { Response }     from 'superagent'
 
 const debugGetPhotosetList = getLogger('/api/get-photoset-list.ts').debug
 export async function getPhotosetList(token: string, secret: string, nsid: string): IResponseXHR<API.IGetPhotosetListResponse> {
   debugGetPhotosetList('Get photoset list for user: ', nsid)
 
-  let res: Response
+  let res: request.Response
   let data: API.IGetPhotosetListResponse
   try {
     res = await request.get('/api/photosets/list')

@@ -4,7 +4,7 @@ import { proxy }                           from './proxy'
 import _                                 = require('lodash')
 const gulp                               = require('gulp')
 const connect                            = require('gulp-connect')
-const msm                                = require('mock-server-middleware')
+const { MSM }                            = require('mock-server-middleware')
 
 const proxyMiddlewareFactory = function proxyMiddlewareFactory(proxy: any) {
   return (req: IncomingMessage, res: ServerResponse, next: Function) => {
@@ -29,14 +29,14 @@ gulp.task('backend', (done: Noop) => {
         // tslint:disable-next-line:no-console
         console.log('No proxy server exists, will use StubAPI mode.')
 
-        msm.initialize({
+          const msm = new MSM({
           apiPrefixes  : config.apiPrefixes,
           apiDir       : 'stubapi/',
           lowerCase    : true,
           ping         : config.ping,
           preserveQuery: false,
         })
-        middleware.push(msm.middleware)
+        middleware.push(msm.middleware())
       } else {
         // tslint:disable-next-line:no-console
         console.log('Existing proxy server found, will use proxy mode.')

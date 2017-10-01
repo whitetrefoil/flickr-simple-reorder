@@ -2,11 +2,10 @@ import * as request     from 'superagent'
 import { getLogger }    from '../services/log'
 import * as API         from './types/api'
 import { IResponseXHR } from './types/response'
-import { Response }     from 'superagent'
 
 const debugLoginToken = getLogger('/api/get-login-token.ts').debug
 export async function getLoginToken(): IResponseXHR<API.IGetLoginTokenResponse> {
-  let res: Response
+  let res: request.Response
   let data: API.IGetLoginTokenResponse
   try {
     res = await request.get('/api/auth/loginToken')

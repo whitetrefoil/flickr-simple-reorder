@@ -2,13 +2,12 @@ import * as request     from 'superagent'
 import { getLogger }    from '../services/log'
 import * as API         from './types/api'
 import { IResponseXHR } from './types/response'
-import { Response }     from 'superagent'
 
 const debugAccessToken = getLogger('/api/get-access-token.ts').debug
 export async function getAccessToken(token: string, secret: string, verifier: string): IResponseXHR<API.IGetAccessTokenResponse> {
   debugAccessToken('Get access token with: ', arguments)
 
-  let res: Response
+  let res: request.Response
   let data: API.IGetAccessTokenResponse
   try {
     res = await request.get('/api/auth/accessToken')
