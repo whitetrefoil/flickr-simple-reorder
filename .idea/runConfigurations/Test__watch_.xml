@@ -2,7 +2,7 @@
   <configuration default="false" name="Test (watch)" type="JavaScriptTestRunnerJest" factoryName="Jest" singleton="false">
     <node-interpreter value="project" />
     <working-dir value="$PROJECT_DIR$" />
-    <jest-options value="--no-coverage" />
+    <jest-options value="--no-coverage --watch" />
     <envs />
     <scope-kind value="ALL" />
     <method />

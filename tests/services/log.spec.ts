@@ -1,3 +1,5 @@
+// tslint:disable:no-implicit-dependencies
+
 import clearRequire from 'clear-require'
 
 let log

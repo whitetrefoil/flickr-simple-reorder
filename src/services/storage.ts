@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash'
-import * as semver from 'semver'
+import { lt } from 'semver'
 import * as API from '../api/types/api'
 import { getLogger } from './log'
 
@@ -49,7 +49,7 @@ storage.addPlugin(require('store/plugins/expire'))
 const sessionVersion = storage.get('flickrSimpleReorder-version')
 debug('Detected session for version:', sessionVersion)
 debug('Current version:', process.env.VERSION)
-if (isEmpty(sessionVersion) || semver.lt(sessionVersion, process.env.VERSION)) {
+if (isEmpty(sessionVersion) || lt(sessionVersion, process.env.VERSION)) {
   storage.clearAll()
 }
 storage.set('flickrSimpleReorder-version', process.env.VERSION)
