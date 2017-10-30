@@ -1,6 +1,6 @@
-import { isEmpty }   from 'lodash'
-import * as semver   from 'semver'
-import * as API      from '../api/types/api'
+import { isEmpty } from 'lodash'
+import * as semver from 'semver'
+import * as API from '../api/types/api'
 import { getLogger } from './log'
 
 interface ICache {
@@ -31,7 +31,7 @@ interface IStorage {
   set<K extends keyof IInternalStorageContent>(
     key: K,
     value: IInternalStorageContent[K],
-    expiration?: number | Date,
+    expiration?: number|Date,
   ): void
   get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]
   remove<K extends keyof IInternalStorageContent>(key: K): void
@@ -54,8 +54,8 @@ if (isEmpty(sessionVersion) || semver.lt(sessionVersion, process.env.VERSION)) {
 }
 storage.set('flickrSimpleReorder-version', process.env.VERSION)
 
-export default class Storage {
-  static set<K extends keyof IStorageContent>(key: K, value: IStorageContent[K]): void {
+export default {
+  set<K extends keyof IStorageContent>(key: K, value: IStorageContent[K]): void {
     switch (key) {
       case 'cache':
         storage.set('flickrSimpleReorder-cache', value as ICache, Date.now() + SEVEN_DAYS_AS_MS)
@@ -66,9 +66,9 @@ export default class Storage {
       default:
       // Do nothing
     }
-  }
+  },
 
-  static get<K extends keyof IStorageContent>(key: K): IStorageContent[K] {
+  get<K extends keyof IStorageContent>(key: K): IStorageContent[K] {
     switch (key) {
       case 'cache':
         return storage.get('flickrSimpleReorder-cache')
@@ -77,9 +77,9 @@ export default class Storage {
       default:
         return null
     }
-  }
+  },
 
-  static remove<K extends keyof IStorageContent>(key: K): void {
+  remove<K extends keyof IStorageContent>(key: K): void {
     switch (key) {
       case 'cache':
         storage.remove('flickrSimpleReorder-cache')
@@ -87,5 +87,5 @@ export default class Storage {
       default:
       // Do nothing
     }
-  }
+  },
 }

@@ -1,19 +1,17 @@
-import { IncomingMessage }    from 'http'
-import { map, noop }          from 'lodash'
-import { config }             from '../config'
-import http                 = require('http')
-import path                 = require('path')
-const del                   = require('del')
-const gulp                  = require('gulp')
-const requireNew            = require('require-uncached')
-const webpack               = require('webpack')
-const WebpackDevServer      = require('webpack-dev-server')
-const devConfig             = require('../webpack/dev')
+// tslint:disable:no-import-side-effect no-implicit-dependencies
 
-const WAIT_FOR_STARTUP_IN_MS      = 30000
-const WATCHER_STABILITY_THRESHOLD = 200
-const WATCHER_RESTART_DELAY       = 500
+import * as gulp from 'gulp'
+import * as http from 'http'
+import * as _ from 'lodash'
+import * as webpack from 'webpack'
+import * as WebpackDevServer from 'webpack-dev-server'
+import config from '../config'
+import { getLogger } from '../utils/log'
+import devConfig from '../webpack/dev'
 
+const WAIT_FOR_STARTUP_IN_MS = 30000
+
+const { debug } = getLogger(__filename)
 
 gulp.task('devServer', (done: () => void) => {
 
@@ -21,37 +19,28 @@ gulp.task('devServer', (done: () => void) => {
   devConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
   devConfig.output.path = config.absOutput('')
 
-  devConfig.entry.index
-    .unshift(`webpack-dev-server/client?http://${config.livereloadHost}:${config.serverPort}`
-      , 'webpack/hot/dev-server')
+  devConfig.entry['polyfills']
+    .unshift(`webpack-dev-server/client?http://${config.livereloadHost}:${config.serverPort}`, 'webpack/hot/dev-server')
 
-  const webpackCompiler       = webpack(devConfig)
+  const webpackCompiler = webpack(devConfig)
+
   const webpackCompilerConfig = {
     publicPath        : '',
     contentBase       : config.absOutput(''),
     hot               : true,
     noInfo            : false,
     historyApiFallback: true,
-    // quiet: false,
-    // lazy: false,
-    // watchOptions: {
-    //  aggregateTimeout: 300,
-    //  poll: true,
-    // },
-    // publicPath: '/assets/',
-    // headers: { 'X-Custom-Header': 'yes' },
-    stats             : 'minimal',
-    proxy             : [
-      {
-        context: map(config.apiPrefixes, (p: string): string => `${p}**`),
-        target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
-      },
-    ],
+    stats             : 'minimal' as 'minimal',
+    proxy             : [{
+      context: _.map(config.apiPrefixes, (p: string): string => `${p}**`),
+      target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
+    }],
+    disableHostCheck  : true,
   }
 
   const server = new WebpackDevServer(webpackCompiler, webpackCompilerConfig)
 
-  server.listen(config.serverPort, (error?: Error) => {
+  server.listen(config.serverPort, '0.0.0.0', (error?: Error) => {
     if (error) {
       // tslint:disable-next-line:no-console
       console.error('Webpack Dev Server startup failed!  Detail:')
@@ -65,8 +54,8 @@ gulp.task('devServer', (done: () => void) => {
     http.get({
       port   : config.serverPort,
       timeout: WAIT_FOR_STARTUP_IN_MS,
-    }, (res: IncomingMessage) => {
-      res.on('data', noop)
+    }, (res: http.IncomingMessage) => {
+      res.on('data', _.noop)
       res.on('end', done)
     })
       .on('error', (err?: Error) => {

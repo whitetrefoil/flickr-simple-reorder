@@ -1,18 +1,17 @@
-const ExtractTextPlugin      = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin      = require('html-webpack-plugin')
-const isEmpty                = require('lodash/isEmpty')
-const webpack                = require('webpack')
-const { config, initialize } = require('../config')
-const { lodashPlugin }       = require('./configs/lodash')
-const { vueLoaderProd }      = require('./configs/vue')
+// tslint:disable:no-import-side-effect no-implicit-dependencies
 
-if (config.isInitialized !== true) {
-  initialize()
-}
+import * as ExtractTextPlugin from 'extract-text-webpack-plugin'
+import * as HtmlWebpackPlugin from 'html-webpack-plugin'
+import * as _ from 'lodash'
+import * as webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import config from '../config'
+import lodashPlugin from './configs/lodash'
+import { vueLoaderProd } from './configs/vue'
 
 const SIZE_14KB = 14336
 
-module.exports = {
+export default {
 
   context: config.absSource(''),
 
@@ -38,9 +37,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use : [
-          'awesome-typescript-loader?configFileName=tsconfig.json',
-        ],
+        use : ['awesome-typescript-loader?configFileName=tsconfig.json'],
       },
       {
         test: /\.js$/,
@@ -85,17 +82,24 @@ module.exports = {
 
   plugins: [
     lodashPlugin,
+    new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
         FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
         FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
-        VERSION        : JSON.stringify(config.version),
+        VERSION        : JSON.stringify(config.pkg.version),
       },
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['index', 'theme', 'vendor', 'polyfills'],
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode  : 'static',
+      defaultSizes  : 'gzip',
+      openAnalyzer  : false,
+      reportFilename: '../test_results/bundle-analysis-report.html',
     }),
     new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin({
@@ -110,9 +114,9 @@ module.exports = {
       minify        : false,
       inject        : 'body',
       chunksSortMode: 'auto',
-      base          : isEmpty(process.env.VUE_ROUTER_BASE)
+      base          : _.isEmpty(process.env.VUE_ROUTER_BASE)
         ? '/'
         : process.env.VUE_ROUTER_BASE,
     }),
   ],
-}
+} as webpack.Configuration
