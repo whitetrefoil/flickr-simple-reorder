@@ -1,31 +1,32 @@
 jest.resetModules()
 
+import * as _ from 'lodash'
 import { compare } from 'semver'
 import { myCompare } from '../../src/services/version'
 
 function testVersion(a: string, b: string) {
   let myResult: number
-  let myCompareThrown = false
+  let myCompareThrown: string
   let officialResult: number
-  let officialCompareThrown = false
+  let officialCompareThrown: string
 
   try {
     myResult = myCompare(a, b)
   } catch (e) {
-    myCompareThrown = true
+    myCompareThrown = e.message
   }
 
   try {
     officialResult = compare(a, b)
   } catch (e) {
-    officialCompareThrown = true
+    officialCompareThrown = e.message
   }
 
-  if (myCompareThrown !== officialCompareThrown) {
-    throw new Error(`My comparator did${myCompareThrown ? ' ' : ' **NOT** '}thrown but the official one did${officialCompareThrown ? '' : ' **NOT**'}.`)
+  if (_.isUndefined(myCompareThrown) !== _.isUndefined(officialCompareThrown)) {
+    throw new Error(`My comparator did${myCompareThrown ? ' ' : ' **NOT** '}thrown but the official one did${officialCompareThrown ? '' : ' **NOT**'}.\nError message: ${myCompareThrown || officialCompareThrown}`)
   }
 
-  expect(myCompare(a, b)).toEqual(compare(a, b))
+  expect(myResult).toEqual(officialResult)
 }
 
 describe('Version comparator', () => {
