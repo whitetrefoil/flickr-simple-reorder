@@ -13,7 +13,10 @@ class DevServerProxy {
   startProxy(proxyConfig: any) {
     debug(`Building proxy to ${config.backendDest}`)
     this.server = httpProxy.createProxyServer(proxyConfig)
-    this.server.on('error', console.warn)
+    this.server.on('error', (err: Error) => {
+      // tslint:disable-next-line:no-console
+      console.warn(err.message)
+    })
     // See https://github.com/nodejitsu/node-http-proxy/issues/180#issuecomment-310550385
     this.server.on('proxyReq', (proxyReq, req) => {
       if (req.body == null) { return }
