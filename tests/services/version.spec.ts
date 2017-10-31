@@ -43,6 +43,10 @@ describe('Version comparator', () => {
     testVersion('1.0.0', '1.0.0.0')
   })
 
+  it('should correctly compare between pre-release version and final version', () => {
+    testVersion('1.0.0', '1.0.0-alpha.1')
+  })
+
   it('should work for pre-releases', () => {
     testVersion('1.0.0', '1.0.1-alpha.1')
     testVersion('1.0.0-alpha.1', '1.0.1')

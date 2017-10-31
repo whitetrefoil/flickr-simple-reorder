@@ -5,7 +5,6 @@
 const VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)(?:-(.*))?$/
 
 export function compare(a: string, b: string): -1|0|1 {
-  // TODO
   if (typeof a !== 'string') {
     throw new TypeError(`Invalid Version: ${a}`)
   }
@@ -27,7 +26,7 @@ export function compare(a: string, b: string): -1|0|1 {
     if (arrA[i] < arrB[i]) { return -1 }
     if (arrA[i] > arrB[i]) { return 1 }
     if (arrA[i] == null && arrB[i] == null) { return 0 }
-    if (arrA[i] == null) { return -1 }
-    if (arrB[i] == null) { return 1 }
+    if (arrA[i] == null) { return 1 }
+    if (arrB[i] == null) { return -1 }
   }
 }
