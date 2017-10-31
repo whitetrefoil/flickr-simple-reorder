@@ -1,9 +1,9 @@
-import { Component, Vue, Prop, p } from 'av-ts'
-import ICircle                     from 'iview/src/components/circle'
-import IButton                     from 'iview/src/components/button'
-import WtModal                     from '../../../components/wt-modal'
-import WtPanel                     from '../../../components/wt-panel'
-import WtProgress                  from '../../../components/wt-progress'
+import { Component, Vue, Prop, p, Lifecycle } from 'av-ts'
+import ICircle from 'iview/src/components/circle'
+import IButton from 'iview/src/components/button'
+import WtModal from '../../../components/wt-modal'
+import WtPanel from '../../../components/wt-panel'
+import WtProgress from '../../../components/wt-progress'
 
 @Component({
   name      : 'reordering-all',
@@ -21,6 +21,14 @@ export default class ReorderingAll extends Vue {
   @Prop successes = p({ type: Number, required: true }) as number
   @Prop skipped   = p({ type: Number, required: true }) as number
   @Prop failures  = p({ type: Number, required: true }) as number
+
+  // display = {
+  //   successes: 0,
+  //   skipped  : 0,
+  //   failures : 0,
+  // }
+  //
+  // timer: number = null
 
   get finished(): boolean {
     return this.successes + this.skipped + this.failures >= this.total
@@ -42,4 +50,18 @@ export default class ReorderingAll extends Vue {
   close(): void {
     this.$emit('close')
   }
+  //
+  // @Lifecycle
+  // mounted() {
+  //   this.timer = window.setInterval(() => {
+  //     this.display.successes = this.successes
+  //     this.display.skipped   = this.skipped
+  //     this.display.failures  = this.failures
+  //   }, 2000)
+  // }
+  //
+  // @Lifecycle
+  // beforeDestroy() {
+  //   window.clearInterval(this.timer)
+  // }
 }
