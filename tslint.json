@@ -161,7 +161,7 @@
       "check-preblock"
     ],
     // v5.2.0 Updates
-    "no-object-literal-type-assertion": true,
+    "no-object-literal-type-assertion": false,
     "no-irregular-whitespace"         : true,
     "prefer-switch"                   : [true, {"min-cases": 3}],
     "number-literal-format"           : true,

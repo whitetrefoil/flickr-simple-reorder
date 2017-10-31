@@ -1,8 +1,10 @@
+// tslint:disable:no-import-side-effect no-implicit-dependencies
+
 jest.resetModules()
 
 import * as _ from 'lodash'
 import { compare } from 'semver'
-import { myCompare } from '../../src/services/version'
+import { compare as myCompare } from '../../src/services/version'
 
 function testVersion(a: string, b: string) {
   let myResult: number
@@ -57,5 +59,6 @@ describe('Version comparator', () => {
     testVersion('255.255.255-alpha.a', '255.255.255-alpha.b')
     testVersion('255.255.-255-alpha.a', '255.255.-255-alpha.b')
     testVersion('255.255.255-alpha.a+asdf', '255.255.255-alpha.b+asdf')
+    testVersion(null, undefined)
   })
 })
