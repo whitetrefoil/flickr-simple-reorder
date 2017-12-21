@@ -1,17 +1,15 @@
-const HtmlWebpackPlugin      = require('html-webpack-plugin')
-const isEmpty                = require('lodash/isEmpty')
-const webpack                = require('webpack')
-const { config, initialize } = require('../config')
-const { lodashPlugin }       = require('./configs/lodash')
-const { vueLoaderDev }       = require('./configs/vue')
+// tslint:disable:no-import-side-effect no-implicit-dependencies
 
-if (config.isInitialized !== true) {
-  initialize()
-}
+import * as HtmlWebpackPlugin from 'html-webpack-plugin'
+import * as _ from 'lodash'
+import * as webpack from 'webpack'
+import config from '../config'
+import lodashPlugin from './configs/lodash'
+import { vueLoaderDev } from './configs/vue'
 
-module.exports = {
+export default {
 
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
 
   context: config.absSource(''),
 
@@ -48,16 +46,8 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        enforce: 'pre',
-        test   : /\.js$/,
-        use    : ['eslint-loader'],
-        exclude: /node_modules/,
-      },
-      {
         test: /\.ts$/,
-        use : [
-          'awesome-typescript-loader?configFileName=tsconfig.json',
-        ],
+        use : ['awesome-typescript-loader?configFileName=tsconfig.json'],
       },
       {
         test: /\.js$/,
@@ -91,13 +81,15 @@ module.exports = {
 
   plugins: [
     lodashPlugin,
+    // new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
         FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
         FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
-        VERSION        : JSON.stringify(config.version),
+        VERSION        : JSON.stringify(config.pkg.version),
       },
     }),
     new webpack.optimize.CommonsChunkPlugin({
@@ -111,7 +103,7 @@ module.exports = {
       minify        : false,
       inject        : 'body',
       chunksSortMode: 'auto',
-      base          : isEmpty(process.env.VUE_ROUTER_BASE)
+      base          : _.isEmpty(process.env.VUE_ROUTER_BASE)
         ? '/'
         : process.env.VUE_ROUTER_BASE,
     }),
@@ -120,4 +112,4 @@ module.exports = {
   performance: {
     hints: false,
   },
-}
+} as webpack.Configuration

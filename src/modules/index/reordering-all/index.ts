@@ -1,9 +1,9 @@
-import { Component, Vue, Prop, p } from 'av-ts'
-import ICircle                     from 'iview/src/components/circle'
-import IButton                     from 'iview/src/components/button'
-import WtModal                     from '../../../components/wt-modal'
-import WtPanel                     from '../../../components/wt-panel'
-import WtProgress                  from '../../../components/wt-progress'
+import { Component, p, Prop, Vue } from 'av-ts'
+import IButton from 'iview/src/components/button'
+import ICircle from 'iview/src/components/circle'
+import WtModal from '../../../components/wt-modal'
+import WtPanel from '../../../components/wt-panel'
+import WtProgress from '../../../components/wt-progress'
 
 @Component({
   name      : 'reordering-all',

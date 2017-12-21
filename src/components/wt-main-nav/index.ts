@@ -6,7 +6,7 @@ import { store }          from '../../store'
 const log = getLogger('/components/wt-main-nav')
 
 @Component({
-  name      : 'wt-main-nav',
+  name: 'wt-main-nav',
 })
 export default class WtMainNav extends Vue {
 
@@ -14,7 +14,7 @@ export default class WtMainNav extends Vue {
 
   get hasLoggedIn(): boolean {
     return !_.isEmpty(_.get(store.state, 'login.token'))
-      && !_.isEmpty(_.get(store.state, 'login.user'))
+           && !_.isEmpty(_.get(store.state, 'login.user'))
   }
 
   get userName(): string {

@@ -1,40 +1,44 @@
-import { IncomingMessage, ServerResponse } from 'http'
-import { config }                          from '../config'
-import { proxy }                           from './proxy'
-import _                                 = require('lodash')
-const gulp                               = require('gulp')
-const connect                            = require('gulp-connect')
-const { MSM }                            = require('mock-server-middleware')
+// tslint:disable:no-import-side-effect no-implicit-dependencies
 
-const proxyMiddlewareFactory = function proxyMiddlewareFactory(proxy: any) {
-  return (req: IncomingMessage, res: ServerResponse, next: Function) => {
+import * as bodyparser from 'body-parser'
+import * as gulp from 'gulp'
+import * as connect from 'gulp-connect'
+import { IncomingMessage, ServerResponse } from 'http'
+import * as _ from 'lodash'
+import { MSM } from 'mock-server-middleware'
+import config from '../config'
+import { proxy } from './proxy'
+
+const proxyMiddlewareFactory = (proxyServer: any) =>
+  (req: IncomingMessage, res: ServerResponse, next: Function) => {
     if (_.every(config.apiPrefixes, (p) => req.url.indexOf(p) !== 0)) {
       next()
       return
     }
-    proxy.web(req, res)
+    proxyServer.web(req, res)
   }
-}
 
 gulp.task('backend', (done: Noop) => {
 
   const server = connect.server({
+    host      : '0.0.0.0',
     root      : [config.source('')],
     port      : config.serverPort + 1,
     fallback  : `${config.outputByEnv(config.serverIndex)}`,
     middleware: () => {
-      const middleware = []
+      const middleware = [bodyparser.json()]
 
       if (proxy.server == null) {
         // tslint:disable-next-line:no-console
         console.log('No proxy server exists, will use StubAPI mode.')
 
-          const msm = new MSM({
+        const msm = new MSM({
           apiPrefixes  : config.apiPrefixes,
           apiDir       : 'stubapi/',
           lowerCase    : true,
           ping         : config.ping,
           preserveQuery: false,
+          logLevel     : 'DEBUG',
         })
         middleware.push(msm.middleware())
       } else {

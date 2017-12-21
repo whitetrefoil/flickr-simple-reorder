@@ -1,61 +1,109 @@
+// tslint:disable:no-implicit-dependencies no-import-side-effect
+
+import Chalk         from 'chalk'
+import * as _        from 'lodash'
+import * as meow     from 'meow'
+import * as path     from 'path'
+import { getLogger } from './utils/log'
+
+// region - Interfaces
+
+interface IFlags {
+  development: boolean
+  port: string
+  prefix: string
+  index: string
+  livereload: string
+  ping: string
+  backend: string
+}
+
+type IBuildPathFn = (...path: string[]) => string
+
+interface IConfig {
+  argv: meow.Result<IFlags>
+  pkg: any
+  serverPort: number
+  apiPrefixes: string[]
+  serverIndex: string
+  livereloadHost: string
+  ping: number
+  backendDest: string
+
+  root: IBuildPathFn
+  absRoot: IBuildPathFn
+  source: IBuildPathFn
+  absSource: IBuildPathFn
+  building: IBuildPathFn
+  absBuilding: IBuildPathFn
+  output: IBuildPathFn
+  absOutput: IBuildPathFn
+  outputByEnv: IBuildPathFn
+  absOutputByEnv: IBuildPathFn
+}
+
+// endregion
+
+// region - Default constants
+
 const DEFAULT_IS_DEVELOPMENT = false
 const DEFAULT_PORT           = 8000
 const DEFAULT_PREFIX         = '/api/'
 const DEFAULT_INDEX          = 'index.html'
-const DEFAULT_LIVERELOAD     = 'localhost'
 const DEFAULT_PING           = 0
+const DEFAULT_LIVERELOAD     = 'localhost'
 const DEFAULT_BACKEND        = 'http://localhost:3000'
 
 const DEFAULT_BUILDING_DIR    = '.building'
 const DEFAULT_OUTPUT_DIR      = 'dist'
 const DEFAULT_SOURCE_BASE_DIR = 'src'
 
-const meow       = require('meow')
-const { colors } = require('gulp-util')
-const path       = require('path')
+// endregion
 
-const argv = meow(`
+const logger = getLogger(__filename)
+
+const { blue, green, gray, yellow } = Chalk
+
+// region - Configure Meow
+
+const argv = meow<IFlags>(
+  `
     Usage:
-      $ npm run gulp ${colors.yellow('<task>')} -- ${colors.yellow('<options>')}
+      $ npm run gulp ${yellow('<task>')} -- ${yellow('<options>')}
     or:
-      $ ./node_modules/.bin/gulp ${colors.yellow('<task>')} ${colors.yellow('<options>')}
+      $ ./node_modules/.bin/gulp ${yellow('<task>')} ${yellow('<options>')}
+    or (if have npx installed):
+      $ npx gulp ${yellow('<task>')} ${yellow('<options>')}
     or (if have gulp installed globally):
-      $ gulp ${colors.yellow('<task>')} ${colors.yellow('<options>')}
+      $ gulp ${yellow('<task>')} ${yellow('<options>')}
 
-    Options:                                                     [${colors.gray('default value')}]
+    Options:                                                     [${gray('default value')}]
       common:
-        -d, --development  Set NODE_ENV to "development"         [${colors.yellow('false')}]
+        -h, --help         show this help message
+        -v, --version      show version number then exit
+        -d, --development  Set NODE_ENV to "development"         [${yellow('false')}]
       developing:
-        -p, --port         port of preview server                [${colors.blue('8888')}]
-        -x, --prefix       prefix to determine backend requests  [${colors.green('"/services/"')}]
+        -p, --port         port of preview server                [${blue('8888')}]
+        -x, --prefix       prefix to determine backend requests  [${green('"/api/"')}]
                            can use ',' to specify multiple ones
-        -i, --index        index page of preview server          [${colors.green('"index.html"')}]
-        -l, --livereload   the hostname in livereload script     [${colors.green('"localhost"')}]
-        -n, --ping         emulate the network delay (ms)        [${colors.blue('0')}]
-        -e, --backend      destination of backend proxy          [${colors.green('"http://localhost:3000"')}]
+        -i, --index        index page of preview server          [${green('"index.html"')}]
+        -l, --livereload   the hostname in livereload script     [${green('"localhost"')}]
+        -n, --ping         emulate the network delay (ms)        [${blue('0')}]
+        -e, --backend      destination of backend proxy          [${green('"http://localhost:3000"')}]
 
     For more detail of tasks / options, see code in "dev/gulp" directory.
   `,
   {
-    boolean: ['development'],
-    string : ['index', 'prefix', 'livereload', 'backend'],
-    alias  : {
-      d: 'development',
-      p: 'port',
-      x: 'prefix',
-      i: 'index',
-      l: 'livereload',
-      n: 'ping',
-      e: 'backend',
-    },
-    default: {
-      development: DEFAULT_IS_DEVELOPMENT,
-      port       : DEFAULT_PORT,
-      prefix     : DEFAULT_PREFIX,
-      index      : DEFAULT_INDEX,
-      livereload : DEFAULT_LIVERELOAD,
-      ping       : DEFAULT_PING,
-      backend    : DEFAULT_BACKEND,
+    flags  : {
+      help       : { alias: 'h', type: 'boolean' },
+      version    : { alias: 'v', type: 'boolean' },
+      development: { alias: 'd', default: DEFAULT_IS_DEVELOPMENT, type: 'boolean' },
+      port       : { alias: 'p', default: DEFAULT_PORT },
+      prefix     : { alias: 'x', default: DEFAULT_PREFIX, type: 'string' },
+      index      : { alias: 'i', default: DEFAULT_INDEX, type: 'string' },
+      livereload : { alias: 'l', default: DEFAULT_LIVERELOAD, type: 'string' },
+      ping       : { alias: 'n', default: DEFAULT_PING, type: 'string' },
+      backend    : { alias: 'e', default: DEFAULT_BACKEND, type: 'string' },
     },
   },
 )
@@ -64,114 +112,66 @@ export class ConfigNotInitializedError extends Error {
   isConfigNotInitializedError = true
 }
 
-const root     = path.join(__dirname, '..')
-const source   = DEFAULT_SOURCE_BASE_DIR
-const building = DEFAULT_BUILDING_DIR
-const output   = DEFAULT_OUTPUT_DIR
+// endregion
 
-interface IConfig {
-  isInitialized: boolean
-  argv?: any
-  pkg?: any
-  version?: string
-  root?(...pathInRoot: string[]): string
-  absRoot?(...pathInRoot: string[]): string
-  source?(...pathInSource: string[]): string
-  absSource?(...pathInSource: string[]): string
-  building?(...pathInBuilding: string[]): string
-  absBuilding?(...pathInBuilding: string[]): string
-  output?(...pathInOutput: string[]): string
-  absOutput?(...pathInOutput: string[]): string
-  outputByEnv?(...pathInOutput: string[]): string
-  absOutputByEnv?(...pathInOutput: string[]): string
-  themeBuildDir?: string
-  themeConfigBasename?: string
-  serverPort?: number
-  apiPrefixes?: string[]
-  serverIndex?: string
-  livereloadHost?: string
-  ping?: number
-  backendDest?: string
+// region - Main exports
+
+const rootDir     = path.join(__dirname, '..')
+const sourceDir   = DEFAULT_SOURCE_BASE_DIR
+const buildingDir = DEFAULT_BUILDING_DIR
+const outputDir   = DEFAULT_OUTPUT_DIR
+
+if (typeof process.env.NODE_ENV !== 'string') {
+  process.env.NODE_ENV = (argv.flags.development || DEFAULT_IS_DEVELOPMENT)
+    ? 'development' : 'production'
 }
+process.env.BABEL_ENV = process.env.NODE_ENV
 
-export const config: IConfig = {
-  isInitialized: false,
-}
+logger.log(`Initializing project in "${rootDir}" for ${process.env.NODE_ENV} environment.`)
 
-config.root = (...pathInRoot) =>
-  path.join(root, ...pathInRoot)
+const root: IBuildPathFn = (...pathInRoot) => path.join(rootDir, ...pathInRoot)
+const absRoot            = root
 
-config.absRoot = config.root
+const source: IBuildPathFn    = (...pathInSource) => path.join(sourceDir, ...pathInSource)
+const absSource: IBuildPathFn = (...pathInSource) => root(sourceDir, ...pathInSource)
 
-config.source = (...pathInSource) =>
-  path.join(source, ...pathInSource)
+const building: IBuildPathFn    = (...pathInBuilding) => path.join(buildingDir, ...pathInBuilding)
+const absBuilding: IBuildPathFn = (...pathInBuilding) => root(buildingDir, ...pathInBuilding)
 
-config.absSource = (...pathInSource) =>
-  config.root(source, ...pathInSource)
+const output: IBuildPathFn    = (...pathInOutput) => path.join(outputDir, ...pathInOutput)
+const absOutput: IBuildPathFn = (...pathInOutput) => root(outputDir, ...pathInOutput)
 
-config.building = (...pathInBuilding) =>
-  path.join(building, ...pathInBuilding)
-
-config.absBuilding = (...pathInBuilding) =>
-  config.root(building, ...pathInBuilding)
-
-config.output = (...pathInOutput) =>
-  path.join(output, ...pathInOutput)
-
-config.absOutput = (...pathInOutput) =>
-  config.root(output, ...pathInOutput)
-
-config.outputByEnv = (...pathInOutput) => {
-  const dir = process.env.NODE_ENV === 'production' ? output : building
+const outputByEnv: IBuildPathFn = (...pathInOutput) => {
+  const dir = process.env.NODE_ENV === 'production' ? outputDir : buildingDir
   return path.join(dir, ...pathInOutput)
 }
 
-config.absOutputByEnv = (...pathInOutput) => {
-  const dir = process.env.NODE_ENV === 'production' ? output : building
-  return config.root(dir, ...pathInOutput)
+const absOutputByEnv: IBuildPathFn = (...pathInOutput) => {
+  const dir = process.env.NODE_ENV === 'production' ? outputDir : buildingDir
+  return root(dir, ...pathInOutput)
 }
 
-config.themeBuildDir       = config.source('theme', 'build')
-config.themeConfigBasename = config.source('theme', 'element-config.css')
-
-// tslint:disable-next-line complexity,max-statements
-export function initialize() {
-
-  if (config.isInitialized) {
-    // tslint:disable-next-line:no-console
-    console.warn(`Project has already been initialized.  Newer settings will be ignored.`)
-    return
-  }
-
-  // tslint:disable-next-line no-console
-  console.log(`Initializing project in "${root}"`)
-
-  config.argv = argv
-
-  config.pkg = argv.pkg || {}
-
-  config.version = argv.pkg.version
-
-  if (typeof process.env.NODE_ENV !== 'string') {
-    process.env.NODE_ENV = (argv.flags.development || DEFAULT_IS_DEVELOPMENT)
-      ? 'development' : 'production'
-  }
-  process.env.BABEL_ENV = process.env.NODE_ENV
-
-  // tslint:disable-next-line no-console
-  console.log(`Running gulp & babel for ${process.env.NODE_ENV} environment.`)
-
-  config.serverPort = parseInt(argv.flags.port, 10)
-
-  config.apiPrefixes = argv.flags.prefix.split(',')
-
-  config.serverIndex = argv.flags.index
-
-  config.livereloadHost = argv.flags.livereload
-
-  config.ping = parseInt(argv.flags.ping, 10)
-
-  config.backendDest = argv.flags.backend
-
-  config.isInitialized = true
+const config: IConfig = {
+  argv,
+  pkg           : argv.pkg || {},
+  serverPort    : parseInt(argv.flags.port, 10),
+  apiPrefixes   : argv.flags.prefix.split(','),
+  serverIndex   : argv.flags.index,
+  livereloadHost: argv.flags.livereload,
+  ping          : parseInt(argv.flags.ping, 10),
+  backendDest   : _.isEmpty(argv.flags.backend) ? DEFAULT_BACKEND : argv.flags.backend,
+  root,
+  absRoot,
+  source,
+  absSource,
+  building,
+  absBuilding,
+  output,
+  absOutput,
+  outputByEnv,
+  absOutputByEnv,
 }
+
+// endregion
+
+export default config

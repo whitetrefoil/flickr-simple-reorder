@@ -1,14 +1,15 @@
 {
   "compilerOptions"               : {
+    "outDir"                        : ".building",
     "allowJs"                       : true,
     "allowSyntheticDefaultImports"  : true,
     "target"                        : "es2017",
-    "lib"                           : ["es2017", "es6", "dom.iterable"],
+    "lib"                           : ["es2017", "es7", "dom"],
     "module"                        : "esnext",
     "moduleResolution"              : "node",
     "inlineSources"                 : true,
-    "inlineSourceMap"               : false,
-    "sourceMap"                     : true,
+    "inlineSourceMap"               : true,
+    "sourceMap"                     : false,
     "skipLibCheck"                  : true,
     "emitDecoratorMetadata"         : true,
     "experimentalDecorators"        : true,
@@ -17,10 +18,8 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "include"                       : [
-    "src/**/*"
-  ],
-  "exclude"                       : [
-    "node_modules"
+    "src/**/*.ts",
+    "declarations/*.d.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "useBabel": true,

@@ -1,17 +1,21 @@
 import { Component, Lifecycle, Vue, Watch } from 'av-ts'
-import * as _                               from 'lodash'
 import IButton                              from 'iview/src/components/button'
 import IIcon                                from 'iview/src/components/icon'
 import IInput                               from 'iview/src/components/input'
 import IOption                              from 'iview/src/components/select/option'
 import ISelect                              from 'iview/src/components/select/select'
 import ISwitch                              from 'iview/src/components/switch'
+import * as _                               from 'lodash'
 import * as API                             from '../../api/types/api'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
+import { getLogger }                        from '../../services/log'
 import { store, types as t }                from '../../store'
+import { BulkReorderProgressEmitter }       from '../../store/photosets/actions'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
+
+const { debug } = getLogger('/src/modules/index/page.ts')
 
 // `null` for normal case.
 const enum Status {
@@ -66,7 +70,7 @@ export default class IndexPage extends Vue {
 
   get hasLoggedIn(): boolean {
     return !_.isEmpty(_.get(store.state, 'login.token'))
-      && !_.isEmpty(_.get(store.state, 'login.user'))
+           && !_.isEmpty(_.get(store.state, 'login.user'))
   }
 
   get filteredSets(): API.IPhotoset[] {
@@ -110,33 +114,32 @@ export default class IndexPage extends Vue {
     this.reorderingAllStatus.successes = 0
     this.reorderingAllStatus.skipped   = 0
     this.reorderingAllStatus.failures  = 0
-    _.forEach(this.filteredSets, async(photoset) => {
-      try {
-        const params: API.IPostPhotosetReorderRequest = {
-          nsid   : store.state.login.user.nsid,
-          setId  : photoset.id,
-          orderBy: store.state.photosets.preferences.orderBy,
-          isDesc : store.state.photosets.preferences.isDesc,
-          token  : store.state.login.token.key,
-          secret : store.state.login.token.secret,
-        }
-        await store.dispatch(t.PHOTOSETS__ORDER_SET, params)
 
-        const status = store.state.photosets.statuses[photoset.id]
-        switch (status) {
-          case 'done':
-            this.reorderingAllStatus.successes += 1
-            return
-          case 'skipped':
-            this.reorderingAllStatus.skipped += 1
-            return
-          default:
-            throw new Error(`Unknown reorder result: ${status}`)
-        }
-      } catch (e) {
-        this.reorderingAllStatus.failures += 1
-      }
+    store.dispatch(t.PHOTOSETS__BULK_ORDER_SET, {
+      nsid   : store.state.login.user.nsid,
+      setIds : _.map(this.filteredSets, (ps) => ps.id),
+      orderBy: store.state.photosets.preferences.orderBy,
+      isDesc : store.state.photosets.preferences.isDesc,
+      token  : store.state.login.token.key,
+      secret : store.state.login.token.secret,
     })
+      .then((emitter: BulkReorderProgressEmitter) => {
+        emitter.on('finish', () => {
+          debug('Bulk reordering finished')
+        })
+
+        emitter.on('success', () => {
+          this.reorderingAllStatus.successes += 1
+        })
+
+        emitter.on('fail', () => {
+          this.reorderingAllStatus.failures += 1
+        })
+
+        emitter.on('skip', () => {
+          this.reorderingAllStatus.skipped += 1
+        })
+      })
   }
 
   onOrderByChange(value: API.IOrderByOption) {

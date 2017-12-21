@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="it" type="js.build_tools.gulp" factoryName="Gulp.js">
+  <configuration default="false" name="Integration w/ Prod env." type="js.build_tools.gulp" factoryName="Gulp.js">
     <node-interpreter>project</node-interpreter>
     <node-options />
     <gulpfile>$PROJECT_DIR$/Gulpfile.js</gulpfile>
     <tasks>
-      <task>it</task>
+      <task>integration</task>
     </tasks>
-    <arguments>-d</arguments>
+    <arguments>-d -e https://flickr-simple-reorder.whitetrefoil.com</arguments>
     <envs />
     <method />
   </configuration>

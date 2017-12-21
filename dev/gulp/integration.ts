@@ -5,6 +5,8 @@ import * as run from 'run-sequence'
 
 import './backend'
 import './dev-server'
+import './proxy'
 
-gulp.task('serve', (cb: Noop) =>
-  run(['devServer', 'backend'], cb))
+gulp.task('integration', (cb: Noop) => {
+  run('proxy', ['devServer', 'backend'], cb)
+})

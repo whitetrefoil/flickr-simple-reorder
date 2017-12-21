@@ -1,6 +1,8 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+// tslint:disable:no-import-side-effect no-implicit-dependencies
 
-const vueOptionsDev = {
+import * as ExtractTextPlugin from 'extract-text-webpack-plugin'
+
+export const vueOptionsDev = {
   loaders: {
     ts  : [
       'awesome-typescript-loader?configFileName=tsconfig.json',
@@ -14,7 +16,7 @@ const vueOptionsDev = {
   },
 }
 
-const vueOptionsProd = {
+export const vueOptionsProd = {
   loaders: {
     ts: [
       'awesome-typescript-loader?configFileName=tsconfig.json',
@@ -33,19 +35,12 @@ const vueOptionsProd = {
   },
 }
 
-const vueLoaderDev = {
+export const vueLoaderDev = {
   loader : 'vue-loader',
   options: vueOptionsDev,
 }
 
-const vueLoaderProd = {
+export const vueLoaderProd = {
   loader : 'vue-loader',
   options: vueOptionsProd,
-}
-
-module.exports = {
-  vueOptionsDev,
-  vueOptionsProd,
-  vueLoaderDev,
-  vueLoaderProd,
 }
