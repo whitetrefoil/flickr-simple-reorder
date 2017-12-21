@@ -36,8 +36,9 @@ export const PHOTOSETS__SET_PREFERENCE = 'photosets/SET_PREFERENCE'
 // Actions
 // ----------
 
-export const PHOTOSETS__GET_LIST  = 'photosets/GET_LIST'
-export const PHOTOSETS__ORDER_SET = 'photosets/ORDER_SET'
+export const PHOTOSETS__GET_LIST       = 'photosets/GET_LIST'
+export const PHOTOSETS__ORDER_SET      = 'photosets/ORDER_SET'
+export const PHOTOSETS__BULK_ORDER_SET = 'photosets/BULK_ORDER_SET'
 
 // // Getters
 // // ----------

@@ -12,7 +12,6 @@
       <excludeFolder url="file://$MODULE_DIR$/test_results" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="npm" level="project" />
     <orderEntry type="library" name="jest-DefinitelyTyped" level="application" />
   </component>
 </module>

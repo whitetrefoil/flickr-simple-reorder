@@ -1,6 +1,6 @@
 import Vue        from 'vue'
 import { sync }   from 'vuex-router-sync'
-import WtApp      from './components/wt-app/index.vue'
+import WtApp      from './components/wt-app'
 import { router } from './router'
 import { store }  from './store'
 

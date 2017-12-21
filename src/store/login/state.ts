@@ -1,5 +1,5 @@
 // tslint:disable:no-implicit-dependencies
-import * as API      from 'flickr-simple-reorder-server/src/api'
+import * as API      from '../../api/types/api'
 import { getLogger } from '../../services/log'
 import Storage       from '../../services/storage'
 
