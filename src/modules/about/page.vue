@@ -11,7 +11,7 @@
       <section>
         <p>A simple tool to help reorder photos in galleries (photosets).</p>
         <p><strong>Current state:</strong> Alpha</p>
-        <p><strong>Latest version:</strong> v2.0.0-alpha.8</p>
+        <p><strong>Latest version:</strong> v2.1.0-alpha.2</p>
       </section>
 
       <div class="about-page-row">
@@ -100,7 +100,14 @@
             <h3>Changelog & Roadmap</h3>
 
             <section>
-              <h4>v2.0.0-alpha.8</h4>
+              <h4>v2.1.0-alpha.2</h4>
+              <ul>
+                <li>Use HTTPS flickr buddyicon.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h4>v2.1.0-alpha.1</h4>
               <ul>
                 <li>Use the newest server version & its bulk_reorder API.</li>
                 <li>Optimize dev / build process.</li>

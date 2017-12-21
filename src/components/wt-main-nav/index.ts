@@ -28,7 +28,7 @@ export default class WtMainNav extends Vue {
     if (_.isNil(farm) || _.isNil(server) || _.isNil(nsid)) {
       return 'about:blank'
     }
-    return `http://farm${farm}.staticflickr.com/${server}/buddyicons/${nsid}.jpg`
+    return `https://farm${farm}.staticflickr.com/${server}/buddyicons/${nsid}.jpg`
   }
 
   get profileUrl(): string {
