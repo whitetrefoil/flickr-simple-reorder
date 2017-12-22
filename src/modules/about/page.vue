@@ -11,7 +11,7 @@
       <section>
         <p>A simple tool to help reorder photos in galleries (photosets).</p>
         <p><strong>Current state:</strong> Alpha</p>
-        <p><strong>Latest version:</strong> v2.1.0-alpha.3</p>
+        <p><strong>Latest version:</strong> v2.1.0-alpha.4</p>
       </section>
 
       <div class="about-page-row">
@@ -98,6 +98,13 @@
 
           <section class="about-page-changelog">
             <h3>Changelog & Roadmap</h3>
+
+            <section>
+              <h4>v2.1.0-alpha.4</h4>
+              <ul>
+                <li>Revert changes in v2.1.0-alpha.3 because that header should be set on server side, not client.</li>
+              </ul>
+            </section>
 
             <section>
               <h4>v2.1.0-alpha.3</h4>
