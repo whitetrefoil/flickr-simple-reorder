@@ -16,5 +16,7 @@ export function postPhotosetBulkReorder(
   debugPostPhotosetBulkReorder(`Bulk reorder photosets: ${setIds}`)
 
   return request.post('/api/photosets/bulk_reorder')
+    .set({ 'X-Accel-Buffering': 'no' })
+    .accept('application/octet-stream')
     .send({ nsid, setIds, orderBy, isDesc, token, secret })
 }
