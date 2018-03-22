@@ -166,7 +166,7 @@
     "prefer-switch"                   : [true, {"min-cases": 3}],
     "number-literal-format"           : true,
     "deprecation"                     : true,
-    "no-unnecessary-type-assertion"   : true,
+    "no-unnecessary-type-assertion"   : false,
     // v5.3.0 Updates
     "prefer-object-spread"            : true,
     "encoding"                        : true,

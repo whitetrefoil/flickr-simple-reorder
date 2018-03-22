@@ -8,22 +8,6 @@ import { ILoginState }    from './state'
 
 export type ILoginActionContext = ActionContext<ILoginState, any>
 
-interface IOfficialUserInfoResponse {
-  id: string
-  nsid: string
-  username: {
-    _content: string,
-  }
-  iconfarm: number,
-  iconserver: string,
-  photosurl: {
-    _content: string,
-  }
-  profileurl: {
-    _content: string,
-  }
-}
-
 const debug = getLogger('/store/login/actions.ts').debug
 
 export const actions = {

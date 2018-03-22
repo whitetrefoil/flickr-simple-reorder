@@ -1,11 +1,8 @@
-import { getLogger }                                 from '@whitetrefoil/debug-log'
 import { Component, Lifecycle, p, Prop, Vue, Watch } from 'av-ts'
 import { store, types as t }                         from '../../store'
 import WtPanel                                       from '../wt-panel'
 
 type Size = 'large'|'medium'|'small'|'tiny'
-
-const { debug } = getLogger('/components/wt-modal/index.ts')
 
 @Component({
   name      : 'wt-modal',

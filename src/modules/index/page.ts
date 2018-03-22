@@ -24,13 +24,6 @@ const enum Status {
   Normal  = '',
 }
 
-const ORDER_BY_OPTIONS = [
-  { value: 'dateUpload', label: 'Upload Time' },
-  { value: 'dateTaken', label: 'Taken Time' },
-  { value: 'title', label: 'Title' },
-  { value: 'views', label: 'Views Count' },
-]
-
 @Component({
   name      : 'index-page',
   components: {
