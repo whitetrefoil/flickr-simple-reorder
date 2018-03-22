@@ -58,6 +58,10 @@ TODOs
 Changelog
 ---------
 
+### v2.2.0-alpha.1
+
+* Use the latest workflow.
+
 ### v2.1.0-alpha.4
 
 * Revert changes in v2.1.0-alpha.3 because that header should be set on server side, not client.

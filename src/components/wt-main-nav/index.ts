@@ -1,6 +1,6 @@
+import { getLogger }      from '@whitetrefoil/debug-log'
 import { Component, Vue } from 'av-ts'
 import * as _             from 'lodash'
-import { getLogger }      from '../../services/log'
 import { store }          from '../../store'
 
 const log = getLogger('/components/wt-main-nav')

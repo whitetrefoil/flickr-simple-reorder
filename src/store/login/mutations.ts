@@ -1,9 +1,9 @@
+import { getLogger }   from '@whitetrefoil/debug-log'
 import Vue             from 'vue'
+import * as API        from '../../api/types/api'
+import Storage         from '../../services/storage'
 import * as t          from '../types'
 import { ILoginState } from './state'
-import * as API        from '../../api/types/api'
-import { getLogger }   from '../../services/log'
-import Storage         from '../../services/storage'
 
 const { debug } = getLogger('/store/login/mutations.ts')
 

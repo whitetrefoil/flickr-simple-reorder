@@ -1,25 +1,44 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as ExtractTextPlugin from 'extract-text-webpack-plugin'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import config            from '../../config'
 
 export const vueOptionsDev = {
   loaders: {
-    ts  : [
-      'awesome-typescript-loader?configFileName=tsconfig.json',
-      'tslint-loader',
+    ts: [
+      'babel-loader',
+      {
+        loader : 'ts-loader',
+        options: {
+          transpileOnly: true,
+          configFile   : config.absRoot('tsconfig.json'),
+        },
+      },
     ],
+
     less: [
       'vue-style-loader',
-      'css-loader?sourceMap',
+      'css-loader?sourceMap&importLoaders=1',
       'less-loader?sourceMap',
     ],
+  },
+
+  preLoaders: {
+    ts: 'tslint-loader!source-map-loader',
   },
 }
 
 export const vueOptionsProd = {
   loaders: {
     ts: [
-      'awesome-typescript-loader?configFileName=tsconfig.json',
+      'babel-loader',
+      {
+        loader : 'ts-loader',
+        options: {
+          transpileOnly: true,
+          configFile   : config.absRoot('tsconfig.json'),
+        },
+      },
     ],
 
     css: ExtractTextPlugin.extract({
@@ -28,7 +47,7 @@ export const vueOptionsProd = {
 
     less: ExtractTextPlugin.extract({
       use: [
-        'css-loader?minimize&safe',
+        'css-loader?minimize&safe&importLoaders=1',
         'less-loader',
       ],
     }),

@@ -29,4 +29,6 @@ export function compare(a: string, b: string): -1|0|1 {
     if (arrA[i] == null) { return 1 }
     if (arrB[i] == null) { return -1 }
   }
+
+  return 0
 }

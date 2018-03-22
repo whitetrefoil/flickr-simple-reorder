@@ -51,7 +51,7 @@
         </div>
 
         <div class="about-page-main-info">
-          <section id="about-page-todos">
+          <section class="about-page-todos">
             <h3>TODOs</h3>
             <ul class="checklist">
               <li>

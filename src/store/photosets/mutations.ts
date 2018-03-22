@@ -1,14 +1,10 @@
-import * as _        from 'lodash'
-import Vue           from 'vue'
-import * as API      from '../../api/types/api'
-import { getLogger } from '../../services/log'
-import Storage       from '../../services/storage'
-import * as t        from '../types'
-import {
-  IPhotosetsState,
-  IPreferences,
-  IStatus,
-} from './state'
+import { getLogger }                               from '@whitetrefoil/debug-log'
+import * as _                                      from 'lodash'
+import Vue                                         from 'vue'
+import * as API                                    from '../../api/types/api'
+import Storage                                     from '../../services/storage'
+import * as t                                      from '../types'
+import { IPhotosetsState, IPreferences, IStatus } from './state'
 
 const { debug } = getLogger('/store/photosets/mutations.ts')
 
@@ -18,9 +14,11 @@ interface ISetStatusParams {
 }
 
 export const mutations = {
-  [t.PHOTOSETS__SET_LIST](state: IPhotosetsState, photosets: API.IPhotoset[] | null | undefined) {
+  [t.PHOTOSETS__SET_LIST](state: IPhotosetsState, photosets: API.IPhotoset[]|null|undefined) {
+
     debug('Set list')
-    state.photosets = photosets
+
+    state.photosets = photosets || undefined
 
     // Set default status
     const setIds = _.map(photosets, _.property('id')) as string[]

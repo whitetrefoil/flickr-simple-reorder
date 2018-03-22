@@ -1,9 +1,9 @@
+import { getLogger }                 from '@whitetrefoil/debug-log'
 import { Component, Lifecycle, Vue } from 'av-ts'
-import * as _                        from 'lodash'
 import IButton                       from 'iview/src/components/button'
-import { store, types as t }         from '../../store'
+import * as _                        from 'lodash'
 import WtPanel                       from '../../components/wt-panel'
-import { getLogger }                 from '../../services/log'
+import { store, types as t }         from '../../store'
 
 const LOGIN_URL_TEMPLATE = 'https://www.flickr.com/services/oauth/authorize?oauth_token={{token}}&perms=write'
 
@@ -26,8 +26,8 @@ const debug = getLogger('/modules/login/page.ts').debug
 })
 export default class LoginPage extends Vue {
 
-  status           = Status.Before
-  loginUrl: string = null
+  status                = Status.Before
+  loginUrl: string|null = null
 
   async requestLoginUrl(): Promise<void> {
     this.status   = Status.Requesting
@@ -35,7 +35,8 @@ export default class LoginPage extends Vue {
     try {
       await store.dispatch(t.LOGIN__REQUEST_LOGIN_TOKEN)
       const loginToken = store.state.login.token
-      this.loginUrl    = LOGIN_URL_TEMPLATE.replace('{{token}}', loginToken.key)
+      if (loginToken == null) { throw new Error('No login token exists.')}
+      this.loginUrl = LOGIN_URL_TEMPLATE.replace('{{token}}', loginToken.key)
     } catch (e) {
       debug('Failed to request login token', e)
       if (e.response != null) {
@@ -46,7 +47,7 @@ export default class LoginPage extends Vue {
       this.loginUrl = null
     }
     if (!_.isEmpty(this.loginUrl)) {
-      window.location.href = this.loginUrl
+      window.location.assign(this.loginUrl as string)
     }
   }
 
@@ -71,7 +72,7 @@ export default class LoginPage extends Vue {
 
   gotVerifier(): boolean {
     const verifier = _.get(this.$route.query, 'oauth_verifier')
-    if (_.isEmpty(verifier)) { return false }
+    if (store.state.login.token == null || _.isEmpty(verifier)) { return false }
 
     const token = _.get(this.$route.query, 'oauth_token')
     if (token !== store.state.login.token.key) {

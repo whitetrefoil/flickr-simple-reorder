@@ -1,8 +1,8 @@
+import { getLogger }      from '@whitetrefoil/debug-log'
 import { ActionContext }  from 'vuex'
-import * as API           from '../../api/types/api'
-import { getLoginToken }  from '../../api/get-login-token'
 import { getAccessToken } from '../../api/get-access-token'
-import { getLogger }      from '../../services/log'
+import { getLoginToken }  from '../../api/get-login-token'
+import * as API           from '../../api/types/api'
 import * as t             from '../types'
 import { ILoginState }    from './state'
 
@@ -41,6 +41,10 @@ export const actions = {
 
   async [t.LOGIN__REQUEST_ACCESS_TOKEN]({ commit, state }: ILoginActionContext, verifier: string): Promise<API.IUser> {
     debug('Request access token.')
+
+    if (state.token == null || state.token.key == null || state.token.secret == null) {
+      throw new Error('No token exists.')
+    }
 
     const res = await getAccessToken(state.token.key, state.token.secret, verifier)
     debug('Got access token response:', res)

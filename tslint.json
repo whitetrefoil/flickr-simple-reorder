@@ -72,7 +72,7 @@
     "no-shadowed-variable"            : true,
     "no-sparse-arrays"                : true,
     "no-string-literal"               : false,
-    "no-string-throw"                 : false,
+    "no-string-throw"                 : true,
     "no-switch-case-fall-through"     : true,
     "no-unsafe-finally"               : true,
     "no-unused-expression"            : [true, "allow-new"],
@@ -161,7 +161,7 @@
       "check-preblock"
     ],
     // v5.2.0 Updates
-    "no-object-literal-type-assertion": false,
+    "no-object-literal-type-assertion": true,
     "no-irregular-whitespace"         : true,
     "prefer-switch"                   : [true, {"min-cases": 3}],
     "number-literal-format"           : true,

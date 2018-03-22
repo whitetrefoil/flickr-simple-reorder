@@ -1,27 +1,9 @@
+import { IAppState }       from './app/state'
 import { ILoginState }     from './login/state'
 import { IPhotosetsState } from './photosets/state'
 
-export interface IAppState {
-  modalShowing: number
-}
-
-// Refer to: https://github.com/Microsoft/TypeScript/issues/15300
-// tslint:disable-next-line:interface-over-type-literal
-export type IAppGetters = {
-  shouldMaskShow(s: IAppState): boolean,
-}
-
-export interface IRootState extends IAppState {
+export interface IRootState {
+  app: IAppState
   login: ILoginState
   photosets: IPhotosetsState
-}
-
-export const state: IAppState = {
-  modalShowing: 0,
-}
-
-export const getters: IAppGetters = {
-  shouldMaskShow(s: IAppState): boolean {
-    return s.modalShowing > 0
-  },
 }

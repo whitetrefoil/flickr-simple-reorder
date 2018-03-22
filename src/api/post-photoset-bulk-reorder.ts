@@ -1,5 +1,5 @@
+import { getLogger } from '@whitetrefoil/debug-log'
 import * as request  from 'superagent'
-import { getLogger } from '../services/log'
 import * as API      from './types/api'
 
 const debugPostPhotosetBulkReorder = getLogger('/api/post-photoset-bulk-reorder.ts').debug

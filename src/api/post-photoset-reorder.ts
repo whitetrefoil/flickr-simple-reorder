@@ -1,9 +1,10 @@
+import { getLogger }    from '@whitetrefoil/debug-log'
 import * as request     from 'superagent'
-import { getLogger }    from '../services/log'
 import * as API         from './types/api'
 import { IResponseXHR } from './types/response'
 
 const debugPostPhotosetReorder = getLogger('/api/post-photoset-reorder.ts').debug
+
 export async function postPhotosetReorder(
   nsid: string,
   setId: string,

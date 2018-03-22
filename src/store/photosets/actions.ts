@@ -1,3 +1,4 @@
+import { getLogger }               from '@whitetrefoil/debug-log'
 import { EventEmitter }            from 'eventemitter3'
 import * as _                      from 'lodash'
 import { ActionContext }           from 'vuex'
@@ -5,7 +6,6 @@ import { getPhotosetList }         from '../../api/get-photoset-list'
 import { postPhotosetBulkReorder } from '../../api/post-photoset-bulk-reorder'
 import { postPhotosetReorder }     from '../../api/post-photoset-reorder'
 import * as API                    from '../../api/types/api'
-import { getLogger }               from '../../services/log'
 import { IRootState }              from '../state'
 import * as t                      from '../types'
 import { IPhotosetsState }         from './state'
@@ -113,8 +113,8 @@ export const actions = {
       params.secret,
     )
       .on('progress', (progress: ProgressEvent) => {
-        const xhr      = progress.target as XMLHttpRequest
-        const txt      = xhr.responseText
+        const xhr = progress.target as XMLHttpRequest
+        const txt = xhr.responseText
 
         if (_.isEmpty(txt)) { return }
 
