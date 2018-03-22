@@ -1,8 +1,5 @@
 // tslint:disable:no-import-side-effect
 
-import './polyfills'
-import './theme'
-
 import { getLogger } from '@whitetrefoil/debug-log'
 import Vue           from 'vue'
 import WtApp         from './components/wt-app'
