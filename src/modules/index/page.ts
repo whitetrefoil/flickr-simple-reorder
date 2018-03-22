@@ -1,3 +1,4 @@
+import { getLogger }                        from '@whitetrefoil/debug-log'
 import { Component, Lifecycle, Vue, Watch } from 'av-ts'
 import IButton                              from 'iview/src/components/button'
 import IIcon                                from 'iview/src/components/icon'
@@ -9,7 +10,6 @@ import * as _                               from 'lodash'
 import * as API                             from '../../api/types/api'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
-import { getLogger }                        from '../../services/log'
 import { store, types as t }                from '../../store'
 import { BulkReorderProgressEmitter }       from '../../store/photosets/actions'
 import ReorderAllConfirm                    from './reorder-all-confirm'
@@ -23,13 +23,6 @@ const enum Status {
   Error   = 'error',
   Normal  = '',
 }
-
-const ORDER_BY_OPTIONS = [
-  { value: 'dateUpload', label: 'Upload Time' },
-  { value: 'dateTaken', label: 'Taken Time' },
-  { value: 'title', label: 'Title' },
-  { value: 'views', label: 'Views Count' },
-]
 
 @Component({
   name      : 'index-page',
@@ -81,7 +74,7 @@ export default class IndexPage extends Vue {
   get photosets(): API.IPhotoset[] {
     const photosets = store.state.photosets.photosets
     if (_.isNil(photosets) || _.isEmpty(photosets)) {
-      return
+      return []
     }
     return photosets
   }
@@ -95,7 +88,10 @@ export default class IndexPage extends Vue {
   }
 
   load(): void {
-    if (!this.hasLoggedIn) { return }
+    if (!this.hasLoggedIn || store.state.login.token == null) { return }
+    if (store.state.login.user == null) {
+      throw new Error('Seems logged in but no user info exists.')
+    }
 
     this.status = Status.Loading
     store.dispatch(t.PHOTOSETS__GET_LIST, {
@@ -111,6 +107,11 @@ export default class IndexPage extends Vue {
   }
 
   async reorderAll(): Promise<void> {
+
+    if (store.state.login.user == null || store.state.login.token == null) {
+      throw new Error('Login info is invalid now.')
+    }
+
     this.reorderingAllStatus.successes = 0
     this.reorderingAllStatus.skipped   = 0
     this.reorderingAllStatus.failures  = 0
@@ -174,6 +175,9 @@ export default class IndexPage extends Vue {
       this.isConfirming = false
     })
     this.reorderAll()
+      .catch((error) => {
+        debug(error.message)
+      })
   }
 
   canceled() {

@@ -1,17 +1,18 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as bodyparser from 'body-parser'
-import * as gulp from 'gulp'
-import * as connect from 'gulp-connect'
+import * as bodyparser                     from 'body-parser'
+import log                                 from 'fancy-log'
+import gulp                                from 'gulp'
+import * as connect                        from 'gulp-connect'
 import { IncomingMessage, ServerResponse } from 'http'
-import * as _ from 'lodash'
-import { MSM } from 'mock-server-middleware'
-import config from '../config'
-import { proxy } from './proxy'
+import * as _                              from 'lodash'
+import { MSM }                             from 'mock-server-middleware'
+import config                              from '../config'
+import { proxy }                           from './proxy'
 
 const proxyMiddlewareFactory = (proxyServer: any) =>
   (req: IncomingMessage, res: ServerResponse, next: Function) => {
-    if (_.every(config.apiPrefixes, (p) => req.url.indexOf(p) !== 0)) {
+    if (_.every(config.apiPrefixes, (p) => req.url != null && req.url.indexOf(p) !== 0)) {
       next()
       return
     }
@@ -29,8 +30,7 @@ gulp.task('backend', (done: Noop) => {
       const middleware = [bodyparser.json()]
 
       if (proxy.server == null) {
-        // tslint:disable-next-line:no-console
-        console.log('No proxy server exists, will use StubAPI mode.')
+        log('No proxy server exists, will use StubAPI mode.')
 
         const msm = new MSM({
           apiPrefixes  : config.apiPrefixes,
@@ -42,8 +42,7 @@ gulp.task('backend', (done: Noop) => {
         })
         middleware.push(msm.middleware())
       } else {
-        // tslint:disable-next-line:no-console
-        console.log('Existing proxy server found, will use proxy mode.')
+        log('Existing proxy server found, will use proxy mode.')
         middleware.push(proxyMiddlewareFactory(proxy.server))
       }
 
@@ -51,6 +50,7 @@ gulp.task('backend', (done: Noop) => {
     },
   })
 
+  if (server.server == null) { throw new Error('No "server" found...')}
   server.server.on('listening', () => {
     done()
   })

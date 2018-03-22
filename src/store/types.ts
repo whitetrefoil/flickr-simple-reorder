@@ -4,8 +4,8 @@
 // Mutations
 // ----------
 
-export const ONE_MORE_MODAL = 'ONE_MORE_MODAL'
-export const ONE_LESS_MODAL = 'ONE_LESS_MODAL'
+export const ONE_MORE_MODAL = 'app/ONE_MORE_MODAL'
+export const ONE_LESS_MODAL = 'app/ONE_LESS_MODAL'
 
 // Login
 // ==========

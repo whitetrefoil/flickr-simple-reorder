@@ -1,26 +1,30 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as gulp from 'gulp'
-import * as http from 'http'
-import * as _ from 'lodash'
-import * as webpack from 'webpack'
-import * as WebpackDevServer from 'webpack-dev-server'
-import config from '../config'
-import { getLogger } from '../utils/log'
-import devConfig from '../webpack/dev'
+import log              from 'fancy-log'
+import gulp             from 'gulp'
+import http             from 'http'
+import * as _           from 'lodash'
+import webpack          from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
+import config           from '../config'
+import devConfig        from '../webpack/dev'
 
 const WAIT_FOR_STARTUP_IN_MS = 30000
-
-const { debug } = getLogger(__filename)
 
 gulp.task('devServer', (done: () => void) => {
 
   devConfig.plugins = devConfig.plugins || []
   devConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+
+  if (devConfig.output == null) {
+    devConfig.output = {}
+  }
   devConfig.output.path = config.absOutput('')
 
-  devConfig.entry['polyfills']
-    .unshift(`webpack-dev-server/client?http://${config.livereloadHost}:${config.serverPort}`, 'webpack/hot/dev-server')
+  const entriesInConfig = devConfig.entry as { index: string[] }
+  entriesInConfig.index
+    .unshift(`webpack-dev-server/client?http://${config.livereloadHost}:${config.serverPort}`
+      , 'webpack/hot/dev-server')
 
   const webpackCompiler = webpack(devConfig)
 
@@ -31,10 +35,12 @@ gulp.task('devServer', (done: () => void) => {
     noInfo            : false,
     historyApiFallback: true,
     stats             : 'minimal' as 'minimal',
-    proxy             : [{
-      context: _.map(config.apiPrefixes, (p: string): string => `${p}**`),
-      target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
-    }],
+    proxy             : [
+      {
+        context: _.map(config.apiPrefixes, (p: string): string => `${p}**`),
+        target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
+      },
+    ],
     disableHostCheck  : true,
   }
 
@@ -42,14 +48,11 @@ gulp.task('devServer', (done: () => void) => {
 
   server.listen(config.serverPort, '0.0.0.0', (error?: Error) => {
     if (error) {
-      // tslint:disable-next-line:no-console
-      console.error('Webpack Dev Server startup failed!  Detail:')
-      // tslint:disable-next-line:no-console
-      console.error(error)
+      log.error('Webpack Dev Server startup failed!  Detail:')
+      log.error(error)
       return
     }
-    // tslint:disable-next-line no-console
-    console.log(`Webpack Dev Server started at port ${config.serverPort}`)
+    log(`Webpack Dev Server started at port ${config.serverPort}`)
 
     http.get({
       port   : config.serverPort,
@@ -59,10 +62,8 @@ gulp.task('devServer', (done: () => void) => {
       res.on('end', done)
     })
       .on('error', (err?: Error) => {
-        // tslint:disable-next-line:no-console
-        console.warn('There must be something wrong with webpack dev server:')
-        // tslint:disable-next-line:no-console
-        console.warn(err)
+        log.warn('There must be something wrong with webpack dev server:')
+        log.warn(err)
         done()
       })
   })

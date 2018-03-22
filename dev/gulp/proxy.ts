@@ -1,22 +1,18 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as gulp from 'gulp'
-import * as httpProxy from 'http-proxy'
-import config from '../config'
-import { getLogger } from '../utils/log'
-
-const { debug } = getLogger(__filename)
+import log       from 'fancy-log'
+import gulp      from 'gulp'
+import httpProxy from 'http-proxy'
+import config    from '../config'
 
 class DevServerProxy {
-  server: NodeJS.EventEmitter = null
+  server!: NodeJS.EventEmitter
 
   startProxy(proxyConfig: any) {
-    debug(`Building proxy to ${config.backendDest}`)
+    log(`Building proxy to ${config.backendDest}`)
     this.server = httpProxy.createProxyServer(proxyConfig)
-    this.server.on('error', (err: Error) => {
-      // tslint:disable-next-line:no-console
-      console.warn(err.message)
-    })
+    this.server.on('error', log.warn)
+
     // See https://github.com/nodejitsu/node-http-proxy/issues/180#issuecomment-310550385
     this.server.on('proxyReq', (proxyReq, req) => {
       if (req.body == null) { return }
@@ -35,8 +31,9 @@ gulp.task('proxy', () => {
     secure : config.backendDest.indexOf('https://') === 0,
     xfwd   : true,
     headers: {
-      host  : config.backendDest.replace(/^https?:\/\//, ''),
-      origin: config.backendDest,
+      host   : config.backendDest.replace(/^https?:\/\//, ''),
+      origin : config.backendDest,
+      referer: `${config.backendDest}/`,
     },
   })
 })

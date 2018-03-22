@@ -11,7 +11,7 @@
       <section>
         <p>A simple tool to help reorder photos in galleries (photosets).</p>
         <p><strong>Current state:</strong> Alpha</p>
-        <p><strong>Latest version:</strong> v2.1.0-alpha.4</p>
+        <p><strong>Latest version:</strong> v2.2.0-alpha.1</p>
       </section>
 
       <div class="about-page-row">
@@ -51,7 +51,7 @@
         </div>
 
         <div class="about-page-main-info">
-          <section id="about-page-todos">
+          <section class="about-page-todos">
             <h3>TODOs</h3>
             <ul class="checklist">
               <li>
@@ -98,6 +98,13 @@
 
           <section class="about-page-changelog">
             <h3>Changelog & Roadmap</h3>
+
+            <section>
+              <h4>v2.2.0-alpha.1</h4>
+              <ul>
+                <li>Use the latest workflow.</li>
+              </ul>
+            </section>
 
             <section>
               <h4>v2.1.0-alpha.4</h4>

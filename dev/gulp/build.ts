@@ -1,26 +1,26 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as del from 'del'
-import * as gulp from 'gulp'
-import * as gutil from 'gulp-util'
-import * as webpack from 'webpack'
-import config from '../config'
-import devConfig from '../webpack/dev'
+import del        from 'del'
+import log        from 'fancy-log'
+import gulp       from 'gulp'
+import webpack    from 'webpack'
+import config     from '../config'
+import devConfig  from '../webpack/dev'
 import prodConfig from '../webpack/prod'
 
 gulp.task('build', (done: () => void) => {
 
   const webpackConfig = process.env.NODE_ENV === 'development'
-    ? devConfig
-    : prodConfig
+                        ? devConfig
+                        : prodConfig
 
   del([config.outputByEnv('')])
     .then((): void => {
       webpack(webpackConfig, (err: Error, stats: any) => {
         if (err != null) {
-          throw new gutil.PluginError('webpack', err)
+          throw err
         }
-        gutil.log('[webpack]:\n', stats.toString('minimal'))
+        log('[webpack]:\n', stats.toString('minimal'))
         done()
       })
     })

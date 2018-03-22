@@ -1,17 +1,17 @@
-import { isEmpty } from 'lodash'
-import { compare } from './version'
-import * as API from '../api/types/api'
-import { getLogger } from './log'
+import { getLogger } from '@whitetrefoil/debug-log'
+import { isEmpty }   from 'lodash'
+import * as API      from '../api/types/api'
+import { compare }   from './version'
 
 interface ICache {
-  k: string
-  s: string
-  t: string
-  u: API.IUser
+  k?: string
+  s?: string
+  t?: string
+  u?: API.IUser
 }
 
 interface IPreferences {
-  f: API.IOrderByOption
+  f?: API.IOrderByOption
   o: boolean
 }
 
@@ -33,9 +33,13 @@ interface IStorage {
     value: IInternalStorageContent[K],
     expiration?: number|Date,
   ): void
-  get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]
+
+  get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]|null
+
   remove<K extends keyof IInternalStorageContent>(key: K): void
+
   clearAll(): void
+
   addPlugin(plugin: any): void
 }
 
@@ -43,16 +47,20 @@ const debug = getLogger('/services/storage.ts').debug
 
 const SEVEN_DAYS_AS_MS = 7 * 24 * 60 * 60 * 1000
 
+const version = process.env.VERSION || '0.0.0'
+
 const storage = require('store') as IStorage
 storage.addPlugin(require('store/plugins/expire'))
 
-const sessionVersion = storage.get('flickrSimpleReorder-version')
+const sessionVersion = storage.get('flickrSimpleReorder-version') || '0.0.0'
+
 debug('Detected session for version:', sessionVersion)
 debug('Current version:', process.env.VERSION)
-if (isEmpty(sessionVersion) || compare(sessionVersion, process.env.VERSION) < 0) {
+
+if (isEmpty(sessionVersion) || compare(sessionVersion, version) < 0) {
   storage.clearAll()
 }
-storage.set('flickrSimpleReorder-version', process.env.VERSION)
+storage.set('flickrSimpleReorder-version', version)
 
 export default {
   set<K extends keyof IStorageContent>(key: K, value: IStorageContent[K]): void {
@@ -68,7 +76,7 @@ export default {
     }
   },
 
-  get<K extends keyof IStorageContent>(key: K): IStorageContent[K] {
+  get<K extends keyof IStorageContent>(key: K): IStorageContent[K]|null {
     switch (key) {
       case 'cache':
         return storage.get('flickrSimpleReorder-cache')

@@ -1,11 +1,8 @@
 import { Component, Lifecycle, p, Prop, Vue, Watch } from 'av-ts'
-import { getLogger }                                 from '../../services/log'
 import { store, types as t }                         from '../../store'
 import WtPanel                                       from '../wt-panel'
 
-type Size = 'large' | 'medium' | 'small' | 'tiny'
-
-const { debug } = getLogger('/components/wt-modal/index.ts')
+type Size = 'large'|'medium'|'small'|'tiny'
 
 @Component({
   name      : 'wt-modal',

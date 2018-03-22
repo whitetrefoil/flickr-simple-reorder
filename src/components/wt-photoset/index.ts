@@ -60,10 +60,18 @@ export default class WtPhotoset extends Vue {
   }
 
   get photosetUrl(): string {
+    if (store.state.login.user == null) {
+      throw new Error('No user info exists.')
+    }
     return `${store.state.login.user.photosUrl}sets/${this.photoset.id}`
   }
 
   click(photoset: API.IPhotoset) {
+
+    if (store.state.login.user == null || store.state.login.token == null) {
+      throw new Error('Login info is invalid now.')
+    }
+
     store.dispatch(t.PHOTOSETS__ORDER_SET, {
       nsid   : store.state.login.user.nsid,
       setId  : photoset.id,

@@ -1,27 +1,28 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import * as HtmlWebpackPlugin from 'html-webpack-plugin'
-import * as _ from 'lodash'
-import * as webpack from 'webpack'
-import config from '../config'
-import lodashPlugin from './configs/lodash'
-import { vueLoaderDev } from './configs/vue'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import HtmlWebpackPlugin          from 'html-webpack-plugin'
+import * as webpack               from 'webpack'
+import config                     from '../config'
+import lodashPlugin               from './configs/lodash'
+import { vueLoaderDev }           from './configs/vue'
 
-export default {
+const devConfig: webpack.Configuration = {
 
-  devtool: 'source-map',
+  mode: 'development',
+
+  devtool: 'cheap-module-eval-source-map',
 
   context: config.absSource(''),
 
   entry: {
-    polyfills: ['./polyfills'],
-    vendor   : ['./vendor'],
-    theme    : ['./theme'],
-    index    : ['./index'],
+    index: ['./polyfills', './vendor', './theme', './index'],
   },
 
   resolve: {
-    extensions: ['.vue', '.ts', '.js', '.json'],
+    extensions : ['.vue', '.ts', '.js', '.json'],
+    mainFields : ['webpack', 'jsnext:main', 'module', 'browser', 'web', 'browserify', 'main'],
+    unsafeCache: false,
   },
 
   output: {
@@ -46,12 +47,28 @@ export default {
         exclude: /node_modules/,
       },
       {
-        test: /\.ts$/,
-        use : ['awesome-typescript-loader?configFileName=tsconfig.json'],
+        test: /\.html$/,
+        use : ['html-loader?interpolate'],
       },
       {
-        test: /\.js$/,
-        use : ['babel-loader'],
+        test   : /\.ts$/,
+        use    : [
+          'babel-loader',
+          {
+            loader : 'ts-loader',
+            options: {
+              transpileOnly   : true,
+              configFile      : config.absRoot('tsconfig.json'),
+              appendTsSuffixTo: [/\.vue$/],
+            },
+          },
+        ],
+        exclude: /node_modules/,
+      },
+      {
+        test   : /\.js$/,
+        use    : ['babel-loader'],
+        exclude: /node_modules/,
       },
       {
         test: /\.vue/,
@@ -68,7 +85,7 @@ export default {
         test: /\.less$/,
         use : [
           'vue-style-loader',
-          'css-loader?sourceMap',
+          'css-loader?sourceMap&importLoaders=1',
           'less-loader?sourceMap',
         ],
       },
@@ -80,36 +97,29 @@ export default {
   },
 
   plugins: [
+    // Refer to: https://github.com/lodash/lodash-webpack-plugin
     lodashPlugin,
-    // new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: config.absRoot('tsconfig.json'),
+      vue     : true,
+    }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
         FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
         FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
         VERSION        : JSON.stringify(config.pkg.version),
       },
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['index', 'theme', 'vendor', 'polyfills'],
-    }),
     new HtmlWebpackPlugin({
       filename      : 'index.html',
       template      : './index.html',
-      chunks        : ['polyfills', 'vendor', 'theme', 'index'],
       hash          : false,
       minify        : false,
       inject        : 'body',
       chunksSortMode: 'auto',
-      base          : _.isEmpty(process.env.VUE_ROUTER_BASE)
-        ? '/'
-        : process.env.VUE_ROUTER_BASE,
     }),
   ],
+}
 
-  performance: {
-    hints: false,
-  },
-} as webpack.Configuration
+export default devConfig

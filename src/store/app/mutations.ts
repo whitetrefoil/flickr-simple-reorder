@@ -1,5 +1,5 @@
-import { getLogger } from '../services/log'
-import * as t        from './types'
+import { getLogger } from '@whitetrefoil/debug-log'
+import * as t        from '../types'
 import { IAppState } from './state'
 
 const { debug } = getLogger('/store/mutations.ts')

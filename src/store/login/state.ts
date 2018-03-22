@@ -1,11 +1,11 @@
 // tslint:disable:no-implicit-dependencies
+import { getLogger } from '@whitetrefoil/debug-log'
 import * as API      from '../../api/types/api'
-import { getLogger } from '../../services/log'
 import Storage       from '../../services/storage'
 
 export interface ILoginState {
-  token: API.IToken
-  user: API.IUser
+  token?: API.IToken
+  user?: API.IUser
 }
 
 const log = getLogger('/store/login/state.ts')
@@ -15,15 +15,14 @@ const existingToken = Storage.get('cache')
 log.debug(`Existing auth info: ${existingToken}`)
 
 export const state: ILoginState = {
-  token: {
-    key   : null,
-    secret: null,
-  },
-  user : null,
+  token: undefined,
+  user : undefined,
 }
 
-if (existingToken != null) {
-  state.token.key    = `${existingToken.k}-${existingToken.t}`
-  state.token.secret = existingToken.s
-  state.user         = existingToken.u
+if (existingToken != null && existingToken.s != null && existingToken.t != null) {
+  state.token = {
+    key   : `${existingToken.k}-${existingToken.t}`,
+    secret: existingToken.s,
+  }
+  state.user  = existingToken.u
 }
