@@ -16,7 +16,7 @@ const devConfig: webpack.Configuration = {
   context: config.absSource(''),
 
   entry: {
-    index: ['./polyfills', './vendor', './theme', './index'],
+    index: ['./polyfills', './theme', './index'],
   },
 
   resolve: {
