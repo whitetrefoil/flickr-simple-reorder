@@ -42,7 +42,6 @@ const prodConf: webpack.Configuration = {
       },
       {
         test   : /\.ts$/,
-        exclude: /node_modules/,
         use    : [
           'babel-loader',
           {
@@ -54,10 +53,12 @@ const prodConf: webpack.Configuration = {
             },
           },
         ],
+        exclude: /node_modules/,
       },
       {
-        test: /\.js$/,
-        use : ['babel-loader'],
+        test   : /\.js$/,
+        use    : ['babel-loader'],
+        exclude: /node_modules/,
       },
       {
         test: /\.vue/,
