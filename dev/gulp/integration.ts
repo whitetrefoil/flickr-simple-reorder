@@ -1,12 +1,10 @@
 // tslint:disable:no-import-side-effect no-implicit-dependencies
 
-import gulp from 'gulp'
-import run  from 'run-sequence'
+import { parallel, series, task } from 'gulp'
 
 import './backend'
 import './dev-server'
+import './pre-check'
 import './proxy'
 
-gulp.task('integration', (cb: Noop) => {
-  run(['devServer', 'proxy'], 'backend', cb)
-})
+task('integration', series('preCheck', parallel('devServer', 'proxy'), 'backend'))

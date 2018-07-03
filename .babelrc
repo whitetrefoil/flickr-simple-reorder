@@ -4,20 +4,21 @@
       "@babel/preset-env",
       {
         "targets"    : {
-          "browsers": "Android >= 4.3, iOS >= 8.0, last 5 Chrome versions, last 5 Firefox versions, last 5 Opera versions, IE >= 10, last 5 Edge versions"
+          "browsers": "Android >= 4.3, iOS >= 10.0, last 10 Chrome versions, last 5 Firefox versions, last 5 Opera versions, IE >= 10, last 1 Edge versions"
         },
         "modules"    : false,
-        "useBuiltIns": "usage"
+        "useBuiltIns": "entry"
       }
     ]
   ],
   "compact"      : true,
   "plugins"      : [
     "lodash",
+    "transform-node-env-inline",
+    "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-syntax-dynamic-import"
   ],
   "highlightCode": false,
-  "sourceMaps"   : true,
   "minified"     : false,
   "comments"     : true,
   "env"          : {
