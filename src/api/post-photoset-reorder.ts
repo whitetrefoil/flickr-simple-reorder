@@ -3,7 +3,9 @@ import * as request     from 'superagent'
 import * as API         from './types/api'
 import { IResponseXHR } from './types/response'
 
-const debugPostPhotosetReorder = getLogger('/api/post-photoset-reorder.ts').debug
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 export async function postPhotosetReorder(
   nsid: string,
@@ -13,7 +15,7 @@ export async function postPhotosetReorder(
   token: string,
   secret: string,
 ): IResponseXHR<API.IPostPhotosetReorderResponse> {
-  debugPostPhotosetReorder('Get photoset list for user: ', nsid)
+  debug('Get photoset list for user: ', nsid)
 
   let res: request.Response
   let data: API.IPostPhotosetReorderResponse
@@ -23,7 +25,7 @@ export async function postPhotosetReorder(
     data = res.body.data
   } catch (e) {
     // TODO: Handle failed auth
-    debugPostPhotosetReorder(e)
+    debug(e)
     throw e
   }
 

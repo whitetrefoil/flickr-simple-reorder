@@ -1,7 +1,7 @@
 import { getLogger }               from '@whitetrefoil/debug-log'
-import { EventEmitter }            from 'eventemitter3'
+import { EventEmitter }            from 'events'
 import * as _                      from 'lodash'
-import { ActionContext }           from 'vuex'
+import { ActionTree }              from 'vuex'
 import { getPhotosetList }         from '../../api/get-photoset-list'
 import { postPhotosetBulkReorder } from '../../api/post-photoset-bulk-reorder'
 import { postPhotosetReorder }     from '../../api/post-photoset-reorder'
@@ -10,9 +10,6 @@ import { IRootState }              from '../state'
 import * as t                      from '../types'
 import { IPhotosetsState }         from './state'
 
-export type IPhotosetsActionContext = ActionContext<IPhotosetsState, IRootState>
-
-const { debug } = getLogger('/store/photosets/actions.ts')
 
 export type BulkReorderProgressEvent = 'success'|'fail'|'skip'
 
@@ -30,42 +27,57 @@ export class BulkReorderProgressEmitter extends EventEmitter {
   }
 }
 
-export const actions = {
-  async [t.PHOTOSETS__GET_LIST](
-    { commit }: IPhotosetsActionContext,
-    params: API.IGetPhotosetListRequest,
-  ): Promise<void> {
+interface IGetListPayload extends API.IGetPhotosetListRequest {
+  type: typeof t.PHOTOSETS__GET_LIST
+}
+
+interface IOrderSetPayload extends API.IPostPhotosetReorderRequest {
+  type: typeof t.PHOTOSETS__ORDER_SET
+}
+
+interface IBulkOrderSetPayload extends API.IPostPhotosetBulkReorderRequest {
+  type: typeof t.PHOTOSETS__BULK_ORDER_SET
+}
+
+
+export type IPhotosetsDispatchPayload =
+  |IGetListPayload
+  |IOrderSetPayload
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
+
+export const actions: ActionTree<IPhotosetsState, IRootState> = {
+  async [t.PHOTOSETS__GET_LIST]({ commit }, payload: IGetListPayload) {
     debug('Get photosets')
 
-    const photosets = await getPhotosetList(params.token, params.secret, params.nsid)
+    const photosets = await getPhotosetList(payload.token, payload.secret, payload.nsid)
 
     commit(t.PHOTOSETS__SET_LIST, photosets.data.photosets)
   },
 
-  async [t.PHOTOSETS__ORDER_SET](
-    { commit, state }: IPhotosetsActionContext,
-    params: API.IPostPhotosetReorderRequest,
-  ): Promise<void> {
-    debug(`Reorder photoset ${params.setId}`)
+  async [t.PHOTOSETS__ORDER_SET]({ commit }, payload: IOrderSetPayload) {
+    debug(`Reorder photoset ${payload.setId}`)
 
     commit(t.PHOTOSETS__SET_STATUS, {
-      id    : params.setId,
+      id    : payload.setId,
       status: 'processing',
     })
 
     try {
       const result = await postPhotosetReorder(
-        params.nsid,
-        params.setId,
-        params.orderBy,
-        params.isDesc,
-        params.token,
-        params.secret,
+        payload.nsid,
+        payload.setId,
+        payload.orderBy,
+        payload.isDesc,
+        payload.token,
+        payload.secret,
       )
 
       if (result.data.result.isSuccessful !== true) {
         commit(t.PHOTOSETS__SET_STATUS, {
-          id    : params.setId,
+          id    : payload.setId,
           status: 'error',
         })
         return
@@ -73,44 +85,41 @@ export const actions = {
 
       if (result.data.result.isSkipped === true) {
         commit(t.PHOTOSETS__SET_STATUS, {
-          id    : params.setId,
+          id    : payload.setId,
           status: 'skipped',
         })
         return
       }
 
       commit(t.PHOTOSETS__SET_STATUS, {
-        id    : params.setId,
+        id    : payload.setId,
         status: 'done',
       })
     } catch (e) {
       commit(t.PHOTOSETS__SET_STATUS, {
-        id    : params.setId,
+        id    : payload.setId,
         status: 'error',
       })
     }
   },
 
-  [t.PHOTOSETS__BULK_ORDER_SET](
-    { commit, state }: IPhotosetsActionContext,
-    params: API.IPostPhotosetBulkReorderRequest,
-  ): BulkReorderProgressEmitter {
+  [t.PHOTOSETS__BULK_ORDER_SET]({ commit, state }, payload: IBulkOrderSetPayload): BulkReorderProgressEmitter {
 
     const emitter = new BulkReorderProgressEmitter()
 
-    _.forEach(params.setIds, (id) => {
+    _.forEach(payload.setIds, (id) => {
       commit(t.PHOTOSETS__SET_STATUS, { id, status: 'processing' })
     })
 
     let streamIndex = 0
 
     postPhotosetBulkReorder(
-      params.nsid,
-      params.setIds,
-      params.orderBy,
-      params.isDesc,
-      params.token,
-      params.secret,
+      payload.nsid,
+      payload.setIds,
+      payload.orderBy,
+      payload.isDesc,
+      payload.token,
+      payload.secret,
     )
       .on('progress', (progress: ProgressEvent) => {
         const xhr = progress.target as XMLHttpRequest

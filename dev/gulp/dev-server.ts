@@ -23,15 +23,13 @@ gulp.task('devServer', async(done) => {
 
   try {
     const server = await serve({
-      config: devConfig,
-      // host   : config.livereloadHost,
-      host  : '0.0.0.0',
-      port  : config.serverPort,
-      dev   : { publicPath: '', stats: 'minimal' },
-      // content: config.absOutputByEnv(''),
-      add   : (app, middleware) => {
-        middleware.content()
-
+      config : devConfig,
+      host   : config.livereloadHost,
+      // host  : '0.0.0.0',
+      port   : config.serverPort,
+      dev    : { publicPath: '', stats: 'minimal' },
+      content: [],
+      add    : (app, middleware) => {
         app.use(c2k(proxy(
           config.apiPrefixes,
           {
@@ -46,6 +44,7 @@ gulp.task('devServer', async(done) => {
         }) as NextHandleFunction))
 
         middleware.webpack()
+        // middleware.content()
       },
     })
 

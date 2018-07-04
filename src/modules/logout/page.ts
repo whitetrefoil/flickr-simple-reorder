@@ -5,7 +5,9 @@ import { isUndefined }       from 'lodash'
 import WtPanel               from '../../components/wt-panel'
 import { store, types as t } from '../../store'
 
-const log = getLogger('/modules/logout/page.ts')
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 @Component({
   name      : 'logout-page',
@@ -21,7 +23,7 @@ export default class LogoutPage extends Vue {
   }
 
   logout(): void {
-    log.debug('Going to logout')
-    store.commit(t.LOGIN__UNSET_AUTH_INFO)
+    debug('Going to logout')
+    store.commit({ type: t.LOGIN__UNSET_AUTH_INFO })
   }
 }

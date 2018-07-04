@@ -1,18 +1,50 @@
-import { getLogger }      from '@whitetrefoil/debug-log'
-import { ActionContext }  from 'vuex'
-import { getAccessToken } from '../../api/get-access-token'
-import { getLoginToken }  from '../../api/get-login-token'
-import * as API           from '../../api/types/api'
-import * as t             from '../types'
-import { ILoginState }    from './state'
+import { getLogger }           from '@whitetrefoil/debug-log'
+import { ActionTree, Payload } from 'vuex'
+import { getAccessToken }      from '../../api/get-access-token'
+import { getLoginToken }       from '../../api/get-login-token'
+import * as API                from '../../api/types/api'
+import { IRootState }          from '../state'
+import * as t                  from '../types'
+import { ILoginState }         from './state'
 
-export type ILoginActionContext = ActionContext<ILoginState, any>
 
-const debug = getLogger('/store/login/actions.ts').debug
+interface IOfficialUserInfoResponse {
+  id: string
+  nsid: string
+  username: {
+    _content: string,
+  }
+  iconfarm: number,
+  iconserver: string,
+  photosurl: {
+    _content: string,
+  }
+  profileurl: {
+    _content: string,
+  }
+}
 
-export const actions = {
 
-  async [t.LOGIN__REQUEST_LOGIN_TOKEN]({ commit, state }: ILoginActionContext): Promise<API.IToken> {
+interface IRequestLoginTokenPayload extends Payload {
+  type: typeof t.LOGIN__REQUEST_LOGIN_TOKEN
+}
+
+interface IRequestAccessTokenPayload extends Payload {
+  type: typeof t.LOGIN__REQUEST_ACCESS_TOKEN
+  verifier: string
+}
+
+export type ILoginDispatchPayload =
+  |IRequestLoginTokenPayload
+  |IRequestAccessTokenPayload
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
+
+export const actions: ActionTree<ILoginState, IRootState> = {
+
+  async [t.LOGIN__REQUEST_LOGIN_TOKEN]({ commit }): Promise<API.IToken> {
     debug('Request login token.')
 
     const res = await getLoginToken()
@@ -23,14 +55,12 @@ export const actions = {
     return res.data.token
   },
 
-  async [t.LOGIN__REQUEST_ACCESS_TOKEN]({ commit, state }: ILoginActionContext, verifier: string): Promise<API.IUser> {
+  async [t.LOGIN__REQUEST_ACCESS_TOKEN]({ commit, state }, payload: IRequestAccessTokenPayload): Promise<API.IUser> {
     debug('Request access token.')
 
-    if (state.token == null || state.token.key == null || state.token.secret == null) {
-      throw new Error('No token exists.')
-    }
+    if (state.token == null) { throw new Error('No token found!') }
 
-    const res = await getAccessToken(state.token.key, state.token.secret, verifier)
+    const res = await getAccessToken(state.token.key, state.token.secret, payload.verifier)
     debug('Got access token response:', res)
 
     commit(t.LOGIN__SET_AUTH_INFO, {

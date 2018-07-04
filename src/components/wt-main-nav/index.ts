@@ -1,6 +1,11 @@
+import { getLogger }      from '@whitetrefoil/debug-log'
 import { Component, Vue } from 'av-ts'
 import * as _             from 'lodash'
 import { store }          from '../../store'
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 @Component({
   name: 'wt-main-nav',
@@ -11,7 +16,7 @@ export default class WtMainNav extends Vue {
 
   get hasLoggedIn(): boolean {
     return !_.isEmpty(_.get(store.state, 'login.token'))
-           && !_.isEmpty(_.get(store.state, 'login.user'))
+      && !_.isEmpty(_.get(store.state, 'login.user'))
   }
 
   get userName(): string {

@@ -15,14 +15,16 @@ import { BulkReorderProgressEmitter }       from '../../store/photosets/actions'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
 
-const { debug } = getLogger('/src/modules/index/page.ts')
-
 // `null` for normal case.
 const enum Status {
   Loading = 'loading',
   Error   = 'error',
-  Normal  = '',
+  Normal  = 'normal',
 }
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 @Component({
   name      : 'index-page',
@@ -88,7 +90,11 @@ export default class IndexPage extends Vue {
   }
 
   load(): void {
-    if (!this.hasLoggedIn || store.state.login.token == null) { return }
+    if (!this.hasLoggedIn
+        || store.state.login.token == null
+        || store.state.login.user == null
+    ) { return }
+
     if (store.state.login.user == null) {
       throw new Error('Seems logged in but no user info exists.')
     }

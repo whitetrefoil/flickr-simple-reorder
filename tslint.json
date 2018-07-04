@@ -15,7 +15,7 @@
     "no-internal-module"              : true,
     "no-magic-numbers"                : [false, 0, 1],
     "no-namespace"                    : false,
-    "no-non-null-assertion"           : true,
+    "no-non-null-assertion"           : false,
     "no-reference"                    : true,
     "no-var-requires"                 : false,
     "only-arrow-functions"            : [true, "allow-declarations", "allow-named-functions"],

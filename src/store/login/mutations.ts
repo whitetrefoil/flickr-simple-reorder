@@ -1,17 +1,40 @@
-import { getLogger }   from '@whitetrefoil/debug-log'
-import Vue             from 'vue'
-import * as API        from '../../api/types/api'
-import Storage         from '../../services/storage'
-import * as t          from '../types'
-import { ILoginState } from './state'
+import { getLogger }             from '@whitetrefoil/debug-log'
+import { MutationTree, Payload } from 'vuex'
+import * as API                  from '../../api/types/api'
+import Storage                   from '../../services/storage'
+import * as t                    from '../types'
+import { ILoginState }           from './state'
 
-const { debug } = getLogger('/store/login/mutations.ts')
 
-export const mutations = {
+interface ISetTempTokenPayload extends Payload {
+  type: typeof t.LOGIN__SET_TEMP_TOKEN
+  token: API.IToken
+}
 
-  [t.LOGIN__SET_TEMP_TOKEN](state: ILoginState, token: API.IToken) {
-    state.token = token
-    debug('Set temp token into state:', token)
+interface ISetAuthInfoPayload extends Payload {
+  type: typeof t.LOGIN__SET_AUTH_INFO
+  token: API.IToken
+  user: API.IUser
+}
+
+interface IUnsetAuthInfo extends Payload {
+  type: typeof t.LOGIN__UNSET_AUTH_INFO
+}
+
+export type ILoginCommitPayload =
+  |ISetTempTokenPayload
+  |ISetAuthInfoPayload
+  |IUnsetAuthInfo
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
+
+export const mutations: MutationTree<ILoginState> = {
+
+  [t.LOGIN__SET_TEMP_TOKEN](state, payload: ISetTempTokenPayload) {
+    state.token = payload.token
+    debug('Set temp token into state:', payload.token)
     state.user = undefined
     debug('Unset user info.')
     const splitToken = state.token.key.split('-')
@@ -24,10 +47,10 @@ export const mutations = {
     debug('Save temp token to storage.')
   },
 
-  [t.LOGIN__SET_AUTH_INFO](state: ILoginState, { token, user }: { token: API.IToken, user: API.IUser }) {
-    state.token = token
-    debug('Set token into state:', token)
-    state.user = user
+  [t.LOGIN__SET_AUTH_INFO](state, payload: ISetAuthInfoPayload) {
+    state.token = payload.token
+    debug('Set token into state:', payload.token)
+    state.user = payload.user
     debug('Set userinfo into state.')
     const splitToken = state.token.key.split('-')
     Storage.set('cache', {
@@ -40,8 +63,8 @@ export const mutations = {
   },
 
   [t.LOGIN__UNSET_AUTH_INFO](state: ILoginState) {
-    Vue.delete(state, 'token')
-    Vue.delete(state, 'user')
+    state.token = undefined
+    state.user  = undefined
     Storage.remove('cache')
   },
 }

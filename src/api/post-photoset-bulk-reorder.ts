@@ -2,7 +2,9 @@ import { getLogger } from '@whitetrefoil/debug-log'
 import * as request  from 'superagent'
 import * as API      from './types/api'
 
-const debugPostPhotosetBulkReorder = getLogger('/api/post-photoset-bulk-reorder.ts').debug
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 export function postPhotosetBulkReorder(
   nsid: string,
@@ -13,7 +15,7 @@ export function postPhotosetBulkReorder(
   secret: string,
 ): request.SuperAgentRequest {
 
-  debugPostPhotosetBulkReorder(`Bulk reorder photosets: ${setIds}`)
+  debug(`Bulk reorder photosets: ${setIds}`)
 
   return request.post('/api/photosets/bulk_reorder')
     .send({ nsid, setIds, orderBy, isDesc, token, secret })
