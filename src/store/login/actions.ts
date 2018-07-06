@@ -8,23 +8,6 @@ import * as t                  from '../types'
 import { ILoginState }         from './state'
 
 
-interface IOfficialUserInfoResponse {
-  id: string
-  nsid: string
-  username: {
-    _content: string,
-  }
-  iconfarm: number,
-  iconserver: string,
-  photosurl: {
-    _content: string,
-  }
-  profileurl: {
-    _content: string,
-  }
-}
-
-
 interface IRequestLoginTokenPayload extends Payload {
   type: typeof t.LOGIN__REQUEST_LOGIN_TOKEN
 }
