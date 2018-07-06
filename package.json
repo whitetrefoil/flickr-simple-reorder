@@ -32,7 +32,6 @@
     "iview": "^2.14.3",
     "lodash": "^4.17.10",
     "store": "^2.0.12",
-    "superagent": "^3.8.3",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -59,8 +58,6 @@
     "@types/lodash-webpack-plugin": "^0.11.3",
     "@types/mini-css-extract-plugin": "^0.2.0",
     "@types/node": "^10.5.1",
-    "@types/semver": "^5.5.0",
-    "@types/superagent": "^3.8.1",
     "@types/webpack": "^4.4.4",
     "@types/webpack-dev-middleware": "^2.0.1",
     "@whitetrefoil/check-dependencies": "^0.1.2",

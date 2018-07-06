@@ -36,10 +36,10 @@ export const actions: ActionTree<ILoginState, IRootState> = {
 
     commit<ILoginCommitPayload>({
       type : t.LOGIN__SET_TEMP_TOKEN,
-      token: res.data.token,
+      token: res.token,
     })
 
-    return res.data.token
+    return res.token
   },
 
   async [t.LOGIN__REQUEST_ACCESS_TOKEN]({ commit, state }, payload: IRequestAccessTokenPayload): Promise<API.IUser> {
@@ -52,10 +52,10 @@ export const actions: ActionTree<ILoginState, IRootState> = {
 
     commit<ILoginCommitPayload>({
       type : t.LOGIN__SET_AUTH_INFO,
-      token: res.data.token,
-      user : res.data.user,
+      token: res.token,
+      user : res.user,
     })
 
-    return res.data.user
+    return res.user
   },
 }

@@ -58,7 +58,7 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
 
     commit<IPhotosetsCommitPayload>({
       type     : t.PHOTOSETS__SET_LIST,
-      photosets: photosets.data.photosets,
+      photosets: photosets.photosets,
     })
   },
 
@@ -83,7 +83,7 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
 
       debug(result)
 
-      if (result.data.result.isSuccessful !== true) {
+      if (result.result.isSuccessful !== true) {
         commit<IPhotosetsCommitPayload>({
           type  : t.PHOTOSETS__SET_STATUS,
           id    : payload.setId,
@@ -92,7 +92,7 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
         return
       }
 
-      if (result.data.result.isSkipped === true) {
+      if (result.result.isSkipped === true) {
         commit<IPhotosetsCommitPayload>({
           type  : t.PHOTOSETS__SET_STATUS,
           id    : payload.setId,
@@ -136,8 +136,7 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
       payload.isDesc,
       payload.token,
       payload.secret,
-    )
-      .on('progress', (progress: ProgressEvent) => {
+      (progress: ProgressEvent) => {
         const xhr = progress.target as XMLHttpRequest
         const txt = xhr.responseText
 
@@ -177,9 +176,9 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
           }
         })
         streamIndex = newIndex
-      })
-
-      .end(() => {
+      },
+    )
+      .then(() => {
         emitter.emit('finish')
       })
 
