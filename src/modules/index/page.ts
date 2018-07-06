@@ -10,7 +10,7 @@ import * as _                               from 'lodash'
 import * as API                             from '../../api/types/api'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
-import { store, types as t }                from '../../store'
+import { IPayload, store, types as t }      from '../../store'
 import { BulkReorderProgressEmitter }       from '../../store/photosets/actions'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
@@ -64,8 +64,8 @@ export default class IndexPage extends Vue {
   filter: string = ''
 
   get hasLoggedIn(): boolean {
-    return !_.isEmpty(_.get(store.state, 'login.token'))
-           && !_.isEmpty(_.get(store.state, 'login.user'))
+    return !_.isEmpty(store.state.login.token)
+           && !_.isEmpty(store.state.login.user)
   }
 
   get filteredSets(): API.IPhotoset[] {
@@ -100,7 +100,8 @@ export default class IndexPage extends Vue {
     }
 
     this.status = Status.Loading
-    store.dispatch(t.PHOTOSETS__GET_LIST, {
+    store.dispatch<IPayload>({
+      type  : t.PHOTOSETS__GET_LIST,
       token : store.state.login.token.key,
       secret: store.state.login.token.secret,
       nsid  : store.state.login.user.nsid,
@@ -122,7 +123,8 @@ export default class IndexPage extends Vue {
     this.reorderingAllStatus.skipped   = 0
     this.reorderingAllStatus.failures  = 0
 
-    store.dispatch(t.PHOTOSETS__BULK_ORDER_SET, {
+    store.dispatch<IPayload>({
+      type   : t.PHOTOSETS__BULK_ORDER_SET,
       nsid   : store.state.login.user.nsid,
       setIds : _.map(this.filteredSets, (ps) => ps.id),
       orderBy: store.state.photosets.preferences.orderBy,
@@ -150,14 +152,16 @@ export default class IndexPage extends Vue {
   }
 
   onOrderByChange(value: API.IOrderByOption) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+    store.commit<IPayload>({
+      type: t.PHOTOSETS__SET_PREFERENCE,
       orderBy: value,
       isDesc : store.state.photosets.preferences.isDesc,
     })
   }
 
   onIsDescChange(value: boolean) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+    store.commit<IPayload>({
+      type: t.PHOTOSETS__SET_PREFERENCE,
       orderBy: store.state.photosets.preferences.orderBy,
       isDesc : value,
     })

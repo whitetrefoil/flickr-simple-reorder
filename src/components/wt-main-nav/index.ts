@@ -15,18 +15,19 @@ export default class WtMainNav extends Vue {
   isMenuShown = false
 
   get hasLoggedIn(): boolean {
-    return !_.isEmpty(_.get(store.state, 'login.token'))
-      && !_.isEmpty(_.get(store.state, 'login.user'))
+    return !_.isEmpty(store.state.login.token)
+      && !_.isEmpty(store.state.login.user)
   }
 
-  get userName(): string {
-    return _.get(store.state, 'login.user.username') as string
+  get userName(): string|undefined {
+    return store.state.login.user == null ? undefined : store.state.login.user.username
   }
 
-  get userAvatarUrl(): string {
-    const farm   = _.get(store.state, 'login.user.iconFarm')
-    const server = _.get(store.state, 'login.user.iconServer')
-    const nsid   = _.get(store.state, 'login.user.nsid')
+  get userAvatarUrl(): string|undefined {
+    if (store.state.login.user == null) { return undefined }
+    const farm   = store.state.login.user.iconFarm
+    const server = store.state.login.user.iconServer
+    const nsid   = store.state.login.user.nsid
     if (_.isNil(farm) || _.isNil(server) || _.isNil(nsid)) {
       return 'about:blank'
     }

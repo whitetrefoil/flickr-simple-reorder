@@ -6,8 +6,8 @@
     <tasks>
       <task>integration</task>
     </tasks>
-    <arguments>-d -e https://flickr-simple-reorder.whitetrefoil.com</arguments>
+    <arguments>-d -e http://flickr-simple-reorder.whitetrefoil.com:43000</arguments>
     <envs />
-    <method />
+    <method v="2" />
   </configuration>
 </component>

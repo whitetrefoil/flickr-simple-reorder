@@ -5,6 +5,7 @@ import { getLoginToken }       from '../../api/get-login-token'
 import * as API                from '../../api/types/api'
 import { IRootState }          from '../state'
 import * as t                  from '../types'
+import { ILoginCommitPayload } from './mutations'
 import { ILoginState }         from './state'
 
 
@@ -33,7 +34,10 @@ export const actions: ActionTree<ILoginState, IRootState> = {
     const res = await getLoginToken()
     debug('Got login token response:', res)
 
-    commit(t.LOGIN__SET_TEMP_TOKEN, res.data.token)
+    commit<ILoginCommitPayload>({
+      type : t.LOGIN__SET_TEMP_TOKEN,
+      token: res.data.token,
+    })
 
     return res.data.token
   },
@@ -46,7 +50,8 @@ export const actions: ActionTree<ILoginState, IRootState> = {
     const res = await getAccessToken(state.token.key, state.token.secret, payload.verifier)
     debug('Got access token response:', res)
 
-    commit(t.LOGIN__SET_AUTH_INFO, {
+    commit<ILoginCommitPayload>({
+      type : t.LOGIN__SET_AUTH_INFO,
       token: res.data.token,
       user : res.data.user,
     })

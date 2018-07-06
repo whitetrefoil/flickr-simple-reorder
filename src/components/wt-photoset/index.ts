@@ -1,7 +1,7 @@
-import { Component, p, Prop, Vue } from 'av-ts'
-import * as API                    from '../../api/types/api'
-import { store, types as t }       from '../../store'
-import { Status }                  from '../../store/photosets/state'
+import { Component, p, Prop, Vue }     from 'av-ts'
+import * as API                        from '../../api/types/api'
+import { IPayload, store, types as t } from '../../store'
+import { Status }                      from '../../store/photosets/state'
 
 const ASPECT_RADIO_THRESHOLD = 2 / 3
 
@@ -32,13 +32,13 @@ export default class WtPhotoset extends Vue {
 
   get buttonClass(): string[] {
     switch (this.status) {
-      case 'done':
+      case Status.Done:
         return ['done']
-      case 'processing':
+      case Status.Processing:
         return ['processing']
-      case 'skipped':
+      case Status.Skipped:
         return ['skipped']
-      case 'error':
+      case Status.Error:
         return ['error']
       default:
         return ['']
@@ -72,7 +72,8 @@ export default class WtPhotoset extends Vue {
       throw new Error('Login info is invalid now.')
     }
 
-    store.dispatch(t.PHOTOSETS__ORDER_SET, {
+    store.dispatch<IPayload>({
+      type   : t.PHOTOSETS__ORDER_SET,
       nsid   : store.state.login.user!.nsid,
       setId  : photoset.id,
       orderBy: store.state.photosets.preferences.orderBy,

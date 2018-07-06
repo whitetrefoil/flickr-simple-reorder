@@ -15,7 +15,7 @@ const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
 const existingToken = Storage.get('cache')
 
 
-debug(`Existing auth info: ${existingToken}`)
+debug('Existing auth info: ', existingToken)
 
 
 export const state: ILoginState = {
@@ -27,7 +27,6 @@ if (existingToken != null
     && existingToken.k != null
     && existingToken.t != null
     && existingToken.s != null
-    && existingToken.u != null
 ) {
   state.token = {
     key   : `${existingToken.k}-${existingToken.t}`,

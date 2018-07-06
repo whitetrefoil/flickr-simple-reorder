@@ -19,9 +19,8 @@ interface ISetStatusPayload extends Payload {
   status: Status
 }
 
-interface ISetPreference extends Payload {
+interface ISetPreference extends IPreferences, Payload {
   type: typeof t.PHOTOSETS__SET_PREFERENCE
-  pref: IPreferences
 }
 
 export type IPhotosetsCommitPayload =
@@ -57,8 +56,8 @@ export const mutations: MutationTree<IPhotosetsState> = {
   },
 
   [t.PHOTOSETS__SET_PREFERENCE](state, payload: ISetPreference) {
-    state.preferences.orderBy = payload.pref.orderBy
-    state.preferences.isDesc  = payload.pref.isDesc
+    state.preferences.orderBy = payload.orderBy
+    state.preferences.isDesc  = payload.isDesc
     Storage.set('preferences', {
       f: state.preferences.orderBy,
       o: state.preferences.isDesc,

@@ -8,7 +8,8 @@ import { postPhotosetReorder }     from '../../api/post-photoset-reorder'
 import * as API                    from '../../api/types/api'
 import { IRootState }              from '../state'
 import * as t                      from '../types'
-import { IPhotosetsState }         from './state'
+import { IPhotosetsCommitPayload } from './mutations'
+import { IPhotosetsState, Status } from './state'
 
 
 export type BulkReorderProgressEvent = 'success'|'fail'|'skip'
@@ -43,6 +44,7 @@ interface IBulkOrderSetPayload extends API.IPostPhotosetBulkReorderRequest {
 export type IPhotosetsDispatchPayload =
   |IGetListPayload
   |IOrderSetPayload
+  |IBulkOrderSetPayload
 
 
 const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
@@ -54,15 +56,19 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
 
     const photosets = await getPhotosetList(payload.token, payload.secret, payload.nsid)
 
-    commit(t.PHOTOSETS__SET_LIST, photosets.data.photosets)
+    commit<IPhotosetsCommitPayload>({
+      type     : t.PHOTOSETS__SET_LIST,
+      photosets: photosets.data.photosets,
+    })
   },
 
   async [t.PHOTOSETS__ORDER_SET]({ commit }, payload: IOrderSetPayload) {
     debug(`Reorder photoset ${payload.setId}`)
 
-    commit(t.PHOTOSETS__SET_STATUS, {
+    commit<IPhotosetsCommitPayload>({
+      type  : t.PHOTOSETS__SET_STATUS,
       id    : payload.setId,
-      status: 'processing',
+      status: Status.Processing,
     })
 
     try {
@@ -75,30 +81,36 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
         payload.secret,
       )
 
+      debug(result)
+
       if (result.data.result.isSuccessful !== true) {
-        commit(t.PHOTOSETS__SET_STATUS, {
+        commit<IPhotosetsCommitPayload>({
+          type  : t.PHOTOSETS__SET_STATUS,
           id    : payload.setId,
-          status: 'error',
+          status: Status.Error,
         })
         return
       }
 
       if (result.data.result.isSkipped === true) {
-        commit(t.PHOTOSETS__SET_STATUS, {
+        commit<IPhotosetsCommitPayload>({
+          type  : t.PHOTOSETS__SET_STATUS,
           id    : payload.setId,
-          status: 'skipped',
+          status: Status.Skipped,
         })
         return
       }
 
-      commit(t.PHOTOSETS__SET_STATUS, {
+      commit<IPhotosetsCommitPayload>({
+        type  : t.PHOTOSETS__SET_STATUS,
         id    : payload.setId,
-        status: 'done',
+        status: Status.Done,
       })
     } catch (e) {
-      commit(t.PHOTOSETS__SET_STATUS, {
+      commit<IPhotosetsCommitPayload>({
+        type  : t.PHOTOSETS__SET_STATUS,
         id    : payload.setId,
-        status: 'error',
+        status: Status.Error,
       })
     }
   },
@@ -108,7 +120,11 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
     const emitter = new BulkReorderProgressEmitter()
 
     _.forEach(payload.setIds, (id) => {
-      commit(t.PHOTOSETS__SET_STATUS, { id, status: 'processing' })
+      commit<IPhotosetsCommitPayload>({
+        type  : t.PHOTOSETS__SET_STATUS,
+        id,
+        status: Status.Processing,
+      })
     })
 
     let streamIndex = 0
@@ -135,23 +151,26 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
           switch (split[1]) {
             case 's':
               emitter.emit('success', split[0])
-              commit(t.PHOTOSETS__SET_STATUS, {
+              commit<IPhotosetsCommitPayload>({
+                type  : t.PHOTOSETS__SET_STATUS,
                 id    : split[0],
-                status: 'done',
+                status: Status.Done,
               })
               break
             case 'f':
               emitter.emit('fail', split[0])
-              commit(t.PHOTOSETS__SET_STATUS, {
+              commit<IPhotosetsCommitPayload>({
+                type  : t.PHOTOSETS__SET_STATUS,
                 id    : split[0],
-                status: 'error',
+                status: Status.Error,
               })
               break
             case 'k':
               emitter.emit('skip', split[0])
-              commit(t.PHOTOSETS__SET_STATUS, {
+              commit<IPhotosetsCommitPayload>({
+                type  : t.PHOTOSETS__SET_STATUS,
                 id    : split[0],
-                status: 'skipped',
+                status: Status.Skipped,
               })
               break
             default: // Do nothing ~

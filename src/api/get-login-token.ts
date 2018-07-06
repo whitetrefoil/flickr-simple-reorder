@@ -11,7 +11,7 @@ export async function getLoginToken(): IResponseXHR<API.IGetLoginTokenResponse> 
   let res: request.Response
   let data: API.IGetLoginTokenResponse
   try {
-    res = await request.get('/api/auth/loginToken')
+    res  = await request.get('/api/auth/loginToken')
       .timeout(process.env.NODE_ENV === 'development' ? 3000 : 10000)
     data = res.body.data
   } catch (e) {

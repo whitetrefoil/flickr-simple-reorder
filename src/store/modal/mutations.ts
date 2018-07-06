@@ -9,7 +9,7 @@ interface IOneMoreModalPayload extends Payload {
 }
 
 interface IOneLessModalPayload extends Payload {
-  type: typeof t.MODAL__ONE_MORE_MODAL
+  type: typeof t.MODAL__ONE_LESS_MODAL
 }
 
 export type IModalCommitPayload =
