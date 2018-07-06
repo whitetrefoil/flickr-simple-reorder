@@ -1,6 +1,6 @@
 {
   "name": "@whitetrefoil/flickr-simple-reorder",
-  "version": "2.2.0-alpha.1",
+  "version": "2.2.0-alpha.3",
   "description": "A simple tool to help reorder photos in galleries.",
   "author": "WhiteTrefoil <whitetrefoil@gmail.com>",
   "main": "src/index.ts",
