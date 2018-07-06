@@ -1,8 +1,11 @@
-import { getLogger } from '@whitetrefoil/debug-log'
-import * as request  from 'superagent'
-import * as API      from './types/api'
+import { getLogger }    from '@whitetrefoil/debug-log'
+import { AxiosPromise } from 'axios'
+import * as API         from './types/api'
+import { axios }        from './types/base'
 
-const debugPostPhotosetBulkReorder = getLogger('/api/post-photoset-bulk-reorder.ts').debug
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 export function postPhotosetBulkReorder(
   nsid: string,
@@ -11,10 +14,17 @@ export function postPhotosetBulkReorder(
   isDesc: boolean,
   token: string,
   secret: string,
-): request.SuperAgentRequest {
+  onProgress: (ev: ProgressEvent) => void,
+): AxiosPromise<string> {
 
-  debugPostPhotosetBulkReorder(`Bulk reorder photosets: ${setIds}`)
+  debug(`Bulk reorder photosets: ${setIds}`)
 
-  return request.post('/api/photosets/bulk_reorder')
-    .send({ nsid, setIds, orderBy, isDesc, token, secret })
+  return axios.post<string>(
+    'photosets/bulk_reorder',
+    { nsid, setIds, orderBy, isDesc, token, secret },
+    {
+      onDownloadProgress: onProgress,
+      timeout           : 60000,
+    },
+  )
 }

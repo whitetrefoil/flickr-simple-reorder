@@ -22,4 +22,8 @@ export default class ReorderAllConfirm extends Vue {
   cancel() {
     this.$emit('cancel')
   }
+
+  oneByOne() {
+    this.$emit('oneByOne')
+  }
 }

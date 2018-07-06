@@ -91,6 +91,7 @@
         :total="totalPhotosets"
         @confirm="confirmed"
         @cancel="canceled"
+        @oneByOne="oneByOne"
     ></reorder-all-confirm>
     <reordering-all
         :is-showing="isReorderingAll"

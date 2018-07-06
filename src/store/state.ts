@@ -1,9 +1,10 @@
-import { IAppState }       from './app/state'
 import { ILoginState }     from './login/state'
+import { IModalState }     from './modal/state'
 import { IPhotosetsState } from './photosets/state'
 
+
 export interface IRootState {
-  app: IAppState
   login: ILoginState
+  modal: IModalState
   photosets: IPhotosetsState
 }

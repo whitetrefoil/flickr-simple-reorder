@@ -1,47 +1,63 @@
-import { getLogger }                               from '@whitetrefoil/debug-log'
-import * as _                                      from 'lodash'
-import Vue                                         from 'vue'
-import * as API                                    from '../../api/types/api'
-import Storage                                     from '../../services/storage'
-import * as t                                      from '../types'
-import { IPhotosetsState, IPreferences, IStatus } from './state'
+import { getLogger }                             from '@whitetrefoil/debug-log'
+import * as _                                    from 'lodash'
+import Vue                                       from 'vue'
+import { MutationTree, Payload }                 from 'vuex'
+import * as API                                  from '../../api/types/api'
+import Storage                                   from '../../services/storage'
+import * as t                                    from '../types'
+import { IPhotosetsState, IPreferences, Status } from './state'
 
-const { debug } = getLogger('/store/photosets/mutations.ts')
 
-interface ISetStatusParams {
-  id: string
-  status: IStatus
+interface ISetListPayload extends Payload {
+  type: typeof t.PHOTOSETS__SET_LIST
+  photosets: API.IPhotoset[]|undefined
 }
 
-export const mutations = {
-  [t.PHOTOSETS__SET_LIST](state: IPhotosetsState, photosets: API.IPhotoset[]|null|undefined) {
+interface ISetStatusPayload extends Payload {
+  type: typeof t.PHOTOSETS__SET_STATUS
+  id: string
+  status: Status
+}
 
-    debug('Set list')
+interface ISetPreference extends IPreferences, Payload {
+  type: typeof t.PHOTOSETS__SET_PREFERENCE
+}
 
-    state.photosets = photosets || undefined
+export type IPhotosetsCommitPayload =
+  |ISetListPayload
+  |ISetStatusPayload
+  |ISetPreference
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
+
+export const mutations: MutationTree<IPhotosetsState> = {
+  [t.PHOTOSETS__SET_LIST](state, payload: ISetListPayload) {
+    state.photosets = payload.photosets
 
     // Set default status
-    const setIds = _.map(photosets, _.property('id')) as string[]
+    const setIds = _.map(payload.photosets, _.property('id')) as string[]
     if (state.statuses == null) { state.statuses = {} }
     _.forEach(setIds, (id) => {
-      Vue.set(state.statuses, id, state.statuses[id] || null)
+      Vue.set(state.statuses, id, state.statuses[id] || Status.Initial)
     })
   },
 
-  [t.PHOTOSETS__SET_STATUS](state: IPhotosetsState, params: ISetStatusParams) {
-    debug(`Setting status of photoset ${params.id} to "${params.status}"`)
+  [t.PHOTOSETS__SET_STATUS](state, { id, status }: ISetStatusPayload) {
+    debug(`Setting status of photoset ${id} to "${status}"`)
 
-    const photoset = _.find(state.photosets, _.matches({ id: params.id }))
+    const photoset = _.find(state.photosets, _.matchesProperty('id', id))
     if (photoset == null) {
-      debug(`no such photoset ${params.id} found!`)
+      debug(`no such photoset ${id} found!`)
       return
     }
-    Vue.set(state.statuses, params.id, params.status)
+    Vue.set(state.statuses, id, status)
   },
 
-  [t.PHOTOSETS__SET_PREFERENCE](state: IPhotosetsState, pref: IPreferences) {
-    state.preferences.orderBy = pref.orderBy
-    state.preferences.isDesc  = pref.isDesc
+  [t.PHOTOSETS__SET_PREFERENCE](state, payload: ISetPreference) {
+    state.preferences.orderBy = payload.orderBy
+    state.preferences.isDesc  = payload.isDesc
     Storage.set('preferences', {
       f: state.preferences.orderBy,
       o: state.preferences.isDesc,

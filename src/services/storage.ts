@@ -3,15 +3,16 @@ import { isEmpty }   from 'lodash'
 import * as API      from '../api/types/api'
 import { compare }   from './version'
 
+
 interface ICache {
-  k?: string
-  s?: string
-  t?: string
-  u?: API.IUser
+  k: string|undefined
+  s: string|undefined
+  t: string|undefined
+  u: API.IUser|undefined
 }
 
 interface IPreferences {
-  f?: API.IOrderByOption
+  f: API.IOrderByOption
   o: boolean
 }
 
@@ -34,7 +35,7 @@ interface IStorage {
     expiration?: number|Date,
   ): void
 
-  get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]|null
+  get<K extends keyof IInternalStorageContent>(key: K): IInternalStorageContent[K]
 
   remove<K extends keyof IInternalStorageContent>(key: K): void
 
@@ -43,7 +44,8 @@ interface IStorage {
   addPlugin(plugin: any): void
 }
 
-const debug = getLogger('/services/storage.ts').debug
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
 
 const SEVEN_DAYS_AS_MS = 7 * 24 * 60 * 60 * 1000
 
@@ -76,14 +78,14 @@ export default {
     }
   },
 
-  get<K extends keyof IStorageContent>(key: K): IStorageContent[K]|null {
+  get<K extends keyof IStorageContent>(key: K): IStorageContent[K]|undefined {
     switch (key) {
       case 'cache':
         return storage.get('flickrSimpleReorder-cache')
       case 'preferences':
         return storage.get('flickrSimpleReorder-pref')
       default:
-        return null
+        return undefined
     }
   },
 

@@ -1,9 +1,10 @@
-import { getLogger }    from '@whitetrefoil/debug-log'
-import * as request     from 'superagent'
-import * as API         from './types/api'
-import { IResponseXHR } from './types/response'
+import { getLogger }        from '@whitetrefoil/debug-log'
+import * as API             from './types/api'
+import { axios, IResponse } from './types/base'
 
-const debugPostPhotosetReorder = getLogger('/api/post-photoset-reorder.ts').debug
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 export async function postPhotosetReorder(
   nsid: string,
@@ -12,20 +13,23 @@ export async function postPhotosetReorder(
   isDesc: boolean,
   token: string,
   secret: string,
-): IResponseXHR<API.IPostPhotosetReorderResponse> {
-  debugPostPhotosetReorder('Get photoset list for user: ', nsid)
+  needLongTimeout = false,
+): Promise<API.IPostPhotosetReorderResponse> {
+  debug('Get photoset list for user: ', nsid)
 
-  let res: request.Response
-  let data: API.IPostPhotosetReorderResponse
   try {
-    res  = await request.post('/api/photosets/reorder')
-      .send({ nsid, setId, orderBy, isDesc, token, secret })
-    data = res.body.data
+    const config = needLongTimeout ? { timeout: 60000 } : undefined
+
+    const res = await axios.post<IResponse<API.IPostPhotosetReorderResponse>>(
+      'photosets/reorder',
+      { nsid, setId, orderBy, isDesc, token, secret },
+      config,
+    )
+
+    return res.data.data
   } catch (e) {
     // TODO: Handle failed auth
-    debugPostPhotosetReorder(e)
+    debug(e)
     throw e
   }
-
-  return { res, data }
 }

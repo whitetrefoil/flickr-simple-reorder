@@ -1,6 +1,12 @@
-import { actions }   from './actions'
-import { mutations } from './mutations'
-import { state }     from './state'
+import { actions, ILoginDispatchPayload } from './actions'
+import { ILoginCommitPayload, mutations } from './mutations'
+import { state }                          from './state'
+
+
+export type ILoginPayload =
+  |ILoginCommitPayload
+  |ILoginDispatchPayload
+
 
 export const login = {
   actions,

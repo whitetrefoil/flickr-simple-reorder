@@ -1,4 +1,4 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+// tslint:disable:no-implicit-dependencies
 
 import log       from 'fancy-log'
 import gulp      from 'gulp'
@@ -12,7 +12,6 @@ class DevServerProxy {
     log(`Building proxy to ${config.backendDest}`)
     this.server = httpProxy.createProxyServer(proxyConfig)
     this.server.on('error', log.warn)
-
     // See https://github.com/nodejitsu/node-http-proxy/issues/180#issuecomment-310550385
     this.server.on('proxyReq', (proxyReq, req) => {
       if (req.body == null) { return }
@@ -25,10 +24,10 @@ class DevServerProxy {
 
 export const proxy = new DevServerProxy()
 
-gulp.task('proxy', () => {
+gulp.task('proxy', (done) => {
   proxy.startProxy({
     target : config.backendDest,
-    secure : config.backendDest.indexOf('https://') === 0,
+    secure : false,
     xfwd   : true,
     headers: {
       host   : config.backendDest.replace(/^https?:\/\//, ''),
@@ -36,4 +35,5 @@ gulp.task('proxy', () => {
       referer: `${config.backendDest}/`,
     },
   })
+  done()
 })

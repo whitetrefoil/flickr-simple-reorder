@@ -1,18 +1,16 @@
-// tslint:disable:no-implicit-dependencies no-import-side-effect
+// tslint:disable:no-implicit-dependencies
 
-import Chalk  from 'chalk'
-import log    from 'fancy-log'
-import * as _ from 'lodash'
-import meow   from 'meow'
-import path   from 'path'
+import Chalk from 'chalk'
+import log   from 'fancy-log'
+import meow  from 'meow'
+import path  from 'path'
 
 // region - Interfaces
 
 interface IFlags {
   development: boolean
+  skipNpmCheck: boolean
   port: string
-  prefix: string
-  index: string
   livereload: string
   ping: string
   backend: string
@@ -23,6 +21,7 @@ type IBuildPathFn = (...path: string[]) => string
 interface IConfig {
   argv: meow.Result<IFlags>
   pkg: any
+  skipNpmCheck: boolean
   serverPort: number
   apiPrefixes: string[]
   serverIndex: string
@@ -48,8 +47,8 @@ interface IConfig {
 
 const DEFAULT_IS_DEVELOPMENT = false
 const DEFAULT_PORT           = 8000
-const DEFAULT_PREFIX         = '/api/'
-const DEFAULT_INDEX          = 'index.html'
+const DEFAULT_PREFIX         = ['/api/']
+const DEFAULT_INDEX          = '/index.html'
 const DEFAULT_PING           = 0
 const DEFAULT_LIVERELOAD     = 'localhost'
 const DEFAULT_BACKEND        = 'http://localhost:3000'
@@ -66,41 +65,60 @@ const { blue, green, gray, yellow } = Chalk
 const argv = meow<IFlags>(
   `
     Usage:
-      $ npm run gulp ${yellow('<task>')} -- ${yellow('<options>')}
-    or:
-      $ ./node_modules/.bin/gulp ${yellow('<task>')} ${yellow('<options>')}
-    or (if have npx installed):
-      $ npx gulp ${yellow('<task>')} ${yellow('<options>')}
-    or (if have gulp installed globally):
-      $ gulp ${yellow('<task>')} ${yellow('<options>')}
+      $ npm ${yellow('<task>')} -- ${yellow('<options>')}
+
+    Tasks:
+      run serve               start preview server
+      start                   alias of "run serve"
+      test                    run tests
+      run coverage            generate coverage report
+      run build               build the source code
 
     Options:                                                     [${gray('default value')}]
       common:
-        -h, --help         show this help message
-        -v, --version      show version number then exit
-        -d, --development  Set NODE_ENV to "development"         [${yellow('false')}]
+        -h, --help            show this help message
+        -d, --development     Set NODE_ENV to "development"      [${yellow('false')}]
+        -s, --skip-npm-check
       developing:
-        -p, --port         port of preview server                [${blue('8888')}]
-        -x, --prefix       prefix to determine backend requests  [${green('"/api/"')}]
-                           can use ',' to specify multiple ones
-        -i, --index        index page of preview server          [${green('"index.html"')}]
-        -l, --livereload   the hostname in livereload script     [${green('"localhost"')}]
-        -n, --ping         emulate the network delay (ms)        [${blue('0')}]
-        -e, --backend      destination of backend proxy          [${green('"http://localhost:3000"')}]
+        -p, --port            port of preview server             [${blue('8888')}]
+        -l, --livereload      the hostname to bind & livereload  [${green('"localhost"')}]
+        --ping                emulate the network delay (ms)     [${blue('0')}]
+        -e, --backend         destination of backend proxy       [${green('"http://localhost:3000"')}]
 
     For more detail of tasks / options, see code in "dev/gulp" directory.
   `,
   {
     flags: {
-      help       : { alias: 'h', type: 'boolean' },
-      version    : { alias: 'v', type: 'boolean' },
-      development: { alias: 'd', default: DEFAULT_IS_DEVELOPMENT, type: 'boolean' },
-      port       : { alias: 'p', default: DEFAULT_PORT },
-      prefix     : { alias: 'x', default: DEFAULT_PREFIX, type: 'string' },
-      index      : { alias: 'i', default: DEFAULT_INDEX, type: 'string' },
-      livereload : { alias: 'l', default: DEFAULT_LIVERELOAD, type: 'string' },
-      ping       : { alias: 'n', default: DEFAULT_PING, type: 'string' },
-      backend    : { alias: 'e', default: DEFAULT_BACKEND, type: 'string' },
+      help        : {
+        alias: 'h',
+      },
+      development : {
+        alias  : 'd',
+        default: DEFAULT_IS_DEVELOPMENT,
+        type   : 'boolean',
+      },
+      skipNpmCheck: {
+        alias  : 's',
+        default: false,
+        type   : 'boolean',
+      },
+      port        : {
+        alias  : 'p',
+        default: DEFAULT_PORT,
+      },
+      livereload  : {
+        alias  : 'l',
+        default: DEFAULT_LIVERELOAD,
+        type   : 'string',
+      },
+      ping        : {
+        default: DEFAULT_PING,
+      },
+      backend     : {
+        alias  : 'e',
+        default: DEFAULT_BACKEND,
+        type   : 'string',
+      },
     },
   },
 )
@@ -114,8 +132,8 @@ const sourceDir   = DEFAULT_SOURCE_BASE_DIR
 const buildingDir = DEFAULT_BUILDING_DIR
 const outputDir   = DEFAULT_OUTPUT_DIR
 
-process.env.NODE_ENV        = (argv.flags.development || DEFAULT_IS_DEVELOPMENT) ? 'development' : 'production'
-process.env.BABEL_ENV       = process.env.NODE_ENV
+process.env.NODE_ENV  = (argv.flags.development || DEFAULT_IS_DEVELOPMENT) ? 'development' : 'production'
+process.env.BABEL_ENV = process.env.NODE_ENV
 
 log(`Initializing project in "${rootDir}" for ${process.env.NODE_ENV} environment.`)
 
@@ -144,12 +162,13 @@ const absOutputByEnv: IBuildPathFn = (...pathInOutput) => {
 const config: IConfig = {
   argv,
   pkg           : argv.pkg || {},
+  skipNpmCheck  : argv.flags.skipNpmCheck,
   serverPort    : parseInt(argv.flags.port, 10),
-  apiPrefixes   : argv.flags.prefix.split(','),
-  serverIndex   : argv.flags.index,
+  apiPrefixes   : DEFAULT_PREFIX,
+  serverIndex   : DEFAULT_INDEX,
   livereloadHost: argv.flags.livereload,
   ping          : parseInt(argv.flags.ping, 10),
-  backendDest   : _.isEmpty(argv.flags.backend) ? DEFAULT_BACKEND : argv.flags.backend,
+  backendDest   : argv.flags.backend === '' ? DEFAULT_BACKEND : argv.flags.backend,
   root,
   absRoot,
   source,

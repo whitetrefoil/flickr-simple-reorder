@@ -1,8 +1,13 @@
+import { getLogger }                                 from '@whitetrefoil/debug-log'
 import { Component, Lifecycle, p, Prop, Vue, Watch } from 'av-ts'
-import { store, types as t }                         from '../../store'
+import { IPayload, store, types as t }               from '../../store'
 import WtPanel                                       from '../wt-panel'
 
 type Size = 'large'|'medium'|'small'|'tiny'
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 @Component({
   name      : 'wt-modal',
@@ -22,15 +27,15 @@ export default class WtModal extends Vue {
 
   @Watch('isShowing') isShowingHandler(goingToShow: boolean) {
     if (goingToShow) {
-      store.commit(t.ONE_MORE_MODAL)
+      store.commit<IPayload>({ type: t.MODAL__ONE_MORE_MODAL })
     } else {
-      store.commit(t.ONE_LESS_MODAL)
+      store.commit<IPayload>({ type: t.MODAL__ONE_LESS_MODAL })
     }
   }
 
   @Lifecycle destroyed() {
     if (this.isShowing) {
-      store.commit(t.ONE_LESS_MODAL)
+      store.commit<IPayload>({ type: t.MODAL__ONE_LESS_MODAL })
     }
   }
 }

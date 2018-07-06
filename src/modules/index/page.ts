@@ -10,19 +10,22 @@ import * as _                               from 'lodash'
 import * as API                             from '../../api/types/api'
 import WtPanel                              from '../../components/wt-panel'
 import WtPhotoset                           from '../../components/wt-photoset'
-import { store, types as t }                from '../../store'
+import { IPayload, store, types as t }      from '../../store'
 import { BulkReorderProgressEmitter }       from '../../store/photosets/actions'
+import { Status }                           from '../../store/photosets/state'
 import ReorderAllConfirm                    from './reorder-all-confirm'
 import ReorderingAll                        from './reordering-all'
 
-const { debug } = getLogger('/src/modules/index/page.ts')
-
 // `null` for normal case.
-const enum Status {
+const enum PageStatus {
   Loading = 'loading',
   Error   = 'error',
-  Normal  = '',
+  Normal  = 'normal',
 }
+
+
+const { debug } = getLogger(`/src/${__filename.split('?')[0]}`)
+
 
 @Component({
   name      : 'index-page',
@@ -41,7 +44,7 @@ const enum Status {
 })
 export default class IndexPage extends Vue {
 
-  status          = Status.Normal
+  status          = PageStatus.Normal
   isConfirming    = false
   isReorderingAll = false
   isSearchFocused = false
@@ -62,8 +65,8 @@ export default class IndexPage extends Vue {
   filter: string = ''
 
   get hasLoggedIn(): boolean {
-    return !_.isEmpty(_.get(store.state, 'login.token'))
-           && !_.isEmpty(_.get(store.state, 'login.user'))
+    return !_.isEmpty(store.state.login.token)
+           && !_.isEmpty(store.state.login.user)
   }
 
   get filteredSets(): API.IPhotoset[] {
@@ -88,21 +91,26 @@ export default class IndexPage extends Vue {
   }
 
   load(): void {
-    if (!this.hasLoggedIn || store.state.login.token == null) { return }
+    if (!this.hasLoggedIn
+        || store.state.login.token == null
+        || store.state.login.user == null
+    ) { return }
+
     if (store.state.login.user == null) {
       throw new Error('Seems logged in but no user info exists.')
     }
 
-    this.status = Status.Loading
-    store.dispatch(t.PHOTOSETS__GET_LIST, {
+    this.status = PageStatus.Loading
+    store.dispatch<IPayload>({
+      type  : t.PHOTOSETS__GET_LIST,
       token : store.state.login.token.key,
       secret: store.state.login.token.secret,
       nsid  : store.state.login.user.nsid,
     })
       .then(() => {
-        this.status = Status.Normal
+        this.status = PageStatus.Normal
       }, () => {
-        this.status = Status.Error
+        this.status = PageStatus.Error
       })
   }
 
@@ -116,7 +124,8 @@ export default class IndexPage extends Vue {
     this.reorderingAllStatus.skipped   = 0
     this.reorderingAllStatus.failures  = 0
 
-    store.dispatch(t.PHOTOSETS__BULK_ORDER_SET, {
+    store.dispatch<IPayload>({
+      type   : t.PHOTOSETS__BULK_ORDER_SET,
       nsid   : store.state.login.user.nsid,
       setIds : _.map(this.filteredSets, (ps) => ps.id),
       orderBy: store.state.photosets.preferences.orderBy,
@@ -143,15 +152,56 @@ export default class IndexPage extends Vue {
       })
   }
 
+  async reorderAllOneByOne() {
+    if (store.state.login.user == null || store.state.login.token == null) {
+      throw new Error('Login info is invalid now.')
+    }
+
+    this.reorderingAllStatus.successes = 0
+    this.reorderingAllStatus.skipped   = 0
+    this.reorderingAllStatus.failures  = 0
+
+    _.forEach(this.filteredSets, async(ps) => {
+      try {
+        await store.dispatch<IPayload>({
+          type           : t.PHOTOSETS__ORDER_SET,
+          nsid           : store.state.login.user!.nsid,
+          setId          : ps.id,
+          orderBy        : store.state.photosets.preferences.orderBy,
+          isDesc         : store.state.photosets.preferences.isDesc,
+          token          : store.state.login.token!.key,
+          secret         : store.state.login.token!.secret,
+          needLongTimeout: true,
+        })
+        const result = store.state.photosets.statuses[ps.id]
+        switch (result) {
+          case Status.Done:
+            this.reorderingAllStatus.successes += 1
+            break
+          case Status.Skipped:
+            this.reorderingAllStatus.skipped += 1
+            break
+          case Status.Error:
+          default:
+            this.reorderingAllStatus.failures += 1
+        }
+      } catch (e) {
+        this.reorderingAllStatus.failures += 1
+      }
+    })
+  }
+
   onOrderByChange(value: API.IOrderByOption) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+    store.commit<IPayload>({
+      type   : t.PHOTOSETS__SET_PREFERENCE,
       orderBy: value,
       isDesc : store.state.photosets.preferences.isDesc,
     })
   }
 
   onIsDescChange(value: boolean) {
-    store.commit(t.PHOTOSETS__SET_PREFERENCE, {
+    store.commit<IPayload>({
+      type   : t.PHOTOSETS__SET_PREFERENCE,
       orderBy: store.state.photosets.preferences.orderBy,
       isDesc : value,
     })
@@ -182,6 +232,17 @@ export default class IndexPage extends Vue {
 
   canceled() {
     this.isConfirming = false
+  }
+
+  oneByOne() {
+    this.isReorderingAll = true
+    this.$nextTick(() => {
+      this.isConfirming = false
+    })
+    this.reorderAllOneByOne()
+      .catch((error) => {
+        debug(error.message)
+      })
   }
 
   closed() {

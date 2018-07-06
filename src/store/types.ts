@@ -1,11 +1,11 @@
-// App
+// Modal
 // ==========
 
 // Mutations
 // ----------
 
-export const ONE_MORE_MODAL = 'app/ONE_MORE_MODAL'
-export const ONE_LESS_MODAL = 'app/ONE_LESS_MODAL'
+export const MODAL__ONE_MORE_MODAL = 'modal/ONE_MORE_MODAL'
+export const MODAL__ONE_LESS_MODAL = 'modal/ONE_LESS_MODAL'
 
 // Login
 // ==========
@@ -40,7 +40,7 @@ export const PHOTOSETS__GET_LIST       = 'photosets/GET_LIST'
 export const PHOTOSETS__ORDER_SET      = 'photosets/ORDER_SET'
 export const PHOTOSETS__BULK_ORDER_SET = 'photosets/BULK_ORDER_SET'
 
-// // Getters
-// // ----------
-//
+// Getters
+// ----------
+
 // export const PHOTOSETS__PHOTOSETS_WITH_STATUS = 'photosets/PHOTOSETS_WITH_STATUS'

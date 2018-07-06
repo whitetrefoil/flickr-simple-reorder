@@ -1,7 +1,7 @@
-import { Component, p, Prop, Vue } from 'av-ts'
-import * as API                    from '../../api/types/api'
-import { IStatus }                 from '../../store/photosets/state'
-import { store, types as t }       from '../../store'
+import { Component, p, Prop, Vue }     from 'av-ts'
+import * as API                        from '../../api/types/api'
+import { IPayload, store, types as t } from '../../store'
+import { Status }                      from '../../store/photosets/state'
 
 const ASPECT_RADIO_THRESHOLD = 2 / 3
 
@@ -26,19 +26,19 @@ export default class WtPhotoset extends Vue {
     }
   }
 
-  get status(): IStatus {
+  get status(): Status {
     return store.state.photosets.statuses[this.photoset.id]
   }
 
   get buttonClass(): string[] {
     switch (this.status) {
-      case 'done':
+      case Status.Done:
         return ['done']
-      case 'processing':
+      case Status.Processing:
         return ['processing']
-      case 'skipped':
+      case Status.Skipped:
         return ['skipped']
-      case 'error':
+      case Status.Error:
         return ['error']
       default:
         return ['']
@@ -63,7 +63,7 @@ export default class WtPhotoset extends Vue {
     if (store.state.login.user == null) {
       throw new Error('No user info exists.')
     }
-    return `${store.state.login.user.photosUrl}sets/${this.photoset.id}`
+    return `${store.state.login.user!.photosUrl}sets/${this.photoset.id}`
   }
 
   click(photoset: API.IPhotoset) {
@@ -72,13 +72,14 @@ export default class WtPhotoset extends Vue {
       throw new Error('Login info is invalid now.')
     }
 
-    store.dispatch(t.PHOTOSETS__ORDER_SET, {
-      nsid   : store.state.login.user.nsid,
+    store.dispatch<IPayload>({
+      type   : t.PHOTOSETS__ORDER_SET,
+      nsid   : store.state.login.user!.nsid,
       setId  : photoset.id,
       orderBy: store.state.photosets.preferences.orderBy,
       isDesc : store.state.photosets.preferences.isDesc,
-      token  : store.state.login.token.key,
-      secret : store.state.login.token.secret,
+      token  : store.state.login.token!.key,
+      secret : store.state.login.token!.secret,
     })
   }
 }

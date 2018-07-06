@@ -1,27 +1,35 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+// tslint:disable:no-implicit-dependencies
 
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import fs                         from 'fs-extra'
 import HtmlWebpackPlugin          from 'html-webpack-plugin'
+import * as path                  from 'path'
+import { VueLoaderPlugin }        from 'vue-loader'
 import * as webpack               from 'webpack'
 import config                     from '../config'
+import excludeFor                 from './configs/exclude'
 import lodashPlugin               from './configs/lodash'
-import { vueLoaderDev }           from './configs/vue'
+
+
+// See https://github.com/vuejs/vue-loader/issues/678#issuecomment-370965224
+const babelrc = fs.readJsonSync(path.join(__dirname, '../../.babelrc'))
+
 
 const devConfig: webpack.Configuration = {
 
   mode: 'development',
 
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'source-map',
 
   context: config.absSource(''),
 
   entry: {
-    index: ['./polyfills', './theme', './index'],
+    index: ['./polyfills', './index'],
   },
 
   resolve: {
     extensions : ['.vue', '.ts', '.js', '.json'],
-    mainFields : ['webpack', 'jsnext:main', 'module', 'browser', 'web', 'browserify', 'main'],
+    // mainFields : ['webpack', 'jsnext:main', 'module', 'browser', 'web', 'browserify', 'main'],
     unsafeCache: false,
   },
 
@@ -47,45 +55,56 @@ const devConfig: webpack.Configuration = {
         exclude: /node_modules/,
       },
       {
-        test: /\.html$/,
-        use : ['html-loader?interpolate'],
+        test   : /\.html$/,
+        exclude: /node_modules/,
+        use    : ['html-loader?interpolate'],
       },
       {
         test   : /\.ts$/,
         use    : [
-          'babel-loader',
+          {
+            loader : 'babel-loader',
+            options: babelrc,
+          },
           {
             loader : 'ts-loader',
             options: {
-              transpileOnly   : true,
-              configFile      : config.absRoot('tsconfig.json'),
-              appendTsSuffixTo: [/\.vue$/],
+              transpileOnly: true,
+              configFile   : config.absRoot('tsconfig.json'),
+              // appendTsSuffixTo: [/\.vue$/],
             },
           },
         ],
-        exclude: /node_modules/,
+        exclude: excludeFor('ts'),
       },
       {
         test   : /\.js$/,
-        use    : ['babel-loader'],
-        exclude: /node_modules/,
+        exclude: excludeFor('babel'),
+        use    : [
+          {
+            loader : 'babel-loader',
+            options: babelrc,
+          },
+        ],
       },
       {
-        test: /\.vue/,
-        use : [vueLoaderDev],
+        test   : /\.vue/,
+        use    : ['vue-loader'],
       },
       {
         test: /\.css$/,
         use : [
           'vue-style-loader',
-          'css-loader?sourceMap',
+          'css-loader?sourceMap&importLoaders=1',
+          'postcss-loader?sourceMap',
         ],
       },
       {
         test: /\.less$/,
         use : [
           'vue-style-loader',
-          'css-loader?sourceMap&importLoaders=1',
+          'css-loader?sourceMap&importLoaders=2',
+          'postcss-loader?sourceMap',
           'less-loader?sourceMap',
         ],
       },
@@ -96,15 +115,21 @@ const devConfig: webpack.Configuration = {
     ],
   },
 
+  node: {
+    __dirname : true,
+    __filename: true,
+  },
+
   plugins: [
-    // Refer to: https://github.com/lodash/lodash-webpack-plugin
     lodashPlugin,
+    new VueLoaderPlugin(),
     new ForkTsCheckerWebpackPlugin({
       tsconfig: config.absRoot('tsconfig.json'),
       vue     : true,
     }),
     new webpack.DefinePlugin({
       'process.env': {
+        NODE_ENV       : JSON.stringify(process.env.NODE_ENV),
         VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
         FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
         FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
@@ -112,12 +137,11 @@ const devConfig: webpack.Configuration = {
       },
     }),
     new HtmlWebpackPlugin({
-      filename      : 'index.html',
-      template      : './index.html',
-      hash          : false,
-      minify        : false,
-      inject        : 'body',
-      chunksSortMode: 'auto',
+      filename: 'index.html',
+      template: './index.html',
+      hash    : false,
+      minify  : false,
+      inject  : 'body',
     }),
   ],
 }

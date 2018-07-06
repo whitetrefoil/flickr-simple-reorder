@@ -1,4 +1,4 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+// tslint:disable:no-implicit-dependencies
 
 import LodashPlugin from 'lodash-webpack-plugin'
 
@@ -6,5 +6,4 @@ import LodashPlugin from 'lodash-webpack-plugin'
 export default new LodashPlugin({
   collections: true,
   guards     : true,
-  paths      : true,
 })
