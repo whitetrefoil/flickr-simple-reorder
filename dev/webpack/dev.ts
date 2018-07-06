@@ -62,7 +62,10 @@ const devConfig: webpack.Configuration = {
       {
         test   : /\.ts$/,
         use    : [
-          'babel-loader',
+          {
+            loader : 'babel-loader',
+            options: babelrc,
+          },
           {
             loader : 'ts-loader',
             options: {
@@ -76,18 +79,17 @@ const devConfig: webpack.Configuration = {
       },
       {
         test   : /\.js$/,
+        exclude: excludeFor('babel'),
         use    : [
           {
             loader : 'babel-loader',
             options: babelrc,
           },
         ],
-        exclude: excludeFor('babel'),
       },
       {
         test   : /\.vue/,
         use    : ['vue-loader'],
-        exclude: excludeFor('vue'),
       },
       {
         test: /\.css$/,

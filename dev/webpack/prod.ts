@@ -64,18 +64,17 @@ const prodConf: webpack.Configuration = {
       },
       {
         test   : /\.js$/,
+        exclude: excludeFor('babel'),
         use    : [
           {
             loader : 'babel-loader',
             options: babelrc,
           },
         ],
-        exclude: excludeFor('babel'),
       },
       {
-        test   : /\.vue/,
-        use    : ['vue-loader'],
-        exclude: excludeFor('vue'),
+        test: /\.vue/,
+        use : ['vue-loader'],
       },
       {
         test: /\.css$/,
