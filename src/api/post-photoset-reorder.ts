@@ -13,14 +13,19 @@ export async function postPhotosetReorder(
   isDesc: boolean,
   token: string,
   secret: string,
+  needLongTimeout = false,
 ): Promise<API.IPostPhotosetReorderResponse> {
   debug('Get photoset list for user: ', nsid)
 
   try {
+    const config = needLongTimeout ? { timeout: 60000 } : undefined
+
     const res = await axios.post<IResponse<API.IPostPhotosetReorderResponse>>(
       'photosets/reorder',
       { nsid, setId, orderBy, isDesc, token, secret },
+      config,
     )
+
     return res.data.data
   } catch (e) {
     // TODO: Handle failed auth

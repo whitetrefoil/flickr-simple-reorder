@@ -34,6 +34,7 @@ interface IGetListPayload extends API.IGetPhotosetListRequest {
 
 interface IOrderSetPayload extends API.IPostPhotosetReorderRequest {
   type: typeof t.PHOTOSETS__ORDER_SET
+  needLongTimeout?: boolean
 }
 
 interface IBulkOrderSetPayload extends API.IPostPhotosetBulkReorderRequest {
@@ -79,6 +80,7 @@ export const actions: ActionTree<IPhotosetsState, IRootState> = {
         payload.isDesc,
         payload.token,
         payload.secret,
+        payload.needLongTimeout,
       )
 
       debug(result)

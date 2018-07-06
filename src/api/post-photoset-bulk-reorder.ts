@@ -22,6 +22,9 @@ export function postPhotosetBulkReorder(
   return axios.post<string>(
     'photosets/bulk_reorder',
     { nsid, setIds, orderBy, isDesc, token, secret },
-    { onDownloadProgress: onProgress },
+    {
+      onDownloadProgress: onProgress,
+      timeout           : 60000,
+    },
   )
 }
