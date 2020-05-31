@@ -1,0 +1,64 @@
+@use "sass:map";
+@use "func" as *;
+
+$theme-color: #0091DC;
+$accent-color: #FF0084;
+
+// region - Custom bootstrap variables
+
+$primary: #464C5B;
+$info: #2DB7F5;
+$success: #00CC66;
+$warning: #FF9900;
+$error: #FF3300;
+
+$body-color: $primary;
+
+$link-color: $theme-color;
+$link-hover-color: tint($link-color, 20%);
+$link-active-color: shade($link-color, 5%);
+
+$tooltip-color: #FFFFFF;
+
+$border-radius: 2px;
+$border-radius-lg: 2px;
+$border-radius-sm: 1px;
+
+$card-cap-bg: none;
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+// endregion
+
+$btn-padding-base-active: 7px 14px 5px 16px;
+
+$non-content-link-color: $primary;
+$non-content-link-hover-color: tint($non-content-link-color, 20%);
+$non-content-link-active-color: shade($non-content-link-color, 5%);
+
+$selected-color: fade($primary, 90%);
+$subsidiary-color: #9EA7B4;
+$rate-star-color: #F5A623;
+
+$screen-xl: map.get($grid-breakpoints, "xl");
+$screen-lg: map.get($grid-breakpoints, "lg");
+$screen-md: map.get($grid-breakpoints, "md");
+$screen-sm: map.get($grid-breakpoints, "sm");
+$screen-xs: 100%;
+
+// Main nav
+// --------
+
+$main-nav-height: 80px;
+//$main-nav-bg-color: $title-color;
+
+// Modal
+// -----
+
+$modal-width-xl: $screen-xl - 40px;
+$modal-width-lg: $screen-lg - 40px;
+$modal-width-md: $screen-md - 40px;
+$modal-width-sm: $screen-sm - 40px;
+$modal-width-xs: calc(#{$screen-xs} - 40px);
+$modal-margin-y: 40px;

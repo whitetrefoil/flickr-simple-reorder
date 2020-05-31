@@ -1,21 +1,5 @@
-import { getLogger }    from '@whitetrefoil/debug-log'
-import * as request     from 'superagent'
-import * as API         from './types/api'
-import { IResponseXHR } from './types/response'
+import type { GetLoginTokenResponse } from '~/interfaces/api';
+import { get }                        from './base';
 
-const debugLoginToken = getLogger('/api/get-login-token.ts').debug
 
-export async function getLoginToken(): IResponseXHR<API.IGetLoginTokenResponse> {
-  let res: request.Response
-  let data: API.IGetLoginTokenResponse
-  try {
-    res  = await request.get('/api/auth/loginToken')
-      .timeout(process.env.NODE_ENV === 'development' ? 3000 : 10000)
-    data = res.body.data
-  } catch (e) {
-    debugLoginToken(e)
-    throw e
-  }
-
-  return { res, data }
-}
+export const getLoginToken = async(): Promise<GetLoginTokenResponse> => get('auth/loginToken');

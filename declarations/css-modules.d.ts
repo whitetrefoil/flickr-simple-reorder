@@ -1,6 +1,23 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+declare interface CSSNameMap {
+  [plain: string]: string;
+}
 
-declare module '*.sass'
-declare module '*.scss'
-declare module '*.less'
-declare module '*.css'
+declare module '*.sass' {
+  const map: CSSNameMap;
+  export = map;
+}
+
+declare module '*.scss' {
+  const map: CSSNameMap;
+  export = map;
+}
+
+declare module '*.less' {
+  const map: CSSNameMap;
+  export = map;
+}
+
+declare module '*.css' {
+  const map: CSSNameMap;
+  export = map;
+}

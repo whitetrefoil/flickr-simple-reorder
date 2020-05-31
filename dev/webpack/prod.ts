@@ -1,36 +1,53 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import * as fs                    from 'fs-extra';
+import HtmlWebpackPlugin          from 'html-webpack-plugin';
+import MiniCssExtractPlugin       from 'mini-css-extract-plugin';
+import * as path                  from 'path';
+import { TsconfigPathsPlugin }    from 'tsconfig-paths-webpack-plugin';
+import * as webpack               from 'webpack';
+import { BundleAnalyzerPlugin }   from 'webpack-bundle-analyzer';
+import WorkboxPlugin              from 'workbox-webpack-plugin';
+import config                     from '../config';
+import htmlLoaderOptions          from './html-loader-options';
 
-import ExtractTextPlugin          from 'extract-text-webpack-plugin'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import HtmlWebpackPlugin          from 'html-webpack-plugin'
-import * as webpack               from 'webpack'
-import { BundleAnalyzerPlugin }   from 'webpack-bundle-analyzer'
-import config                     from '../config'
-import lodashPlugin               from './configs/lodash'
-import { vueLoaderProd }          from './configs/vue'
 
-const SIZE_14KB = 14336
+const SIZE_14KB = 14336;
 
-const prodConf: webpack.Configuration = {
+// See https://github.com/vuejs/vue-loader/issues/678#issuecomment-370965224
+const babelrc = fs.readJsonSync(path.join(__dirname, '../../.babelrc'));
 
+
+const prodConfig: webpack.Configuration = {
   mode: 'production',
 
   context: config.absSource(''),
 
+  profile: true,
+
   entry: {
-    index: ['./polyfills', './theme', './index'],
+    index: ['./polyfills', './index'],
   },
 
   resolve: {
-    extensions: ['.vue', '.ts', '.js', '.json'],
-    mainFields: ['webpack', 'jsnext:main', 'module', 'browser', 'web', 'browserify', 'main'],
+    extensions: ['.tsx', '.ts', '.jsx', '.es6', '.js', '.json'],
+    alias     : {
+      'react'               : 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom'           : 'preact/compat',
+    },
+    plugins   : [
+      new TsconfigPathsPlugin({
+        configFile: config.absRoot('tsconfig.json'),
+      }),
+    ],
   },
 
   output: {
-    path         : config.absOutput(''),
-    publicPath   : '/',
-    filename     : 'js/[name]-[chunkHash].js',
-    chunkFilename: 'js/chunks/[name]-[chunkHash].chunk.js',
+    path         : config.absOutput(),
+    publicPath   : '',
+    filename     : '[id]-[hash].js',
+    chunkFilename: '[id]-[chunkHash].chunk.js',
+    globalObject : 'self',
   },
 
   module: {
@@ -38,99 +55,236 @@ const prodConf: webpack.Configuration = {
       {
         test   : /\.html$/,
         exclude: /node_modules/,
-        use    : ['html-loader?interpolate'],
+        use    : [
+          {
+            loader : 'html-loader',
+            options: htmlLoaderOptions,
+          },
+        ],
       },
       {
-        test   : /\.ts$/,
-        use    : [
-          'babel-loader',
+        test: /\.(?:md|markdown)$/,
+        use : [
+          {
+            loader : 'html-loader',
+            options: htmlLoaderOptions,
+          },
+          {
+            loader : 'markdown-loader',
+            options: {},
+          },
+        ],
+      },
+      {
+        test: /\.tsx?$/,
+        use : [
+          {
+            loader : 'babel-loader',
+            options: babelrc,
+          },
           {
             loader : 'ts-loader',
             options: {
-              transpileOnly   : true,
-              configFile      : config.absRoot('tsconfig.json'),
-              appendTsSuffixTo: [/\.vue$/],
+              transpileOnly: true,
+              configFile   : config.absRoot('tsconfig.json'),
             },
           },
         ],
-        exclude: /node_modules/,
       },
       {
-        test   : /\.js$/,
-        use    : ['babel-loader'],
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.vue/,
-        use : [vueLoaderProd],
+        test: /\.jsx?$/,
+        use : [
+          {
+            loader : 'babel-loader',
+            options: babelrc,
+          },
+        ],
       },
       {
         test: /\.css$/,
-        use : ExtractTextPlugin.extract({
-          use: ['css-loader?minimize&safe'],
-        }),
+        use : [
+          MiniCssExtractPlugin.loader,
+          {
+            loader : 'css-loader',
+            options: {
+              modules         : {
+                mode          : 'global',
+                localIdentName: '[hash:base64]',
+              },
+              localsConvention: 'camelCase',
+              importLoaders   : 1,
+            },
+          },
+          'postcss-loader',
+        ],
       },
       {
-        test: /\.less/,
-        use : ExtractTextPlugin.extract({
-          use: [
-            'css-loader?minimize&safe&importLoaders=1',
-            'less-loader?sourceMap',
-          ],
-        }),
+        test: /\.s[ac]ss$/,
+        use : [
+          MiniCssExtractPlugin.loader,
+          {
+            loader : 'css-loader',
+            options: {
+              modules         : {
+                mode          : 'global',
+                localIdentName: '[hash:base64]',
+              },
+              localsConvention: 'camelCase',
+              importLoaders   : 4,
+            },
+          },
+          'postcss-loader',
+          'resolve-url-loader?keepQuery',
+          'svg-transform-loader/encode-query',
+          {
+            loader : 'sass-loader',
+            options: {
+              sassOptions: {
+                includePaths: [config.source('styles')],
+              },
+              sourceMap  : true,
+            },
+          },
+        ],
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff2?|ttf|eot|ico)(\?\S*)?$/,
+        test: /manifest\.webmanifest$/,
         use : [
           {
-            loader: 'url-loader',
-            query : {
-              // limit for base64 inlining in bytes
-              limit: SIZE_14KB,
-              // custom naming format if file is larger than
-              // the threshold
-              name : 'assets/[hash].[ext]',
+            loader : 'file-loader',
+            options: {
+              name: '[hash].[ext]',
             },
+          },
+        ],
+      },
+      {
+        test : /\.(?:png|jpe?g|gif|svg|webp|webm|woff2?|ttf|eot|ico)(?:\?.*)?$/,
+        oneOf: [
+          {
+            test: /icon\.c\.png$/,
+            use : [
+              {
+                loader : 'file-loader',
+                options: {
+                  name: '[path][name].[ext]',
+                },
+              },
+            ],
+          },
+          {
+            test: /\.svg(?:\?.*)?$/,
+            use : [
+              {
+                loader : 'url-loader',
+                options: {
+                  // limit for base64 inlining in bytes
+                  limit   : SIZE_14KB,
+                  // custom naming format if file is larger than
+                  // the threshold
+                  name    : '[hash].[ext]',
+                  fallback: 'file-loader?outputPath=assets&publicPath=./',
+                },
+              },
+              'svg-transform-loader',
+            ],
+          },
+          {
+            test: /\.weixin\.(?:png|jpe?g|gif|svg|webp|webm|woff2?|ttf|eot|ico)(?:\?.*)?$/,
+            use : [
+              {
+                loader : 'file-loader',
+                options: {
+                  name      : 'weixin-[hash].[ext]',
+                  outputPath: 'assets',
+                  publicPath: './',
+                  // See: https://github.com/webpack-contrib/file-loader/issues/350
+                  esModule  : false,
+                },
+              },
+            ],
+          },
+          {
+            use: [
+              {
+                loader : 'url-loader',
+                options: {
+                  // limit for base64 inlining in bytes
+                  limit   : SIZE_14KB,
+                  // custom naming format if file is larger than
+                  // the threshold
+                  name    : '[hash].[ext]',
+                  fallback: 'file-loader?outputPath=assets&publicPath=./',
+                },
+              },
+            ],
           },
         ],
       },
     ],
   },
 
+  stats: {
+    // See: https://github.com/TypeStrong/ts-loader#transpileonly-boolean-defaultfalse
+    warningsFilter: /export .* was not found in/,
+  },
+
+  node: {
+    __dirname : true,
+    __filename: true,
+  },
+
+  optimization: {
+    moduleIds             : 'named',
+    chunkIds              : 'named',
+    removeAvailableModules: true,
+    splitChunks           : {
+      chunks : 'async',
+      // minChunks: 1,
+      // maxAsyncRequests: Infinity,
+      // maxInitialRequests: Infinity,
+      maxSize: 200 * 1024,
+    },
+  },
+
   plugins: [
-    // Refer to: https://github.com/lodash/lodash-webpack-plugin
-    lodashPlugin,
     new ForkTsCheckerWebpackPlugin({
-      tsconfig: config.absRoot('tsconfig.json'),
-      vue     : true,
+      tsconfig                   : config.absRoot('tsconfig.json'),
+      useTypescriptIncrementalApi: false,
     }),
+
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting : true,
+    }),
+
     new webpack.DefinePlugin({
-      'process.env': {
-        VUE_ROUTER_BASE: JSON.stringify(process.env.VUE_ROUTER_BASE),
-        FLICKR_SECRET  : JSON.stringify(process.env.FLICKR_SECRET),
-        FLICKR_KEY     : JSON.stringify(process.env.FLICKR_KEY),
-        VERSION        : JSON.stringify(config.pkg.version),
-      },
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.BASE_URL': JSON.stringify(config.baseUrl),
     }),
+
     new BundleAnalyzerPlugin({
       analyzerMode  : 'static',
       defaultSizes  : 'gzip',
       openAnalyzer  : false,
-      reportFilename: '../test_results/bundle-analysis-report.html',
+      reportFilename: config.absRoot('test_results/bundle-analysis-report.html'),
     }),
-    new ExtractTextPlugin({
-      filename : 'css/[name]-[contenthash].css',
-      allChunks: true,
+
+    new MiniCssExtractPlugin({
+      filename     : '[id]-[hash].css',
+      chunkFilename: '[id]-[chunkHash].chunk.css',
     }),
+
     new HtmlWebpackPlugin({
       filename      : 'index.html',
       template      : './index.html',
       hash          : false,
       minify        : false,
       inject        : 'body',
-      chunksSortMode: 'auto',
+      chunksSortMode: 'manual',
+      base          : `${config.baseUrl}/`,
     }),
   ],
-}
+};
 
-export default prodConf
+export default prodConfig;

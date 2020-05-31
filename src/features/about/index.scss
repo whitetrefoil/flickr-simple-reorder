@@ -1,0 +1,45 @@
+:local {
+  .root {
+    ul {
+      padding-left: 0;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .secondary-info {
+      flex: 4 4 40%;
+      order: 1;
+    }
+
+    .main-info {
+      flex: 6 6 60%;
+      order: -1;
+
+      .todos {
+        ul {
+          list-style: none;
+        }
+      }
+
+      > section {
+        margin-top: 20px;
+
+        > section {
+          margin-top: 10px;
+        }
+      }
+    }
+
+
+    .changelog {
+      ul {
+        li {
+          margin-left: 2rem;
+          list-style: disc;
+        }
+      }
+    }
+  }
+}

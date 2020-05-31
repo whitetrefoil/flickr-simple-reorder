@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "body": {
+    "code": 200,
+    "data": {
+      "token": {
+        "key"   : "72157685465950506-8efa461c4a3eebac",
+        "secret": "3791acc27d8ae216"
+      },
+      "user" : {
+        "nsid"      : "42816498@N05",
+        "iconServer": "7394",
+        "iconFarm"  : 8,
+        "pathAlias" : "whitetrefoil",
+        "username"  : "待宵草 (Gino Zhang)",
+        "photosUrl" : "https://www.flickr.com/photos/whitetrefoil/",
+        "profileUrl": "https://www.flickr.com/people/whitetrefoil/"
+      }
+    }
+  }
+}

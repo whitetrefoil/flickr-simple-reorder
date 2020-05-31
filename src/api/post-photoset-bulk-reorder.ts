@@ -1,20 +1,29 @@
-import { getLogger } from '@whitetrefoil/debug-log'
-import * as request  from 'superagent'
-import * as API      from './types/api'
+import { DownloadProgress }   from 'ky';
+import type { OrderByOption } from '~/interfaces/api';
+import { post }               from './base';
 
-const debugPostPhotosetBulkReorder = getLogger('/api/post-photoset-bulk-reorder.ts').debug
 
-export function postPhotosetBulkReorder(
-  nsid: string,
-  setIds: string[],
-  orderBy: API.IOrderByOption,
-  isDesc: boolean,
-  token: string,
-  secret: string,
-): request.SuperAgentRequest {
-
-  debugPostPhotosetBulkReorder(`Bulk reorder photosets: ${setIds}`)
-
-  return request.post('/api/photosets/bulk_reorder')
-    .send({ nsid, setIds, orderBy, isDesc, token, secret })
+export interface PostPhotosetBulkReorderReqParams {
+  nsid: string;
+  setIds: string[];
+  orderBy: OrderByOption;
+  isDesc: boolean;
+  token: string;
+  secret: string;
 }
+
+
+export const postPhotosetBulkReorder = (
+  {
+    nsid,
+    setIds,
+    orderBy,
+    isDesc,
+    token,
+    secret,
+  }: PostPhotosetBulkReorderReqParams,
+  onDownloadProgress: (progress: DownloadProgress, chunk: Uint8Array) => void,
+): Promise<void> => post('photosets/bulk_reorder', {
+  json: { nsid, setIds, orderBy, isDesc, token, secret },
+  onDownloadProgress,
+});

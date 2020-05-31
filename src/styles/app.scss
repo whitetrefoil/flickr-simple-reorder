@@ -1,0 +1,24 @@
+@use "var" as *;
+
+:local {
+  .page {
+    width: $screen-lg;
+    margin: 0 auto;
+    padding: 20px 0;
+
+    .page-header {
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+
+    .page-content {
+      > section {
+        margin-top: 20px;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

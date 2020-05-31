@@ -1,0 +1,37 @@
+@use "../../styles/func" as *;
+@use "../../styles/var" as *;
+
+:local {
+
+  @mixin colorize-panel($color) {
+    border-color: tint($color, 80%);
+
+    .title {
+      border-bottom-color: tint($color, 80%);
+      background-color: tint($color, 90%);
+      color: shade($color, 10%);
+    }
+
+    strong {
+      color: $color;
+    }
+  }
+
+  .root {
+    &.error {
+      @include colorize-panel($error)
+    }
+
+    &.warning {
+      @include colorize-panel($warning)
+    }
+
+    &.success {
+      @include colorize-panel($success)
+    }
+
+    &.info {
+      @include colorize-panel($info)
+    }
+  }
+}

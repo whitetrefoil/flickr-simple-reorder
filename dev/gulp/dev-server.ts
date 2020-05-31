@@ -1,70 +1,70 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+import log              from 'fancy-log';
+import gulp             from 'gulp';
+import webpack          from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
+import config           from '../config';
+import devConfig        from '../webpack/dev';
+import prodConfig       from '../webpack/prod';
 
-import log              from 'fancy-log'
-import gulp             from 'gulp'
-import http             from 'http'
-import * as _           from 'lodash'
-import webpack          from 'webpack'
-import WebpackDevServer from 'webpack-dev-server'
-import config           from '../config'
-import devConfig        from '../webpack/dev'
 
-const WAIT_FOR_STARTUP_IN_MS = 30000
+gulp.task('devServer', async done => {
 
-gulp.task('devServer', (done: () => void) => {
+  const webpackConfig = process.env.NODE_ENV === 'development'
+    ? devConfig
+    : prodConfig;
 
-  devConfig.plugins = devConfig.plugins || []
-  devConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-  if (devConfig.output == null) {
-    devConfig.output = {}
-  }
-  devConfig.output.path = config.absOutput('')
-
-  const entriesInConfig = devConfig.entry as { index: string[] }
-  entriesInConfig.index
-    .unshift(`webpack-dev-server/client?http://${config.livereloadHost}:${config.serverPort}`
-      , 'webpack/hot/dev-server')
-
-  const webpackCompiler = webpack(devConfig)
-
-  const webpackCompilerConfig = {
-    publicPath        : '',
-    contentBase       : config.absOutput(''),
+  const devServerOptions: WebpackDevServer.Configuration = {
+    host              : '0.0.0.0',
+    port              : config.serverPort,
+    publicPath        : `${config.baseUrl}/`,
+    contentBase       : [
+      config.absOutputByEnv(''),
+      config.absRoot('stubapi/static'),
+      config.absRoot(''),
+    ],
     hot               : true,
     noInfo            : false,
-    historyApiFallback: true,
-    stats             : 'minimal' as 'minimal',
+    index             : 'index.html',
+    injectClient      : true,
+    injectHot         : true,
+    // Base on 'errors-only' + filter ts-loader transpileOnly related warnings.
+    // See https://github.com/webpack/webpack/blob/30882ca548625e6d1e54323ff5c61795c6ab4bda/lib/Stats.js#L1405
+    stats             : {
+      all           : false,
+      errors        : true,
+      moduleTrace   : true,
+      warningsFilter: /export .* was not found in/,
+    },
+    https             : true,
     proxy             : [
       {
-        context: _.map(config.apiPrefixes, (p: string): string => `${p}**`),
-        target : `http://${config.livereloadHost}:${config.serverPort + 1}`,
+        context: config.apiPrefixes.map((p: string): string => `${p}**`),
+        target : `http://0.0.0.0:${config.serverPort + 1}`,
+        secure : false,
       },
     ],
+    historyApiFallback: {
+      index  : `${config.baseUrl}/index.html`,
+      verbose: true,
+    },
     disableHostCheck  : true,
-  }
+    compress          : process.env.NODE_ENV !== 'development',
+  };
 
-  const server = new WebpackDevServer(webpackCompiler, webpackCompilerConfig)
+  WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerOptions);
 
-  server.listen(config.serverPort, '0.0.0.0', (error?: Error) => {
-    if (error) {
-      log.error('Webpack Dev Server startup failed!  Detail:')
-      log.error(error)
-      return
+  const webpackCompiler = webpack(webpackConfig);
+
+  const server = new WebpackDevServer(webpackCompiler, devServerOptions);
+
+  server.listen(config.serverPort, '0.0.0.0', error => {
+    if (error != null) {
+      log.error('Webpack Dev Server startup failed!  Detail:');
+      log.error(error);
+    } else {
+      log(`Webpack Dev Server started at port ${config.serverPort}`);
     }
-    log(`Webpack Dev Server started at port ${config.serverPort}`)
 
-    http.get({
-      port   : config.serverPort,
-      timeout: WAIT_FOR_STARTUP_IN_MS,
-    }, (res: http.IncomingMessage) => {
-      res.on('data', _.noop)
-      res.on('end', done)
-    })
-      .on('error', (err?: Error) => {
-        log.warn('There must be something wrong with webpack dev server:')
-        log.warn(err)
-        done()
-      })
-  })
-})
+    done();
+  });
+});

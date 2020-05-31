@@ -1,57 +1,85 @@
-// tslint:disable:no-import-side-effect no-implicit-dependencies
+import { createProxyMiddleware } from '@whitetrefoil/koa-http-proxy';
+import { Koa, LogLevel, MSM }    from '@whitetrefoil/msm';
+import log                       from 'fancy-log';
+import gulp                      from 'gulp';
+import koaBodyparser             from 'koa-bodyparser';
+import { URL }                   from 'url';
+import config                    from '../config';
 
-import * as bodyparser                     from 'body-parser'
-import log                                 from 'fancy-log'
-import gulp                                from 'gulp'
-import * as connect                        from 'gulp-connect'
-import { IncomingMessage, ServerResponse } from 'http'
-import * as _                              from 'lodash'
-import { MSM }                             from 'mock-server-middleware'
-import config                              from '../config'
-import { proxy }                           from './proxy'
 
-const proxyMiddlewareFactory = (proxyServer: any) =>
-  (req: IncomingMessage, res: ServerResponse, next: Function) => {
-    if (_.every(config.apiPrefixes, (p) => req.url != null && req.url.indexOf(p) !== 0)) {
-      next()
-      return
-    }
-    proxyServer.web(req, res)
-  }
+gulp.task('backend:stubapi', done => {
+  const app = new Koa();
 
-gulp.task('backend', (done: Noop) => {
+  log('Will use StubAPI mode.');
 
-  const server = connect.server({
-    host      : '0.0.0.0',
-    root      : [config.source('')],
-    port      : config.serverPort + 1,
-    fallback  : `${config.outputByEnv(config.serverIndex)}`,
-    middleware: () => {
-      const middleware = [bodyparser.json()]
+  const msm = new MSM({
+    apiPrefixes: config.apiPrefixes,
+    apiDir     : 'stubapi/',
+    lowerCase  : true,
+    nonChar    : '-',
+    logLevel   : LogLevel.DEBUG,
+  });
 
-      if (proxy.server == null) {
-        log('No proxy server exists, will use StubAPI mode.')
+  app.use(koaBodyparser());
+  app.use(msm.middleware());
 
-        const msm = new MSM({
-          apiPrefixes  : config.apiPrefixes,
-          apiDir       : 'stubapi/',
-          lowerCase    : true,
-          ping         : config.ping,
-          preserveQuery: false,
-          logLevel     : 'DEBUG',
-        })
-        middleware.push(msm.middleware())
-      } else {
-        log('Existing proxy server found, will use proxy mode.')
-        middleware.push(proxyMiddlewareFactory(proxy.server))
-      }
+  app.listen(config.serverPort + 1, () => {
+    log(`Backend server listening at port ${config.serverPort + 1}`);
+    done();
+  });
+});
 
-      return middleware
+gulp.task('backend:proxy', done => {
+  const app = new Koa();
+
+  log('Will use proxy mode.');
+
+  const url = new URL(config.backendDest);
+
+  app.use(createProxyMiddleware(config.apiPrefixes, {
+    target : url.href,
+    secure : false,
+    xfwd   : true,
+    headers: {
+      host   : url.host,
+      origin : url.host,
+      referer: url.href,
     },
-  })
+  }));
 
-  if (server.server == null) { throw new Error('No "server" found...')}
-  server.server.on('listening', () => {
-    done()
-  })
-})
+  app.listen(config.serverPort + 1, () => {
+    log(`Backend server listening at port ${config.serverPort + 1}`);
+    done();
+  });
+});
+
+gulp.task('backend:recorder', done => {
+  const app = new Koa();
+
+  log('Will use recorder mode.');
+
+  const msm = new MSM({
+    apiPrefixes: config.apiPrefixes,
+    apiDir     : 'stubapi/',
+    lowerCase  : true,
+    nonChar    : '-',
+    logLevel   : LogLevel.INFO,
+  });
+
+  app.use(msm.recorder());
+  app.use(createProxyMiddleware(config.apiPrefixes, {
+    target : config.backendDest,
+    secure : false,
+    xfwd   : true,
+    headers: {
+      host   : config.backendDest.replace(/^https?:\/\//, ''),
+      origin : config.backendDest,
+      referer: `${config.backendDest}/`,
+    },
+  }));
+
+  app.listen(config.serverPort + 1, () => {
+    log(`Backend server listening at port ${config.serverPort + 1}`);
+    done();
+  });
+});

@@ -1,13 +1,14 @@
 require('ts-node').register({
-  project: './dev/tsconfig.json',
-  fast   : true,
-  cache  : false,
-})
+  project      : './dev/tsconfig.json',
+  files        : true,
+  fast         : true,
+  cache        : false,
+  transpileOnly: true,
+});
 
-require('./dev/config')
-require('./dev/gulp/backend')
-require('./dev/gulp/build')
-require('./dev/gulp/dev-server')
-require('./dev/gulp/integration')
-require('./dev/gulp/proxy')
-require('./dev/gulp/serve')
+require('./dev/gulp/backend');
+require('./dev/gulp/build');
+require('./dev/gulp/dev-server');
+require('./dev/gulp/help');
+require('./dev/gulp/integration');
+require('./dev/gulp/serve');

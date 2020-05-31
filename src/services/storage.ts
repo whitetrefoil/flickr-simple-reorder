@@ -1,7 +1,7 @@
 import { getLogger } from '@whitetrefoil/debug-log'
 import { isEmpty }   from 'lodash'
-import * as API      from '../api/types/api'
-import { compare }   from './version'
+import * as API    from '../api/types/api'
+import { compare } from '../utils/version'
 
 interface ICache {
   k?: string

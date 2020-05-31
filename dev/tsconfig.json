@@ -1,13 +1,15 @@
 {
   "extends"        : "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../.building",
-    "target": "es2015",
-    "module": "commonjs"
+    "inlineSourceMap": true,
+    "module"         : "commonjs",
+    "outDir"         : "../.building",
+    "sourceMap"      : false,
+    "target"         : "es2018"
   },
   "include"        : [
+    "../declarations/**/*.d.ts",
     "../Gulpfile.js",
-    "**/*.ts",
-    "../declarations/**/*.d.ts"
+    "**/*.ts"
   ]
 }

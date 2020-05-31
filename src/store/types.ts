@@ -1,46 +1,28 @@
-// App
-// ==========
+import { ActionType, PayloadAction, PayloadActionCreator } from 'typesafe-actions';
 
-// Mutations
-// ----------
 
-export const ONE_MORE_MODAL = 'app/ONE_MORE_MODAL'
-export const ONE_LESS_MODAL = 'app/ONE_LESS_MODAL'
+declare global {
+  type RootAction =
+    |ActionType<typeof import('./session/actions')>
+    ;
 
-// Login
-// ==========
+  interface RootState {
+    session: import('./session/reducer').State;
+  }
 
-// Mutations
-// ----------
+  export type PA<T> = PayloadAction<string, T>;
+  export type PAC<T> = PayloadActionCreator<string, T>;
+}
+// export type AnyA<R = any> = RootAction|ThunkA<R>;
+// export type AnyAC<R = any> = ThunkAC<R>|((...args: any[]) => RootAction);
 
-export const LOGIN__SET_TEMP_TOKEN  = 'login/SET_TEMP_TOKEN'
-export const LOGIN__SET_AUTH_INFO   = 'login/SET_AUTH_INFO'
-export const LOGIN__UNSET_AUTH_INFO = 'login/UNSET_AUTH_INFO'
+// export type ThunkD = ThunkDispatch<RootState, void, RootAction>;
 
-// Actions
-// ----------
 
-export const LOGIN__REQUEST_LOGIN_TOKEN  = 'login/REQUEST_LOGIN_TOKEN'
-export const LOGIN__REQUEST_ACCESS_TOKEN = 'login/REQUEST_ACCESS_TOKEN'
+declare module 'typesafe-actions' {
+  interface Types {
+    RootAction: RootAction;
+  }
 
-// Photosets
-// ==========
-
-// Mutations
-// ----------
-
-export const PHOTOSETS__SET_LIST       = 'photosets/SET_LIST'
-export const PHOTOSETS__SET_STATUS     = 'photosets/SET_STATUS'
-export const PHOTOSETS__SET_PREFERENCE = 'photosets/SET_PREFERENCE'
-
-// Actions
-// ----------
-
-export const PHOTOSETS__GET_LIST       = 'photosets/GET_LIST'
-export const PHOTOSETS__ORDER_SET      = 'photosets/ORDER_SET'
-export const PHOTOSETS__BULK_ORDER_SET = 'photosets/BULK_ORDER_SET'
-
-// // Getters
-// // ----------
-//
-// export const PHOTOSETS__PHOTOSETS_WITH_STATUS = 'photosets/PHOTOSETS_WITH_STATUS'
+  export type NoMeta<T> = [T, never];
+}
