@@ -35,10 +35,11 @@ export default createReducer<State, ActionType<typeof A>>({})
     token, user,
   }))
 
-  .handleAction(A.VERIFY_TOKEN.failure, (s, { payload: loadError }) => ({
-    ...s,
-    access: { loadError },
+  .handleAction(A.VERIFY_TOKEN.failure, (s, { payload: error }) => ({
+    error,
   }))
+
+  .handleAction(A.LOGOUT, () => ({}))
 
   .handleAction(A.AUTH_ERROR, () => ({}))
 ;

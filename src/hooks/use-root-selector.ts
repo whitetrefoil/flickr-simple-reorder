@@ -18,7 +18,7 @@ export const useRootSelector = <TSelected>(
   tag?: string,
 ): TSelected => {
   const res = useSelector<RootState, TSelected>(selector);
-  useDebugValue(tag, t => t == null ? JSON.stringify(res) : `${t}: ${JSON.stringify(res)}`);
+  useDebugValue(tag, t => t == null ? res : `${t}: ${JSON.stringify(res)}`);
   return res;
 };
 

@@ -26,7 +26,7 @@ export default Root;
 
 
 export async function render(rootNode: HTMLElement): Promise<void> {
-  const store = await import(/*webpackChunkName:"store"*/'./store').then(m => m.configureStore({}));
+  const store = await import(/*webpackChunkName:"store"*/'./store').then(m => m.configureStore());
 
   ReactDOM.render(<Root store={store}/>, rootNode);
 }

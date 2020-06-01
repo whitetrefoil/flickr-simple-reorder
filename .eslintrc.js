@@ -159,7 +159,7 @@ module.exports = {
     'array-element-newline'           : [0],
     'block-spacing'                   : [2],
     'brace-style'                     : [2, '1tbs', { allowSingleLine: true }],
-    'camelcase'                       : [2, { properties: 'always' }],
+    'camelcase'                       : [0],
     'capitalized-comments'            : [0],
     'comma-dangle'                    : [2, 'always-multiline'],
     'comma-spacing'                   : [2],
@@ -369,7 +369,7 @@ module.exports = {
           },
         ],
         '@typescript-eslint/member-ordering'                       : [0],
-        // Needs type info!
+        'camcelcase'                                               : [0],
         '@typescript-eslint/naming-convention'                     : [0],
         '@typescript-eslint/no-dynamic-delete'                     : [2],
         '@typescript-eslint/no-empty-interface'                    : [1],

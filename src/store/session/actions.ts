@@ -16,4 +16,6 @@ export const VERIFY_TOKEN = createAsyncAction(
 )<{ key: string, verifier: string }, { token: KeySecret, user: User }, Error>();
 
 
+export const LOGOUT = createAction('session/LOGOUT')<void>();
+
 export const AUTH_ERROR = createAction('session/AUTH_ERROR')<void>();

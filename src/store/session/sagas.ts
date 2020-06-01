@@ -1,5 +1,5 @@
 import { call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
-import { ActionType }                                from 'typesafe-actions';
+import { ActionType, isActionOf }                    from 'typesafe-actions';
 import { getAccessToken }                            from '~/api/get-access-token';
 import { getLoginToken }                             from '~/api/get-login-token';
 import { RootSelected }                              from '~/hooks/use-root-selector';
@@ -52,13 +52,18 @@ function *doSaveAuth(token?: KeySecret, user?: User) {
   }
 }
 
+function *doLogout() {
+  yield call(inStorage.remove, 'cache');
+}
+
 export function *watch() {
   yield takeLatest(A.FETCH_TOKEN.request, doFetchToken);
   yield takeLatest(A.VERIFY_TOKEN.request, doVerifyToken);
+  yield takeLatest(A.LOGOUT, doLogout);
   yield fork(function *() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const action: ActionType<typeof A.VERIFY_TOKEN.success|typeof A.VERIFY_TOKEN.failure|typeof A.AUTH_ERROR> = yield take(
+      const action: ActionType<typeof A.FETCH_TOKEN.success|typeof A.FETCH_TOKEN.failure|typeof A.VERIFY_TOKEN.success|typeof A.VERIFY_TOKEN.failure|typeof A.AUTH_ERROR> = yield take(
         [
           A.FETCH_TOKEN.success,
           A.FETCH_TOKEN.failure,
@@ -66,7 +71,11 @@ export function *watch() {
           A.VERIFY_TOKEN.failure,
           A.AUTH_ERROR,
         ]);
-      yield fork(doSaveAuth, (action.payload as ActionType<typeof A.VERIFY_TOKEN.success>['payload'])?.token);
+      if (isActionOf(A.VERIFY_TOKEN.success, action)) {
+        yield fork(doSaveAuth, action.payload.token, action.payload.user);
+      } else if (isActionOf(A.FETCH_TOKEN.success, action)) {
+        yield fork(doSaveAuth, action.payload);
+      }
     }
   });
 }

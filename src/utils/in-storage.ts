@@ -34,11 +34,11 @@ const { debug } = getLogger(`/src/${__filename.split('?')[0]}`);
 
 const SEVEN_DAYS_AS_MS = 7 * 24 * 60 * 60 * 1000;
 
-const version = process.env.VERSION || '0.0.0';
+const version = process.env.VERSION ?? '0.0.0';
 
 storage.addPlugin(expire);
 
-const sessionVersion = storage.get('flickrSimpleReorder-version') || '0.0.0';
+const sessionVersion = storage.get('flickrSimpleReorder-version') ?? '0.0.0';
 
 debug('Detected session for version:', sessionVersion);
 debug('Current version:', process.env.VERSION);

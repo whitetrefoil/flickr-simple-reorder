@@ -1,20 +1,76 @@
-import Vue            from 'vue'
-import Vuex           from 'vuex'
-import { app }        from './app'
-import { login }      from './login'
-import { photosets }  from './photosets'
-import { IRootState } from './state'
-import * as t         from './types'
+import createSagaMiddleware, { Saga }                    from '@redux-saga/core';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { composeWithDevTools }                           from 'redux-devtools-extension';
+import { fork }                                          from 'redux-saga/effects';
+import inStorage                                         from '~/utils/in-storage';
+// import list                                              from '~/features/list/reducer';
+// import * as listSagas                                    from '~/features/list/sagas';
+import session                                           from './session/reducer';
+import * as sessionSagas                                 from './session/sagas';
 
-Vue.use(Vuex)
 
-export const store = new Vuex.Store<IRootState>({
-  strict : process.env.NODE_ENV === 'development',
-  modules: {
-    app,
-    login,
-    photosets,
-  },
-})
+export const rootReducer = combineReducers({
+  session,
+});
 
-export const types = t
+function *runSagas(sagas: Record<string, Saga>) {
+  for (const key of Object.keys(sagas)) {
+    yield fork(sagas[key]);
+  }
+}
+
+function *rootWatch() {
+  yield *runSagas(sessionSagas);
+}
+
+
+const defaultSession = (): RootState['session'] => {
+  const cache = inStorage.get('cache');
+  if (cache == null) {
+    return {};
+  }
+  const { k, t, s, u } = cache;
+  if (k == null || t == null || s == null) {
+    return {};
+  }
+  const token = {
+    key   : `${k}-${t}`,
+    secret: s,
+  };
+  if (u == null) {
+    return {
+      token,
+    };
+  }
+  const user = u;
+  return {
+    token,
+    user,
+  };
+};
+
+const createDefaultState = (): Partial<RootState> => ({
+  session: defaultSession(),
+});
+
+
+export function configureStore(initialState: Partial<RootState> = createDefaultState()) {
+  const composeEnhancers = composeWithDevTools({
+    // Specify name here, actionsBlacklist, actionsCreators and other options if needed
+  });
+
+  const sagaMiddleware = createSagaMiddleware();
+
+  const store = createStore(rootReducer, initialState, composeEnhancers(
+    applyMiddleware(sagaMiddleware),
+  ));
+
+  sagaMiddleware.run(rootWatch);
+
+  return store;
+}
+
+
+export const rootStore = configureStore();
+
+export default rootStore;

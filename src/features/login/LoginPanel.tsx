@@ -1,4 +1,5 @@
 import { prevented }              from '@whitetrefoil/jsx-sp-events/react';
+import getLogger                  from '@whitetrefoil/log-utils';
 import React, { FC, memo }        from 'react';
 import Button                     from 'react-bootstrap/Button';
 import { ApiError, NetworkError } from '~/api/base';
@@ -7,6 +8,9 @@ import { useVal, ValOf }          from '~/hooks/use-val';
 import { KeySecret }              from '~/interfaces/api';
 import { BsColor }                from '~/interfaces/bs';
 import * as css                   from './index.scss';
+
+
+const { warn } = getLogger(`/src/${__filename.split('?')[0]}`);
 
 
 const LoginPanel: FC<{
@@ -60,10 +64,22 @@ const LoginPanel: FC<{
   }
 
   if (token || loading) {
+    if (loginUrl == null) {
+      return (
+        <Panel className={css.panel} color={BsColor.Default} title="Login">
+          <p>Redirecting you to Flickr&hellip;&hellip;</p>
+        </Panel>
+      );
+    }
+    if (process.env.NODE_ENV === 'development') {
+      warn('Redirecting to:', loginUrl);
+    } else {
+      window.location.assign(loginUrl);
+    }
     return (
       <Panel className={css.panel} color={BsColor.Default} title="Login">
         <p>Redirecting you to Flickr&hellip;&hellip;</p>
-        {loginUrl && <p>If the page doesn&apos;t redirect, please <a href={loginUrl}>click here</a>.</p>}
+        <p>If the page doesn&apos;t redirect, please <a href={loginUrl}>click here</a>.</p>
       </Panel>
     );
   }

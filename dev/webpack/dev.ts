@@ -246,10 +246,10 @@ const devConfig: webpack.Configuration = {
       useTypescriptIncrementalApi: false,
     }),
 
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting : true,
-    }),
+    // new WorkboxPlugin.GenerateSW({
+    //   clientsClaim: true,
+    //   skipWaiting : true,
+    // }),
 
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
